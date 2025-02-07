@@ -12,13 +12,13 @@ jobs:
     name: Update Dependency Graph
     runs-on: ubuntu-latest # or windows-latest, or macOS-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Setup Java and Scala
         uses: olafurpg/setup-scala@v14
         with:
           java-version: adopt@1.11
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "18" # or whatever
       - name: Setup Scala.JS
@@ -27,7 +27,7 @@ jobs:
         uses: coursier/cache-action@v6.3
       - name: npm install
         run: npm install
-      - uses: scalacenter/sbt-dependency-submission@v2
+      - uses: scalacenter/sbt-dependency-submission@v3
         with:
           working-directory: ./
          #  modules-ignore:

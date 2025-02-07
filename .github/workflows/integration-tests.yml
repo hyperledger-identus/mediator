@@ -34,25 +34,25 @@ jobs:
       MEDIATOR_DID: "did:peer:2.Ez6LSghwSE437wnDE1pt3X6hVDUQzSjsHzinpX3XFvMjRAm7y.Vz6Mkhh1e5CEYYq6JBUcTZ6Cp2ranCWRrv7Yax3Le4N59R6dd.SeyJ0IjoiZG0iLCJzIjp7InVyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImEiOlsiZGlkY29tbS92MiJdfX0.SeyJ0IjoiZG0iLCJzIjp7InVyaSI6IndzOi8vbG9jYWxob3N0OjgwODAvd3MiLCJhIjpbImRpZGNvbW0vdjIiXX19"
     steps:
       - name: Checkout mediator
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Checkout tests
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: input-output-hk/didcomm-v2-mediator-test-suite
           path: "./didcomm-v2-mediator-test-suite"
           ref: ${{ env.DIDCOMM_V2_TESTSUITE_VERSION }}
 
       - name: Setup Java and Scala
-        uses: olafurpg/setup-scala@v13
+        uses: olafurpg/setup-scala@v14
         with:
           java-version: openjdk@1.11
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@v3
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
 

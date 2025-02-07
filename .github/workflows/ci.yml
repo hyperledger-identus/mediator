@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # https://github.com/japgolly/setup-everything-scala
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0 # Needed for the release tag // `git fetch --tags` will also work
       - name: Setup Java and Scala
@@ -28,7 +28,7 @@ jobs:
         with:
           java-version: openjdk@1.11
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: "lts/*"
       - name: Setup Scala.JS
@@ -36,7 +36,7 @@ jobs:
       - name: Cache sbt
         uses: coursier/cache-action@v6.3
       - name: Cache embedmongo
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.embedmongo
           key: ${{ runner.os }}-embedmongo-4.14.0
