@@ -32,9 +32,9 @@ lazy val V = new {
   val mongo = "1.1.0-RC10"
   val embedMongo = "4.14.0"
   val munitZio = "0.1.1"
-  val zioTest = "2.1.5"
-  val zioTestSbt = "2.1.5"
-  val zioTestMagnolia = "2.1.5"
+  val zioTest = "2.1.15"
+  val zioTestSbt = "2.1.15"
+  val zioTestMagnolia = "2.1.15"
 
   // For WEBAPP
   val laminar = "17.0.0"
