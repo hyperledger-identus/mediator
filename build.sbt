@@ -20,7 +20,7 @@ lazy val V = new {
 
 //   // https://mvnrepository.com/artifact/dev.zio/zio
   val zio = "2.1.5"
-  val zioJson = "0.7.1"
+  val zioJson = "0.7.15"
   // val zioMunitTest = "0.1.1"
   val zioHttp = "3.0.0-RC6"
   val zioConfig = "4.0.1"
