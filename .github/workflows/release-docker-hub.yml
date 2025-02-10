@@ -83,26 +83,12 @@ jobs:
       fail-fast: false
       matrix:
         docker:
-          - # identus # This is a test account
-            registry: docker.io
-            repository: ${{vars.DOCKERHUB_IDENTUS_USERNAME}}
-            username: ${{vars.DOCKERHUB_IDENTUS_USERNAME}}
-            password_name: DOCKERHUB_IDENTUS_TOKEN
+          - # https://hub.docker.com/u/hyperledger
             tags_noschedule: |
              type=semver,pattern={{version}}
              type=sha,format=long
              type=edge,branch=main
-             type=raw,value=latest,enable=${{ !startsWith(github.ref, 'refs/tags/v') }}
-            tags_schedule: |
-             type=schedule,pattern=nightly,enable={{is_default_branch}}
-          - # fmgp # My presonal acount also for testing
-            registry: docker.io
-            repository: ${{vars.DOCKERHUB_FMGP_USERNAME}}
-            username: ${{vars.DOCKERHUB_FMGP_USERNAME}}
-            password_name: DOCKERHUB_FMGP_TOKEN
-            tags_noschedule: |
-             type=semver,pattern={{version}},enable={{is_default_branch}}
-             type=raw,value=latest,enable={{is_default_branch}}
+             type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             tags_schedule: |
              type=schedule,enable={{is_default_branch}}
 
@@ -121,7 +107,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ matrix.docker.registry }}/${{ matrix.docker.repository }}/identus-mediator
+          images: docker.io/hyperledger/identus-mediator
           tags: "${{ env.META_CONFIG }}"
 
       - name: JOB INFO
@@ -156,12 +142,12 @@ jobs:
               max-parallelism = 1
           platforms: linux/amd64,linux/arm64
 
-      - name: Login to the ${{ matrix.docker.registry }} Container Registry with ${{ matrix.docker.username }}
+      - name: Login to the 'docker.io' Container Registry with 'hyperledger'
         uses: docker/login-action@v3
         with:
-          registry: ${{ matrix.docker.registry }}
-          username: ${{ matrix.docker.username }}
-          password: ${{ secrets[matrix.docker.password_name] }}
+          registry: docker.io
+          username: hyperledger
+          password: ${{ vars.DOCKERHUB_TOKEN }}
 
      # TODO FIX These builds the image multiple times (matrix)
       - name: Build and push identus-mediator Image
