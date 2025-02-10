@@ -85,8 +85,8 @@ jobs:
         docker:
           - # Publish to Docker Hub
             registry: docker.io
-            repository: "hyperledger"
-            username: "hyperledger"
+            repository: ${{vars.DOCKERHUB_ORG}}
+            username: ${{vars.DOCKERHUB_USERNAME}}
             password_name: ${{ secrets.DOCKERHUB_TOKEN }}
             tags_noschedule: |
              type=semver,pattern={{version}}
