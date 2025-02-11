@@ -1,13 +1,13 @@
 package org.hyperledger.identus.mediator
 
 import org.scalajs.dom
-import com.raquo.laminar.api.L._
+import com.raquo.laminar.api.L.*
 import typings.qrcodeGenerator
-
-import zio.json._
-import fmgp.did._
-import fmgp.did.comm._
+import zio.json.*
+import fmgp.did.*
+import fmgp.did.comm.*
 import fmgp.did.comm.protocol.oobinvitation.OOBInvitation
+import typings.qrcodeGenerator.anon.CellSize
 
 object MediatorInfo {
 
@@ -22,12 +22,13 @@ object MediatorInfo {
   val fullPath = s"${scheme}//${host}"
   val qrCodeData = OutOfBand.from(invitation.toPlaintextMessage).makeURI(s"$fullPath")
 
-  val divQRCode = div()
+  val divQRCode = div(width := "55%")
   {
     val aux = qrcodeGenerator.mod.^.apply(qrcodeGenerator.TypeNumber.`0`, qrcodeGenerator.ErrorCorrectionLevel.L)
     aux.addData(qrCodeData)
     aux.make()
-    divQRCode.ref.innerHTML = aux.createSvgTag(8d)
+    val cellSize = CellSize().setScalable(true)
+    divQRCode.ref.innerHTML = aux.createSvgTag(cellSize)
   }
 
   def apply(): HtmlElement = // rootElement
