@@ -36,7 +36,7 @@ jobs:
       - name: Cache sbt
         uses: coursier/cache-action@v6.3
       - name: Cache embedmongo
-        uses: actions/cache@v2
+        uses: actions/cache@v4
         with:
           path: ~/.embedmongo
           key: ${{ runner.os }}-embedmongo-4.14.0
