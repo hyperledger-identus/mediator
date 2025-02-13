@@ -4,19 +4,16 @@ name: Release to Docker Hub
 # How to test:
 # > git tag v9.9.9
 # > git tag --delete v9.9.9
-# > act --artifact-server-path /tmp/artifacts -s GITHUB_TOKEN="$(gh auth token)" --var DOCKERHUB_FMGP_USERNAME=$DOCKERHUB_FMGP_USERNAME -s DOCKERHUB_FMGP_TOKEN=$DOCKERHUB_FMGP_TOKEN --var DOCKERHUB_IDENTUS_USERNAME=$DOCKERHUB_IDENTUS_USERNAME -s DOCKERHUB_IDENTUS_TOKEN=$DOCKERHUB_IDENTUS_TOKEN -j build-and-push-docker-images schedule
-# > act --artifact-server-path /tmp/artifacts -s GITHUB_TOKEN="$(gh auth token)" --var DOCKERHUB_FMGP_USERNAME=$DOCKERHUB_FMGP_USERNAME -s DOCKERHUB_FMGP_TOKEN=$DOCKERHUB_FMGP_TOKEN --var DOCKERHUB_IDENTUS_USERNAME=$DOCKERHUB_IDENTUS_USERNAME -s DOCKERHUB_IDENTUS_TOKEN=$DOCKERHUB_IDENTUS_TOKEN --workflows '.github/workflows/release-docker-hub.yml' push
+# > act --artifact-server-path /tmp/artifacts -s GITHUB_TOKEN="$(gh auth token)" --var DOCKERHUB_ORG=hyperledgeridentus --var DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME -s DOCKERHUB_TOKEN=$DOCKERHUB_TOKEN -j build-and-push-docker-images schedule
+# > act --artifact-server-path /tmp/artifacts -s GITHUB_TOKEN="$(gh auth token)" --var DOCKERHUB_ORG=hyperledgeridentus --var DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME -s DOCKERHUB_TOKEN=$DOCKERHUB_TOKEN --workflows '.github/workflows/release-docker-hub.yml' push
 # > act --artifact-server-path /tmp/artifacts -s GITHUB_TOKEN="$(gh auth token)" \
-#     --var DOCKERHUB_FMGP_USERNAME=$DOCKERHUB_FMGP_USERNAME -s DOCKERHUB_FMGP_TOKEN=$DOCKERHUB_FMGP_TOKEN \
-#     --var DOCKERHUB_IDENTUS_USERNAME=$DOCKERHUB_IDENTUS_USERNAME -s DOCKERHUB_IDENTUS_TOKEN=$DOCKERHUB_IDENTUS_TOKEN \
+#     --var DOCKERHUB_ORG=hyperledgeridentus --var DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME -s DOCKERHUB_TOKEN=$DOCKERHUB_TOKEN \
 #     workflow_dispatch --workflows '.github/workflows/release-docker-hub.yml' --eventpath \
-#     <( jq -n '{ inputs: { DEPLOYMENT_BRANCH: "v1.0.0" } }' )
+#     <( jq -n '{ inputs: { DEPLOYMENT_BRANCH: "v9.9.9" } }' )
 
 # How to push old images from another repo:
-# > docker login docker.io -u fmgp -p $DOCKERHUB_FMGP_TOKEN
-# > docker login docker.io -u identus -p $DOCKERHUB_IDENTUS_TOKEN
+# > docker login docker.io -u identus -p $DOCKERHUB_TOKEN
 # > OLD_TAG=ghcr.io/hyperledger/identus-mediator:1.0.0; NEW_TAG=docker.io/identus/identus-mediator:1.0.0; docker buildx imagetools create --tag "$NEW_TAG" "$OLD_TAG"
-
 
 
 concurrency:
@@ -24,8 +21,8 @@ concurrency:
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * *'  # Run every day at midnight UTC
+  # schedule:
+  #   - cron: '0 0 * * *'  # Run every day at midnight UTC
   push:
     tags:
       - v*
@@ -107,7 +104,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: docker.io/hyperledger/identus-mediator
+          images: docker.io/${{vars.DOCKERHUB_ORG}}/identus-mediator
           tags: "${{ env.META_CONFIG }}"
 
       - name: JOB INFO
@@ -142,12 +139,12 @@ jobs:
               max-parallelism = 1
           platforms: linux/amd64,linux/arm64
 
-      - name: Login to the 'docker.io' Container Registry with 'hyperledger'
+      - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}' 
         uses: docker/login-action@v3
         with:
           registry: docker.io
-          username: hyperledger
-          password: ${{ vars.DOCKERHUB_TOKEN }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
      # TODO FIX These builds the image multiple times (matrix)
       - name: Build and push identus-mediator Image
