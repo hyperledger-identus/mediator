@@ -14,7 +14,7 @@ services:
       - ./initdb.js:/docker-entrypoint-initdb.d/initdb.js
 
   identus-mediator:
-    image: ghcr.io/hyperledger/identus-mediator:${MEDIATOR_VERSION:-latest}
+    image: docker.io/hyperledgeridentus/identus-mediator:${MEDIATOR_VERSION:-latest}
     ports:
       - "8080:8080"
     environment:
