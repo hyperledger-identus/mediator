@@ -77,8 +77,6 @@ jobs:
     needs: build-binaries
     strategy:
       fail-fast: false
-    env:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - name: Docker meta
         id: meta
