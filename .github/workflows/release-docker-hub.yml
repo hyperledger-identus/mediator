@@ -32,49 +32,49 @@ permissions:
   contents: read
 
 jobs:
-  # build-binaries:
-  #   if: ${{ !contains(github.event.head_commit.message, 'chore(release)') }}
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     GITHUB_ACTOR: "hyperledger-bot"
-  #     GITHUB_ACTOR_EMAIL: "hyperledger-bot@hyperledger.org"
-  #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #     JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
-  #     SBT_OPTS: -Xmx2G
-  #   steps:
-  #     - uses: actions/checkout@v4
+  build-binaries:
+    if: ${{ !contains(github.event.head_commit.message, 'chore(release)') }}
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_ACTOR: "hyperledger-bot"
+      GITHUB_ACTOR_EMAIL: "hyperledger-bot@hyperledger.org"
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
+      SBT_OPTS: -Xmx2G
+    steps:
+      - uses: actions/checkout@v4
 
-  #     - name: Setup Java and Scala
-  #       uses: olafurpg/setup-scala@v14
-  #       with:
-  #         java-version: zulu@1.11.0
+      - name: Setup Java and Scala
+        uses: olafurpg/setup-scala@v14
+        with:
+          java-version: zulu@1.11.0
 
-  #     - name: Cache sbt
-  #       uses: coursier/cache-action@v6.3
+      - name: Cache sbt
+        uses: coursier/cache-action@v6.3
 
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: "lts/*"
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "lts/*"
 
-  #     - name: Setup Scala.JS
-  #       uses: japgolly/setup-scalajs@v1
+      - name: Setup Scala.JS
+        uses: japgolly/setup-scalajs@v1
 
-  #     - name: Build Binaries
-  #       env:
-  #         NODE_OPTIONS: --openssl-legacy-provider
-  #       run:  sbt -J-Xmx5120m "docker:stage"
+      - name: Build Binaries
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
+        run:  sbt -J-Xmx5120m "docker:stage"
   
-  #     - name: Save build Directory
-  #       uses: actions/upload-artifact@v4
-  #       with:
-  #         name: docker-directory-artifact
-  #         path: ./mediator/target/docker/stage
+      - name: Save build Directory
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-directory-artifact
+          path: ./mediator/target/docker/stage
  
   build-and-push-docker-images:
     name: Build and Push Docker images
     runs-on: ubuntu-latest
-    # needs: build-binaries
+    needs: build-binaries
     strategy:
       fail-fast: false
     env:
@@ -104,39 +104,39 @@ jobs:
           echo "### runner: ${{ toJSON(runner) }}"
           echo "### github: ${{ toJSON(github) }}"
 
-    #   - name: Download docker-directory-artifact
-    #     uses: actions/download-artifact@v4
-    #     with:
-    #       name: docker-directory-artifact
-    #       path: docker-artifact
+      - name: Download docker-directory-artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docker-directory-artifact
+          path: docker-artifact
 
-    #   - name: Set up QEMU
-    #     uses: docker/setup-qemu-action@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
-    #   - name: Set up Docker Buildx
-    #     uses: docker/setup-buildx-action@v3
-    #     with:
-    #       buildkitd-flags: --debug
-    #       buildkitd-config-inline: |
-    #         [worker.oci]
-    #           max-parallelism = 1
-    #       platforms: linux/amd64,linux/arm64
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          buildkitd-flags: --debug
+          buildkitd-config-inline: |
+            [worker.oci]
+              max-parallelism = 1
+          platforms: linux/amd64,linux/arm64
 
-    #   - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}' 
-    #     uses: docker/login-action@v3
-    #     with:
-    #       registry: docker.io
-    #       username: ${{ vars.DOCKERHUB_USERNAME }}
-    #       password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}' 
+        uses: docker/login-action@v3
+        with:
+          registry: docker.io
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    #  # TODO FIX These builds the image multiple times (matrix)
-    #   - name: Build and push identus-mediator Image
-    #     id: push
-    #     uses: docker/build-push-action@v6
-    #     with:
-    #       context: ./docker-artifact/
-    #       platforms: linux/amd64,linux/arm64
-    #       tags: ${{ steps.meta.outputs.tags }}
-    #       push: ${{ steps.meta.outputs.tags != '' }}
-    #       labels: ${{ steps.meta.outputs.labels }}
-    #       annotations: ${{ steps.meta.outputs.annotations }}
+     # TODO FIX These builds the image multiple times (matrix)
+      - name: Build and push identus-mediator Image
+        id: push
+        uses: docker/build-push-action@v6
+        with:
+          context: ./docker-artifact/
+          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.tags }}
+          push: ${{ steps.meta.outputs.tags != '' }}
+          labels: ${{ steps.meta.outputs.labels }}
+          annotations: ${{ steps.meta.outputs.annotations }}
