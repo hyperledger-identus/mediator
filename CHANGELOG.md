@@ -26,7 +26,7 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 * Add and enable websocket on apisix route ([#179](https://github.com/hyperledger/identus-mediator/issues/179)) ([9060b73](https://github.com/hyperledger/identus-mediator/commit/9060b73f953436152407069431dc4519400e67e5))
 * Added DidSubject to report problem when not enrolled ([#111](https://github.com/hyperledger/identus-mediator/issues/111)) ([397a00a](https://github.com/hyperledger/identus-mediator/commit/397a00aa10589b68a062f3b664617af19c3e30c2))
-* alias list is empty in new acounts by default ([#87](https://github.com/hyperledger/identus-mediator/issues/87)) ([c35ba20](https://github.com/hyperledger/identus-mediator/commit/c35ba20195fadf260b9c0c2cbad3d03aed7305fd))
+* alias list is empty in new accounts by default ([#87](https://github.com/hyperledger/identus-mediator/issues/87)) ([c35ba20](https://github.com/hyperledger/identus-mediator/commit/c35ba20195fadf260b9c0c2cbad3d03aed7305fd))
 * allowed memory to increase gradually in CI ([#37](https://github.com/hyperledger/identus-mediator/issues/37)) ([59eb4e6](https://github.com/hyperledger/identus-mediator/commit/59eb4e6d5eb41e85d33bddb6298ae0f17acbd196))
 * Annotate Headers & Update zio-http to version 3.0.0-RC2 ([#106](https://github.com/hyperledger/identus-mediator/issues/106)) ([37e3343](https://github.com/hyperledger/identus-mediator/commit/37e33435cbdd5cac4d751a6cf814232f7947fa5b))
 * Change atala-prism-mediator to identus-mediator ([#287](https://github.com/hyperledger/identus-mediator/issues/287)) ([0341a45](https://github.com/hyperledger/identus-mediator/commit/0341a45f96f0c975177d43651d43b062a9aab824))
@@ -48,7 +48,7 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 * **infra:** add sync-wave to certificate template ([#134](https://github.com/hyperledger/identus-mediator/issues/134)) ([daecc08](https://github.com/hyperledger/identus-mediator/commit/daecc08e897830beb9bb0a6329c13afcf5588c9b))
 * make content-type header case insensitive & remove support for ws ([#7](https://github.com/hyperledger/identus-mediator/issues/7)) ([c2f064e](https://github.com/hyperledger/identus-mediator/commit/c2f064e8614d0a8085975a64f0246c11abff33e7))
 * mediator ATL-4883 pickup status message to sync reply ([#59](https://github.com/hyperledger/identus-mediator/issues/59)) ([eb5ce56](https://github.com/hyperledger/identus-mediator/commit/eb5ce563b5363be3e4fb718a5fda927b2c6cc0c5))
-* mediator db not storing the orignal  value for protected header ([#15](https://github.com/hyperledger/identus-mediator/issues/15)) ([1bba75f](https://github.com/hyperledger/identus-mediator/commit/1bba75f26b2e4c630bc2cc7b399c731705805abf))
+* mediator db not storing the original value for protected header ([#15](https://github.com/hyperledger/identus-mediator/issues/15)) ([1bba75f](https://github.com/hyperledger/identus-mediator/commit/1bba75f26b2e4c630bc2cc7b399c731705805abf))
 * mediator docker-compose image repo and version ([#39](https://github.com/hyperledger/identus-mediator/issues/39)) ([803b74c](https://github.com/hyperledger/identus-mediator/commit/803b74c037aad864111808fe38250e7e6586b5e4))
 * mediator oob webpage added logo  ([#42](https://github.com/hyperledger/identus-mediator/issues/42)) ([faf43d9](https://github.com/hyperledger/identus-mediator/commit/faf43d9eccdada8a17702cec995d76b5bbcffa68))
 * mediator rename package and refactoring ([#41](https://github.com/hyperledger/identus-mediator/issues/41)) ([286e742](https://github.com/hyperledger/identus-mediator/commit/286e7420127aa67b5bc82c98dca2b93b09053067))
@@ -260,7 +260,7 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 ### Bug Fixes
 
-* alias list is empty in new acounts by default ([#87](https://github.com/input-output-hk/atala-prism-mediator/issues/87)) ([39484e6](https://github.com/input-output-hk/atala-prism-mediator/commit/39484e68b87bf2c20570c271b9ee8fd447471b9f))
+* alias list is empty in new accounts by default ([#87](https://github.com/input-output-hk/atala-prism-mediator/issues/87)) ([39484e6](https://github.com/input-output-hk/atala-prism-mediator/commit/39484e68b87bf2c20570c271b9ee8fd447471b9f))
 
 ## [0.8.1](https://github.com/input-output-hk/atala-prism-mediator/compare/prism-mediator-v0.8.0...prism-mediator-v0.8.1) (2023-08-18)
 
@@ -323,7 +323,7 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 ### Features
 
 * Better error handling for connection refused ([#47](https://github.com/input-output-hk/atala-prism-mediator/issues/47)) ([429940e](https://github.com/input-output-hk/atala-prism-mediator/commit/429940e2ef6807017c4e4ef156432e843c5cdccc))
-* Not send response errors to the caller ([#50](https://github.com/input-output-hk/atala-prism-mediator/issues/50)) ([60ee3ef](https://github.com/input-output-hk/atala-prism-mediator/commit/60ee3ef8e4342fb5fa69501502abdd739c55e22a))
+* Do not send response errors to the caller ([#50](https://github.com/input-output-hk/atala-prism-mediator/issues/50)) ([60ee3ef](https://github.com/input-output-hk/atala-prism-mediator/commit/60ee3ef8e4342fb5fa69501502abdd739c55e22a))
 
 ## [0.3.1](https://github.com/input-output-hk/atala-prism-mediator/compare/prism-mediator-v0.3.0...prism-mediator-v0.3.1) (2023-07-10)
 
@@ -355,7 +355,7 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 * field name routing_did in keylist response body ([#22](https://github.com/input-output-hk/atala-prism-mediator/issues/22)) ([f61f114](https://github.com/input-output-hk/atala-prism-mediator/commit/f61f1148f033fa3587ab9787bb06428ba14cf6ab))
 * Fix release job (add more ram) ([#32](https://github.com/input-output-hk/atala-prism-mediator/issues/32)) ([97ab05a](https://github.com/input-output-hk/atala-prism-mediator/commit/97ab05a943053dce1d789d6aac6d736517c2bfee))
 * make content-type header case insensitive & remove support for ws ([#7](https://github.com/input-output-hk/atala-prism-mediator/issues/7)) ([d4a169a](https://github.com/input-output-hk/atala-prism-mediator/commit/d4a169a9ef16b4677bfb31b8785dc79474d9062a))
-* mediator db not storing the orignal  value for protected header ([#15](https://github.com/input-output-hk/atala-prism-mediator/issues/15)) ([bd119f1](https://github.com/input-output-hk/atala-prism-mediator/commit/bd119f162b1735d1e7c386e7e421877e19bec7b2))
+* mediator db not storing the original value for protected header ([#15](https://github.com/input-output-hk/atala-prism-mediator/issues/15)) ([bd119f1](https://github.com/input-output-hk/atala-prism-mediator/commit/bd119f162b1735d1e7c386e7e421877e19bec7b2))
 * mediator unique constraint issue ([#25](https://github.com/input-output-hk/atala-prism-mediator/issues/25)) ([576d7a3](https://github.com/input-output-hk/atala-prism-mediator/commit/576d7a3090598eca325b7c5ddc9834298253ba8b))
 * trustPing call back not working ([#23](https://github.com/input-output-hk/atala-prism-mediator/issues/23)) ([e8bf356](https://github.com/input-output-hk/atala-prism-mediator/commit/e8bf356de2b8143e7728e5414e6b2cfc24ae4957))
 
