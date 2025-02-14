@@ -233,6 +233,7 @@ lazy val mediator = project
     Docker / dockerUsername := Some("hyperledger"),
     Docker / dockerRepository := Some("ghcr.io"),
     Docker / packageName := "identus-mediator",
+    Docker / version := (Compile / version).value.replace("+", "_"),
     dockerExposedPorts := Seq(8080),
     dockerBaseImage := "openjdk:11",
     dockerUpdateLatest := true,

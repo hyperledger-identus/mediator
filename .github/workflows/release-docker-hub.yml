@@ -2,21 +2,19 @@ name: Release to Docker Hub
 # ower: FabioPinheiro
 # updated: 2024/11/25
 # How to test:
+# > unset GITHUB_TOKEN
 # > git tag v9.9.9
 # > git tag --delete v9.9.9
-# > act --artifact-server-path /tmp/artifacts -s GITHUB_TOKEN="$(gh auth token)" --var DOCKERHUB_FMGP_USERNAME=$DOCKERHUB_FMGP_USERNAME -s DOCKERHUB_FMGP_TOKEN=$DOCKERHUB_FMGP_TOKEN --var DOCKERHUB_IDENTUS_USERNAME=$DOCKERHUB_IDENTUS_USERNAME -s DOCKERHUB_IDENTUS_TOKEN=$DOCKERHUB_IDENTUS_TOKEN -j build-and-push-docker-images schedule
-# > act --artifact-server-path /tmp/artifacts -s GITHUB_TOKEN="$(gh auth token)" --var DOCKERHUB_FMGP_USERNAME=$DOCKERHUB_FMGP_USERNAME -s DOCKERHUB_FMGP_TOKEN=$DOCKERHUB_FMGP_TOKEN --var DOCKERHUB_IDENTUS_USERNAME=$DOCKERHUB_IDENTUS_USERNAME -s DOCKERHUB_IDENTUS_TOKEN=$DOCKERHUB_IDENTUS_TOKEN --workflows '.github/workflows/release-docker-hub.yml' push
+# > act --artifact-server-path /tmp/artifacts -s GITHUB_TOKEN="$(gh auth token)" --var DOCKERHUB_ORG=hyperledgeridentus --var DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME -s DOCKERHUB_TOKEN=$DOCKERHUB_TOKEN -j build-and-push-docker-images schedule
+# > act --artifact-server-path /tmp/artifacts -s GITHUB_TOKEN="$(gh auth token)" --var DOCKERHUB_ORG=hyperledgeridentus --var DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME -s DOCKERHUB_TOKEN=$DOCKERHUB_TOKEN --workflows '.github/workflows/release-docker-hub.yml' push
 # > act --artifact-server-path /tmp/artifacts -s GITHUB_TOKEN="$(gh auth token)" \
-#     --var DOCKERHUB_FMGP_USERNAME=$DOCKERHUB_FMGP_USERNAME -s DOCKERHUB_FMGP_TOKEN=$DOCKERHUB_FMGP_TOKEN \
-#     --var DOCKERHUB_IDENTUS_USERNAME=$DOCKERHUB_IDENTUS_USERNAME -s DOCKERHUB_IDENTUS_TOKEN=$DOCKERHUB_IDENTUS_TOKEN \
+#     --var DOCKERHUB_ORG=hyperledgeridentus --var DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME -s DOCKERHUB_TOKEN=$DOCKERHUB_TOKEN \
 #     workflow_dispatch --workflows '.github/workflows/release-docker-hub.yml' --eventpath \
-#     <( jq -n '{ inputs: { DEPLOYMENT_BRANCH: "v1.0.0" } }' )
+#     <( jq -n '{ inputs: { DEPLOYMENT_BRANCH: "v9.9.9" } }' )
 
 # How to push old images from another repo:
-# > docker login docker.io -u fmgp -p $DOCKERHUB_FMGP_TOKEN
-# > docker login docker.io -u identus -p $DOCKERHUB_IDENTUS_TOKEN
+# > docker login docker.io -u identus -p $DOCKERHUB_TOKEN
 # > OLD_TAG=ghcr.io/hyperledger/identus-mediator:1.0.0; NEW_TAG=docker.io/identus/identus-mediator:1.0.0; docker buildx imagetools create --tag "$NEW_TAG" "$OLD_TAG"
-
 
 
 concurrency:
@@ -24,8 +22,6 @@ concurrency:
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: '0 0 * * *'  # Run every day at midnight UTC
   push:
     tags:
       - v*
@@ -81,59 +77,27 @@ jobs:
     needs: build-binaries
     strategy:
       fail-fast: false
-      matrix:
-        docker:
-          - # identus # This is a test account
-            registry: docker.io
-            repository: ${{vars.DOCKERHUB_IDENTUS_USERNAME}}
-            username: ${{vars.DOCKERHUB_IDENTUS_USERNAME}}
-            password_name: DOCKERHUB_IDENTUS_TOKEN
-            tags_noschedule: |
-             type=semver,pattern={{version}}
-             type=sha,format=long
-             type=edge,branch=main
-             type=raw,value=latest,enable=${{ !startsWith(github.ref, 'refs/tags/v') }}
-            tags_schedule: |
-             type=schedule,pattern=nightly,enable={{is_default_branch}}
-          - # fmgp # My presonal acount also for testing
-            registry: docker.io
-            repository: ${{vars.DOCKERHUB_FMGP_USERNAME}}
-            username: ${{vars.DOCKERHUB_FMGP_USERNAME}}
-            password_name: DOCKERHUB_FMGP_TOKEN
-            tags_noschedule: |
-             type=semver,pattern={{version}},enable={{is_default_branch}}
-             type=raw,value=latest,enable={{is_default_branch}}
-            tags_schedule: |
-             type=schedule,enable={{is_default_branch}}
-
     steps:
-      - name: Set test variable
-        run: |
-         echo "META_CONFIG<<EOF" >> $GITHUB_ENV
-         if [ ${{ github.event_name }} == 'schedule' ]; then
-           echo "${{matrix.docker.tags_schedule}}" >> $GITHUB_ENV;
-         else
-           echo "${{matrix.docker.tags_noschedule}}" >> $GITHUB_ENV;
-         fi
-         echo "EOF" >> $GITHUB_ENV
-
       - name: Docker meta
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: ${{ matrix.docker.registry }}/${{ matrix.docker.repository }}/identus-mediator
-          tags: "${{ env.META_CONFIG }}"
+          images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
+          tags: |
+            type=semver,pattern={{version}}
+            type=sha,format=long
+            type=edge,branch=main
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
 
       - name: JOB INFO
         run: |
           echo "##################"
           echo "#### JOB INFO ####"
           echo "##################"
-          echo "### github.event_name=${{github.event_name}}     (Is this type 'schedule'""? ${{ github.event_name == 'schedule' }})"
-          echo "### matrix.docker.tags_schedule: ${{ matrix.docker.tags_schedule }}"
-          echo "### matrix.docker.tags_noschedule: ${{ matrix.docker.tags_noschedule }}"
-          echo "### env.META_CONFIG: ${{ env.META_CONFIG }}"
+          echo "### github.event_name=${{ github.event_name }}     (Is this type 'schedule'""? ${{ github.event_name == 'schedule' }})"
           echo "### TAGS: ${{ steps.meta.outputs.tags == '' }}"
+          echo "### DOCKERHUB_USERNAME: ${{ vars.DOCKERHUB_USERNAME }}"
+          echo "### DOCKERHUB_ORG: ${{ vars.DOCKERHUB_ORG }}"
           echo "${{ steps.meta.outputs.tags }}"
           echo "### runner: ${{ toJSON(runner) }}"
           echo "### github: ${{ toJSON(github) }}"
@@ -156,12 +120,12 @@ jobs:
               max-parallelism = 1
           platforms: linux/amd64,linux/arm64
 
-      - name: Login to the ${{ matrix.docker.registry }} Container Registry with ${{ matrix.docker.username }}
+      - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}' 
         uses: docker/login-action@v3
         with:
-          registry: ${{ matrix.docker.registry }}
-          username: ${{ matrix.docker.username }}
-          password: ${{ secrets[matrix.docker.password_name] }}
+          registry: docker.io
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
      # TODO FIX These builds the image multiple times (matrix)
       - name: Build and push identus-mediator Image
