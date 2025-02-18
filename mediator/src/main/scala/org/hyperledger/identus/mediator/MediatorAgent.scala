@@ -40,7 +40,27 @@ object MediatorAgent {
         val data = req.headers.toSeq.map(e => (e.headerName, e.renderedValue))
         ZIO.succeed(Response.text("HEADERS:\n" + data.mkString("\n") + "\nRemoteAddress:" + req.remoteAddress)).debug
       },
-      Method.GET / "health" -> handler { (req: Request) => ZIO.succeed(Response.ok) },
+      Method.GET / "health" -> handler { (req: Request) =>
+        for {
+          userRepo <- ZIO.service[UserAccountRepo]
+          messageRepo <- ZIO.service[MessageItemRepo]
+          outboxRepo <- ZIO.service[OutboxMessageRepo]
+          userStats <- userRepo.stats.either
+          messageStats <- messageRepo.stats.either
+          outboxStats <- outboxRepo.stats.either
+          services = Seq(userStats, userStats, outboxStats)
+          ret =
+            if (services.exists(_.isLeft))
+              Response.serviceUnavailable(
+                s"""Unable to connect to the Database collections:
+                  |UserAccountRepo=$userStats
+                  |MessageItemRepo=$messageStats
+                  |OutboxMessageRepo=$outboxStats
+                  |""".stripMargin.trim()
+              )
+            else Response.ok
+        } yield ret
+      },
       Method.GET / "version" -> handler { (req: Request) => ZIO.succeed(Response.text(MediatorBuildInfo.version)) },
       Method.GET / "did" -> handler { (req: Request) =>
         for {

@@ -96,6 +96,7 @@ object MediatorStandalone extends ZIOAppDefault {
       .serve((MediatorAgent.didCommApp ++ DIDCommRoutes.app) @@ (Middleware.cors))
       .provideSomeLayer(DidPeerResolver.layerDidPeerResolver)
       .provideSomeLayer(agentLayer)
+      .provideSomeLayer(repos)
       .provideSomeLayer((agentLayer ++ transportFactory ++ repos ++ Scope.default) >>> OperatorImp.layer)
       .provideSomeLayer(Operations.layerDefault)
       .provideSomeLayer(Scope.default)
