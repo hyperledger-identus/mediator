@@ -18,7 +18,7 @@ object OutboxMessageRepo {
     }
 }
 
-class OutboxMessageRepo(reactiveMongoApi: ReactiveMongoApi)(using ec: ExecutionContext) {
+class OutboxMessageRepo(reactiveMongoApi: ReactiveMongoApi)(using ec: ExecutionContext) extends MongoHealth {
   def collectionName: String = "messages.outbound"
 
   def collection: IO[StorageCollection, BSONCollection] = reactiveMongoApi.database
