@@ -41,6 +41,6 @@ services:
       timeout: 8s
       retries: 3
       #start_period: 1m # because is not supported on CI https://github.com/hyperledger-identus/mediator/actions/runs/13416910097/job/37479904198
-      start_interval: 6s
+      #start_interval: 6s # because is not supported on CI https://github.com/hyperledger-identus/mediator/actions/runs/13416910097/job/37479904198
     extra_hosts:
       - "host.docker.internal:host-gateway"
