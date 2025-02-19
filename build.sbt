@@ -1,3 +1,4 @@
+import com.typesafe.sbt.packager.docker.Dockerfile
 resolvers ++= Resolver.sonatypeOssRepos("public")
 resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
@@ -230,8 +231,8 @@ lazy val mediator = project
   .settings(
     Compile / mainClass := Some("org.hyperledger.identus.mediator.MediatorStandalone"),
     Docker / maintainer := "atala@iohk.io",
-    Docker / dockerUsername := Some("hyperledger"),
-    Docker / dockerRepository := Some("ghcr.io"),
+    Docker / dockerUsername := Some("hyperledgeridentus"),
+    Docker / dockerRepository := Some("docker.io"),
     Docker / packageName := "identus-mediator",
     Docker / version := (Compile / version).value.replace("+", "_"),
     dockerExposedPorts := Seq(8080),

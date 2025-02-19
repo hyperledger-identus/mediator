@@ -35,5 +35,12 @@ services:
       - MONGODB_DB_NAME=mediator
     depends_on:
       - "mongo"
+    healthcheck:
+      test: curl --fail http://localhost:8080/health || exit 1
+      interval: 30s
+      timeout: 8s
+      retries: 3
+      start_period: 1m
+      start_interval: 6s
     extra_hosts:
       - "host.docker.internal:host-gateway"

@@ -11,7 +11,7 @@ Using  Docker
 
 ```shell
 docker:publishLocal # Compile and create the mediator image
-docker-compose up #docker run -p 8080:8080 ghcr.io/hyperledger/identus-mediator:0.1.0-SNAPSHOT
+docker-compose up #docker run -p 8080:8080 docker.io/hyperledgeridentus/identus-mediator:0.1.0-SNAPSHOT
 ```
 
 
