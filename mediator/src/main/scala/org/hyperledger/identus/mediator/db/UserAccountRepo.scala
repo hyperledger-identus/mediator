@@ -21,7 +21,7 @@ object UserAccountRepo {
     }
 }
 
-class UserAccountRepo(reactiveMongoApi: ReactiveMongoApi)(using ec: ExecutionContext) {
+class UserAccountRepo(reactiveMongoApi: ReactiveMongoApi)(using ec: ExecutionContext) extends MongoHealth {
   def collectionName: String = "user.account"
 
   def collection: IO[StorageCollection, BSONCollection] = reactiveMongoApi.database

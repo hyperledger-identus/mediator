@@ -154,9 +154,8 @@ The latest stable image version is available in the Hyperledger Identus-Mediator
 To build a docker image locally, run `NODE_OPTIONS=--openssl-legacy-provider sbt docker:publishLocal`.
 
 ```shell
-shell> cd atala-prism-mediator
 shell> NODE_OPTIONS=--openssl-legacy-provider sbt docker:publishLocal
-shell> MEDIATOR_VERSION=$(sbt "print mediator/version" --error) docker compose up
+shell> MEDIATOR_VERSION=?; docker compose up
 ```
 
 ### Configure the Mediator

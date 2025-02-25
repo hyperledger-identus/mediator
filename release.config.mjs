@@ -5,7 +5,9 @@ export default {
         { name: 'beta/*', prerelease: 'rc' }
     ],
     plugins: [
-        '@semantic-release/commit-analyzer',
+        ['@semantic-release/commit-analyzer', {
+            "preset": "conventionalcommits"
+        }],
         '@semantic-release/release-notes-generator',
         ["@semantic-release/changelog", {
             "changelogFile": "CHANGELOG.md"
@@ -20,7 +22,7 @@ export default {
             "prepareCmd": "NODE_OPTIONS=--openssl-legacy-provider sbt -J-Xmx5120m  \"release release-version ${nextRelease.version} with-defaults\""
         }],
         ["@semantic-release/exec", {
-            "prepareCmd": "docker buildx build --platform=linux/arm64,linux/amd64 --push -t ghcr.io/hyperledger/identus-mediator:${nextRelease.version} ./mediator/target/docker/stage"
+            "prepareCmd": "docker buildx build --platform=linux/arm64,linux/amd64 --push -t docker.io/hyperledgeridentus/identus-mediator:${nextRelease.version} ./mediator/target/docker/stage"
         }],
         ["@semantic-release/git", {
             "assets": [

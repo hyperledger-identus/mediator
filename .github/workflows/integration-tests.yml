@@ -56,12 +56,12 @@ jobs:
         with:
           node-version: "lts/*"
 
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ghcr.io
-          username: ${{ env.GITHUB_ACTOR }}
-          password: ${{ env.GITHUB_TOKEN }}
+      # - name: Login to GitHub Container Registry
+      #   uses: docker/login-action@v2
+      #   with:
+      #     registry: ghcr.io
+      #     username: ${{ env.GITHUB_ACTOR }}
+      #     password: ${{ env.GITHUB_TOKEN }}
 
       - name: Install Compose
         uses: ndeloof/install-compose-action@v0.0.1
@@ -73,10 +73,10 @@ jobs:
         env:
           NODE_OPTIONS: "--openssl-legacy-provider"
         run: |
-          sbt -mem 2048 -J-Xmx5120m docker:publishLocal
-          MEDIATOR_VERSION=$(cut version.sbt -d '=' -f2 | tr -d '" ')
-          echo "MEDIATOR_VERSION=${MEDIATOR_VERSION}"  >> $GITHUB_ENV
-          echo ${MEDIATOR_VERSION}
+          sbt -mem 2048 -J-Xmx5120m "set ThisBuild / version := \"tmp\"" docker:publishLocal
+          # MEDIATOR_VERSION=$(cut version.sbt -d '=' -f2 | tr -d '" ')
+          # echo "MEDIATOR_VERSION=${MEDIATOR_VERSION}"  >> $GITHUB_ENV
+          # echo ${MEDIATOR_VERSION}
       - name: Start Mediator
         uses: isbang/compose-action@v1.4.1
         with:
@@ -92,7 +92,7 @@ jobs:
           ./gradlew reports
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: e2e-tests-result
           path: ${{ env.REPORTS_DIR }}

@@ -40,7 +40,66 @@ object MediatorAgent {
         val data = req.headers.toSeq.map(e => (e.headerName, e.renderedValue))
         ZIO.succeed(Response.text("HEADERS:\n" + data.mkString("\n") + "\nRemoteAddress:" + req.remoteAddress)).debug
       },
-      Method.GET / "health" -> handler { (req: Request) => ZIO.succeed(Response.ok) },
+      Method.GET / "health" -> handler { (req: Request) =>
+        for {
+          userStatsFiber <- ZIO
+            .service[UserAccountRepo]
+            .flatMap(_.stats)
+            .timeout(5.seconds)
+            .either
+            .map {
+              case Right(Some(value)) => Right(s"Ok: $value")
+              case Right(None)        => Left(s"Error: timeout")
+              case Left(error)        => Left(s"Error: $error")
+            }
+            .fork
+          messageStatsFiber <- ZIO
+            .service[MessageItemRepo]
+            .flatMap(_.stats)
+            .timeout(5.seconds)
+            .either
+            .map {
+              case Right(Some(value)) => Right(s"Ok: $value")
+              case Right(None)        => Left(s"Error: timeout")
+              case Left(error)        => Left(s"Error: $error")
+            }
+            .fork
+          outboxStatsFiber <-
+            ZIO
+              .service[OutboxMessageRepo]
+              .flatMap(_.stats)
+              .timeout(5.seconds)
+              .either
+              .map {
+                case Right(Some(value)) => Right(s"Ok: $value")
+                case Right(None)        => Left(s"Error: timeout")
+                case Left(error)        => Left(s"Error: $error")
+              }
+              .fork
+          userStats <- userStatsFiber.join
+          messageStats <- messageStatsFiber.join
+          outboxStats <- outboxStatsFiber.join
+          services = Seq(userStats, messageStats, outboxStats)
+          ret <-
+            if (services.exists(_.isLeft)) {
+              // Response.serviceUnavailable( //This method does not work - BUG in ZIO http ?
+              ZIO.logWarning("health check fail!") *>
+                ZIO.succeed(
+                  Response(
+                    Status.ServiceUnavailable,
+                    Headers(Header.ContentType(MediaType.text.plain).untyped),
+                    Body.fromCharSequence(
+                      s"""Unable to connect to the Database collections:
+                     |UserAccountRepo=${userStats.merge}
+                     |MessageItemRepo=${messageStats.merge}
+                     |OutboxMessageRepo=${outboxStats.merge}
+                     |""".stripMargin.trim()
+                    )
+                  )
+                )
+            } else ZIO.succeed(Response.ok)
+        } yield ret
+      },
       Method.GET / "version" -> handler { (req: Request) => ZIO.succeed(Response.text(MediatorBuildInfo.version)) },
       Method.GET / "did" -> handler { (req: Request) =>
         for {

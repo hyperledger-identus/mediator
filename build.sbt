@@ -1,9 +1,11 @@
+import com.typesafe.sbt.packager.docker.Dockerfile
 resolvers ++= Resolver.sonatypeOssRepos("public")
 resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
 inThisBuild(
   Seq(
     scalaVersion := "3.3.3", // Also update docs/publishWebsite.sh and any ref to scala-3.3.3
+    versionScheme := Some("semver-spec"), // https://www.scala-sbt.org/1.x/docs/Publishing.html#Version+scheme
   )
 )
 
@@ -172,7 +174,7 @@ lazy val scalaJSBundlerConfigure: Project => Project =
       // Compile / fullOptJS / webpackExtraArgs += "--mode=production",
       Compile / fastOptJS / webpackDevServerExtraArgs += "--mode=development",
       Compile / fullOptJS / webpackDevServerExtraArgs += "--mode=production",
-      useYarn := true
+      // useYarn := true
     )
 
 lazy val buildInfoConfigure: Project => Project = _.enablePlugins(BuildInfoPlugin)
@@ -229,9 +231,10 @@ lazy val mediator = project
   .settings(
     Compile / mainClass := Some("org.hyperledger.identus.mediator.MediatorStandalone"),
     Docker / maintainer := "atala@iohk.io",
-    Docker / dockerUsername := Some("hyperledger"),
-    Docker / dockerRepository := Some("ghcr.io"),
+    Docker / dockerUsername := Some("hyperledgeridentus"),
+    Docker / dockerRepository := Some("docker.io"),
     Docker / packageName := "identus-mediator",
+    Docker / version := (Compile / version).value.replace("+", "_"),
     dockerExposedPorts := Seq(8080),
     dockerBaseImage := "openjdk:11",
     dockerUpdateLatest := true,

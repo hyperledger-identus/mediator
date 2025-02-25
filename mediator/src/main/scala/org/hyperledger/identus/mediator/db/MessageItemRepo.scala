@@ -22,7 +22,7 @@ object MessageItemRepo {
     }
 }
 
-class MessageItemRepo(reactiveMongoApi: ReactiveMongoApi)(using ec: ExecutionContext) {
+class MessageItemRepo(reactiveMongoApi: ReactiveMongoApi)(using ec: ExecutionContext) extends MongoHealth {
   def collectionName: String = "messages"
 
   def collection: IO[StorageCollection, BSONCollection] = reactiveMongoApi.database
