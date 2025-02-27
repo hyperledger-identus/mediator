@@ -8,8 +8,35 @@ import fmgp.did.*
 import fmgp.did.comm.*
 import fmgp.did.comm.protocol.oobinvitation.OOBInvitation
 import typings.qrcodeGenerator.anon.CellSize
+import scala.scalajs.js.Date
 
+@scala.scalajs.js.annotation.JSExportTopLevel("MediatorInfo")
 object MediatorInfo {
+
+  val divHealthCheck = div()
+
+  @scala.scalajs.js.annotation.JSExport
+  def healthCheck = HttpClient.runProgram {
+    HttpClient.healthCheck
+      .map(e =>
+        e.status match
+          case 200 =>
+            divHealthCheck.ref.replaceChildren(
+              div("Mediator status:", code("ok")).ref,
+              div(s"Status update at ${Date()}").ref,
+            )
+          case 503 =>
+            divHealthCheck.ref.replaceChildren(
+              div(styleAttr := "color:red;", "Status Warning:", code(e.body)).ref,
+              div(s"Mediator status update at ${Date()}").ref
+            )
+          case code =>
+            divHealthCheck.ref.replaceChildren(
+              div(s"Mediator with unexpected status code '$code' in health check").ref,
+              div(s"Status update at ${Date()}").ref
+            )
+      )
+  }
 
   val invitation = OOBInvitation(
     from = Global.mediatorDID,
@@ -33,10 +60,15 @@ object MediatorInfo {
 
   def apply(): HtmlElement = // rootElement
     div(
+      onMountCallback(ctx => healthCheck),
       h1("Invite for the DID Comm Mediator:"),
       div(
         h3("Mediator identity (DID):"),
         code(invitation.from.value),
+      ),
+      div(
+        h3("Mediator Health Check:"),
+        divHealthCheck,
       ),
       h3("Plaintext out of band invitation:"),
       p(a(href := fullPath, target := "_blank", code(qrCodeData))), // FIXME make it a link to the mobile app
