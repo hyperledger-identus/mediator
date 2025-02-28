@@ -155,7 +155,7 @@ stateDiagram-v2
   class mediation_granted grant
 ```
 
-Pickup 3.0 https://didcomm.org/pickup/3.0
+MessagePickup 3.0 https://didcomm.org/messagepickup/3.0/
 
 https://didcomm.org/messagepickup/3.0/status-request
 ```mermaid

@@ -6,7 +6,7 @@ It coordinates the mediation configuration between a mediating agent and the rec
 
 This protocol follows the request-response message exchange pattern, and only requerires the simple state of waiting for a response or to produce a response.
 
-For a detailed description of the protocol, please, see [Mediator Coordination v2.0](https://didcomm.org/mediator-coordination/2.0/).
+For a detailed description of the protocol, please, see [Mediator Coordination v2.0](https://didcomm.org/coordinate-mediation/2.0/).
 
 ## PIURI
 

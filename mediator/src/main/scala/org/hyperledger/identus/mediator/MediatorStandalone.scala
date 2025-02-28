@@ -67,12 +67,12 @@ object MediatorStandalone extends ZIOAppDefault {
         |██║ ╚═╝ ██║███████╗██████╔╝██║██║  ██║   ██║   ╚██████╔╝██║  ██║
         |╚═╝     ╚═╝╚══════╝╚═════╝ ╚═╝╚═╝  ╚═╝   ╚═╝    ╚═════╝ ╚═╝  ╚═╝
         |Yet another server simpler Mediator server DID Comm v2.
-        |Vist: https://github.com/hyperledger/identus-mediator""".stripMargin
+        |Visit: https://github.com/hyperledger-identus/mediator""".stripMargin
     )
     configs = ConfigProvider.fromResourcePath()
     mediatorConfig <- configs.nested("identity").nested("mediator").load(deriveConfig[MediatorConfig])
     agentLayer = mediatorConfig.agentLayer
-    _ <- ZIO.log(s"Identus Mediator APP. See https://github.com/hyperledger/identus-mediator")
+    _ <- ZIO.log(s"Identus Mediator APP. See https://github.com/hyperledger-identus/mediator")
     _ <- ZIO.log(s"MediatorConfig: $mediatorConfig")
     _ <- ZIO.log(s"DID: ${mediatorConfig.did.id.string}")
     mediatorDbConfig <- configs.nested("database").nested("mediator").load(deriveConfig[DataBaseConfig])
