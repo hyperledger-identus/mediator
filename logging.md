@@ -12,7 +12,6 @@ We have special annotations in the log so there is traceability between the diff
 Here is the list of annotations and their meaning that we currently have:
 
 - `request-id` - Is the HTTP header `X-Request-Id` from the caller.
-  - If this header is missing, it is create by the APISIX https://apisix.apache.org/docs/apisix/plugins/request-id/. See the configuration how to enable in the file [apisixroute.yaml](https://github.com/hyperledger-identus/mediator/blob/eb6d822f125bea7b3da8f[…]0a378/infrastructure/charts/mediator/templates/apisixroute.yaml)
 - `msg_sha256` - Is the Hash (sha256) of the DID Comm message
 
 ## Code

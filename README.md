@@ -1,6 +1,6 @@
-| Live Demo                        | Discord                          | Atala PRISM Website            |
-|----------------------------------|----------------------------------|--------------------------------|
-| [![Atala-Symbol]][Link-LiveDemo] | [![Badge-Discord]][Link-Discord] | [![Atala-Favicon]][Link-Atala] |
+| Live Demo                        | Discord Identus                          | Discord Linux Foundation Decentralized Trust |
+|----------------------------------|------------------------------------------|----------------------------------------------|
+| [![Atala-Symbol]][Link-LiveDemo] | [![Badge-Discord]][Link-Discord Identus] | [![Badge-Discord]][Link-Discord LFDT]        |
 
 | CI              | Project Stage  | Commits since latest release       |
 |-----------------|----------------|------------------------------------|
@@ -26,8 +26,8 @@ graph LR
 
 **#identus-mediator on Discord:**
 
-For the fastest answers, join the [#identus-mediator][Link-Discord] channel in the official Atala Discord and ask your
-questions, or chat with other Atala developers and pioneers!
+For the fastest answers, join the [#identus-mediator][Link-Discord Identus] channel in the official Identus Discord and ask your
+questions, or chat with other Identus developers and pioneers!
 
 **More documentation:**
 
@@ -101,10 +101,10 @@ can assume that the mediator is always online.
 ## Protocols
 
 - [DONE] `BasicMessage 2.0` - https://didcomm.org/basicmessage/2.0
-- [DONE] `MediatorCoordination 2.0` - https://didcomm.org/mediator-coordination/2.0
-- See [link for the protocol specs](/Coordinate-Mediation-Protocol.md)
-- [TODO] `MediatorCoordination 3.0` - https://didcomm.org/mediator-coordination/3.0
-- [DONE] `Pickup 3` - https://didcomm.org/pickup/3.0
+- [DONE] `CoordinateMediation 2.0` - https://didcomm.org/coordinate-mediation/2.0/
+- See [link for the protocol specs](Coordinate-Mediation-Protocol.md)
+- [TODO] `CoordinateMediation 3.0` - https://didcomm.org/coordinate-mediation/3.0
+- [DONE] `MessagePickup 3` - https://didcomm.org/messagepickup/3.0/
 - [DONE] `TrustPing 2.0` - https://didcomm.org/trust-ping/2.0/
 - [DONE] `Report Problem 2.0` https://didcomm.org/report-problem/2.0/
 
@@ -260,12 +260,13 @@ https://input-output-hk.github.io/didcomm-v2-mediator-test-suite/Reports.html
 ---
 [LICENSE](LICENSE) - Apache License, Version 2.0
 
+[Live-LiveDemo]:https://mediator.atalaprism.io/
 
-[Link-LiveDemo]:https://sandbox-mediator.atalaprism.io
+[Link-Identus]:https://github/hyperledger-identus/identus
 
-[Link-Atala]:https://atalaprism.io/
+[Link-Discord Identus]:https://discord.gg/25uWZtDJzH
 
-[Link-Discord]:https://discord.gg/atala
+[Link-Discord LFDT]:https://discord.gg/bN5CrUCdpj
 
 [Badge-Stage]: https://img.shields.io/badge/0.9.2-Production%20Ready-brightgreen.svg
 
