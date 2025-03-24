@@ -7,6 +7,8 @@ on:
   schedule:
     - cron: "0 20 * * *"
   workflow_dispatch:
+permissions:
+      contents: write # this permission is needed to submit the dependency graph
 jobs:
   dependency-graph:
     name: Update Dependency Graph
