@@ -1,18 +1,19 @@
 package org.hyperledger.identus.mediator
 
-import zio._
-import zio.json._
-import zio.stream._
-import zio.http._
-import zio.http.Header.{AccessControlAllowOrigin, AccessControlAllowMethods}
-
-import fmgp.crypto._
-import fmgp.crypto.error._
-import fmgp.did._
-import fmgp.did.comm._
-import fmgp.did.framework._
-import fmgp.did.method.peer.DidPeerResolver
+import fmgp.crypto.*
+import fmgp.crypto.error.*
+import fmgp.did.*
+import fmgp.did.comm.*
+import fmgp.did.framework.*
+import fmgp.did.framework.Transport
 import fmgp.did.method.peer.DIDPeer.AgentDIDPeer
+import fmgp.did.method.peer.DidPeerResolver
+import zio.*
+import zio.http.*
+import zio.http.Header.AccessControlAllowMethods
+import zio.http.Header.AccessControlAllowOrigin
+import zio.json.*
+import zio.stream.*
 
 object DIDCommRoutes {
 
@@ -50,11 +51,16 @@ object DIDCommRoutes {
               def transmissionType = Transport.TransmissionType.SingleTransmission
               def id: TransportID = TransportID.http(req.headers.get("request_id"))
               def inbound: ZStream[Any, Transport.InErr, SignedMessage | EncryptedMessage] =
-                ZStream.fromQueue(inboundQueue)
+                ZStream
+                  .fromQueue(inboundQueue)
+                  .timeout(10.seconds)
+                  .ensuring(inboundQueue.shutdown)
               def outbound: ZSink[Any, Transport.OutErr, SignedMessage | EncryptedMessage, Nothing, Unit] =
-                ZSink.fromQueue(outboundQueue)
+                ZSink
+                  .fromQueue(outboundQueue)
+                  .ensuring(outboundQueue.shutdown)
 
-              // TODO def close = inboundQueue.shutdown <&> outboundQueue.shutdown
+              def close = inboundQueue.shutdown <&> outboundQueue.shutdown
             }
             operator <- ZIO.service[Operator]
             fiber <- operator.receiveTransport(transport).fork
@@ -69,8 +75,8 @@ object DIDCommRoutes {
                 case Some(msg: EncryptedMessage) =>
                   Response(Status.Ok, Headers(MediaTypes.ENCRYPTED.asContentType), Body.fromCharSequence(msg.toJson))
               }
-            shutdown <- inboundQueue.shutdown <&> outboundQueue.shutdown
-            _ <- fiber.join
+            _ <- fiber.interrupt.fork
+            _ <- inboundQueue.shutdown <&> outboundQueue.shutdown
           } yield ret)
             .tapErrorCause(ZIO.logErrorCause("Error", _))
             .catchAllCause(cause => ZIO.succeed(Response.fromCause(cause)))
