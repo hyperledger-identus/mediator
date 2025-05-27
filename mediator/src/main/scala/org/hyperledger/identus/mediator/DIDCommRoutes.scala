@@ -59,7 +59,7 @@ object DIDCommRoutes {
                 ZSink
                   .fromQueue(outboundQueue)
                   .ensuring(outboundQueue.shutdown)
-              // def close = inboundQueue.shutdown <&> outboundQueue.shutdown
+              // TODO def close = inboundQueue.shutdown <&> outboundQueue.shutdown
             }
             operator <- ZIO.service[Operator]
             fiber <- operator.receiveTransport(transport).fork
