@@ -53,7 +53,6 @@ object DIDCommRoutes {
               def inbound: ZStream[Any, Transport.InErr, SignedMessage | EncryptedMessage] =
                 ZStream
                   .fromQueue(inboundQueue)
-                  .timeout(10.seconds)
                   .ensuring(inboundQueue.shutdown)
               def outbound: ZSink[Any, Transport.OutErr, SignedMessage | EncryptedMessage, Nothing, Unit] =
                 ZSink
