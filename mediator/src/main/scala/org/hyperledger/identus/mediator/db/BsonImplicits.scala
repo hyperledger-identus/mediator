@@ -5,9 +5,9 @@ import fmgp.did.*
 import fmgp.did.comm.*
 import fmgp.did.comm.extension.*
 import fmgp.util.*
+import reactivemongo.api.bson.*
 import zio.json.*
 import zio.json.ast.Json
-import reactivemongo.api.bson.*
 
 import scala.util.*
 
@@ -160,25 +160,24 @@ given BSONReader[MediaTypes] with {
 given BSONDocumentWriter[PublicKey] with {
   override def writeTry(obj: PublicKey): Try[BSONDocument] =
     obj match {
-      case ECPublicKey(kty, crv, x, y, kid) =>
+      case key: ECPublicKey =>
         Try(
           BSONDocument(
-            "kty" -> kty,
-            "crv" -> crv,
-            "x" -> x,
-            "y" -> y,
-            "kid" -> kid,
+            "kty" -> key.kty,
+            "crv" -> key.crv,
+            "x" -> key.x,
+            "y" -> key.y
           )
         )
-      case OKPPublicKey(kty, crv, x, kid) =>
+      case key: OKPPublicKey =>
         Try(
           BSONDocument(
-            "kty" -> kty,
-            "crv" -> crv,
-            "x" -> x,
-            "kid" -> kid,
+            "kty" -> key.kty,
+            "crv" -> key.crv,
+            "x" -> key.x
           )
         )
+      case null => Failure(new RuntimeException("PublicKey cannot be null"))
     }
 }
 given BSONDocumentReader[PublicKey] with {
@@ -195,9 +194,9 @@ given BSONDocumentReader[PublicKey] with {
             Success(
               OKPPublicKey(
                 kty = KTY.OKP,
-                crv = crv,
+                crv = crv.asOKPCurve,
                 x = x,
-                kid = doc.getAsOpt[String]("kid")
+                kid = doc.getAsOpt[String]("kid").orNull
               )
             )
           case (Failure(ex), _) => Failure(ex)
@@ -212,10 +211,10 @@ given BSONDocumentReader[PublicKey] with {
             Success(
               ECPublicKey(
                 kty = KTY.EC,
-                crv = crv,
+                crv = crv.asECCurve,
                 x = x,
                 y = y,
-                kid = doc.getAsOpt[String]("kid")
+                kid = doc.getAsOpt[String]("kid").orNull
               )
             )
           case (Failure(ex), _, _) => Failure(ex)
@@ -264,11 +263,11 @@ given BSONReader[Payload] with {
   def readTry(bson: BSONValue): Try[Payload] = bson.asTry[String].map(v => Payload.fromBase64url(v))
 }
 
-given BSONWriter[SigningAlgorithm] with {
-  def writeTry(obj: SigningAlgorithm): Try[BSONValue] = Try(BSONString(obj.toString()))
+given BSONWriter[JWAAlgorithm] with {
+  def writeTry(obj: JWAAlgorithm): Try[BSONValue] = Try(BSONString(obj.toString()))
 }
-given BSONReader[SigningAlgorithm] with {
-  def readTry(bson: BSONValue): Try[SigningAlgorithm] = bson.asTry[String].map(v => SigningAlgorithm.valueOf(v))
+given BSONReader[JWAAlgorithm] with {
+  def readTry(bson: BSONValue): Try[JWAAlgorithm] = bson.asTry[String].map(v => JWAAlgorithm.valueOf(v))
 }
 
 given BSONDocumentWriter[SignProtectedHeader] = Macros.writer[SignProtectedHeader]
