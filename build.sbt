@@ -4,7 +4,7 @@ resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
 inThisBuild(
   Seq(
-    scalaVersion := "3.3.3", // Also update docs/publishWebsite.sh and any ref to scala-3.3.3
+    scalaVersion := "3.3.6", // Also update docs/publishWebsite.sh and any ref to scala-3.3.3
     versionScheme := Some("semver-spec"), // https://www.scala-sbt.org/1.x/docs/Publishing.html#Version+scheme
   )
 )
@@ -251,7 +251,7 @@ lazy val mediator = project
     // pipelineStages ++= Seq(digest, gzip), //Compression - If you serve your Scala.js application from a web server, you should additionally gzip the resulting .js files.
     Compile / unmanagedResourceDirectories += baseDirectory.value / "src" / "main" / "extra-resources",
     // Compile / unmanagedResourceDirectories += (baseDirectory.value.toPath.getParent.getParent / "docs-build" / "target" / "mdoc").toFile,
-    // Compile / unmanagedResourceDirectories += (baseDirectory.value.toPath.getParent.getParent / "serviceworker" / "target" / "scala-3.3.3" / "fmgp-serviceworker-fastopt").toFile,
+    // Compile / unmanagedResourceDirectories += (baseDirectory.value.toPath.getParent.getParent / "serviceworker" / "target" / "scala-3.3.6" / "fmgp-serviceworker-fastopt").toFile,
     Compile / compile := ((Compile / compile) dependsOn scalaJSPipeline).value,
     // Frontend dependency configuration
     Assets / WebKeys.packagePrefix := "public/",
