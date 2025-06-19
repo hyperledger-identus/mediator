@@ -363,7 +363,7 @@ given BSONReader[FROM] with {
 }
 
 //JSON_RFC7159
-def sequenceTrys[T](trySequence: Seq[_ <: Try[_ <: T]]): Try[Seq[T]] = {
+def sequenceTrys[T](trySequence: Seq[? <: Try[? <: T]]): Try[Seq[T]] = {
   trySequence.foldLeft(Try(Seq.empty[T])) { (acc, tryElement) =>
     acc.flatMap(accSeq => tryElement.map(success => accSeq :+ success))
   }
@@ -379,8 +379,8 @@ def toBSON(j: Json): Try[BSONValue] = j match
 
 def toJson(b: BSONValue): Try[Json] = b match
   case doc: BSONDocument =>
-    sequenceTrys(doc.toMap.toSeq.map(e => toJson(e._2).map(e2 => (e._1, e2)))).map(Json.Obj(_: _*))
-  case array: BSONArray => sequenceTrys(array.values.map(toJson(_))).map(Json.Arr(_: _*))
+    sequenceTrys(doc.toMap.toSeq.map(e => toJson(e._2).map(e2 => (e._1, e2)))).map(Json.Obj(_*))
+  case array: BSONArray => sequenceTrys(array.values.map(toJson(_))).map(Json.Arr(_*))
   case e: BSONDouble    => e.toDouble.map(Json.Num(_))
   case e: BSONInteger   => e.toDouble.map(Json.Num(_))
   case e: BSONLong      => e.toDouble.map(Json.Num(_))
@@ -407,7 +407,7 @@ given BSONWriter[JSON_RFC7159] with {
 given BSONReader[JSON_RFC7159] with {
   def readTry(bson: BSONValue): Try[JSON_RFC7159] =
     bson.asTry[BSONDocument].flatMap { doc =>
-      sequenceTrys(doc.toMap.toSeq.map(e => toJson(e._2).map(e2 => (e._1, e2)))).map(Json.Obj(_: _*))
+      sequenceTrys(doc.toMap.toSeq.map(e => toJson(e._2).map(e2 => (e._1, e2)))).map(Json.Obj(_*))
     }
 }
 

@@ -4,7 +4,7 @@ resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
 inThisBuild(
   Seq(
-    scalaVersion := "3.3.6", // Also update docs/publishWebsite.sh and any ref to scala-3.3.3
+    scalaVersion := "3.6.4", // Also update docs/publishWebsite.sh and any ref to scala-3.6.3
     versionScheme := Some("semver-spec"), // https://www.scala-sbt.org/1.x/docs/Publishing.html#Version+scheme
   )
 )
@@ -30,7 +30,7 @@ lazy val V = new {
   val logback = "1.5.6"
   val logstash = "7.4"
   val jansi = "2.4.1"
-  val mongo = "1.1.0-RC10"
+  val mongo = "1.1.0-RC15"
   val embedMongo = "4.14.0"
   val munitZio = "0.1.1"
   val zioTest = "2.1.5"
