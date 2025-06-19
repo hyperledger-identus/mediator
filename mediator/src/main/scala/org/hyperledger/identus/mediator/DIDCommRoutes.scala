@@ -1,23 +1,23 @@
 package org.hyperledger.identus.mediator
 
-import zio._
-import zio.json._
-import zio.stream._
-import zio.http._
-import zio.http.Header.{AccessControlAllowOrigin, AccessControlAllowMethods}
-
-import fmgp.crypto._
-import fmgp.crypto.error._
-import fmgp.did._
-import fmgp.did.comm._
-import fmgp.did.framework._
-import fmgp.did.method.peer.DidPeerResolver
+import fmgp.crypto.*
+import fmgp.crypto.error.*
+import fmgp.did.*
+import fmgp.did.comm.*
+import fmgp.did.framework.*
 import fmgp.did.method.peer.DIDPeer.AgentDIDPeer
+import fmgp.did.method.peer.DidPeerResolver
+import zio.*
+import zio.http.*
+import zio.http.Header.AccessControlAllowMethods
+import zio.http.Header.AccessControlAllowOrigin
+import zio.json.*
+import zio.stream.*
 
 object DIDCommRoutes {
 
-  def app: HttpApp[Operator & Operations & Resolver & Scope] = routes.@@(TraceIdMiddleware.addTraceId).toHttpApp
-
+  def app: Routes[Operator & Operations & Resolver, Nothing] =
+    routes @@ TraceIdMiddleware.addTraceId
   def routes: Routes[Operator & Operations & Resolver, Nothing] = Routes(
     Method.GET / "ws" -> handler { (req: Request) =>
       for {
@@ -74,7 +74,8 @@ object DIDCommRoutes {
           } yield ret)
             .tapErrorCause(ZIO.logErrorCause("Error", _))
             .catchAllCause(cause => ZIO.succeed(Response.fromCause(cause)))
-        case Some(_) | None => ZIO.succeed(Response.badRequest(s"The content-type must be $SignedTyp or $EncryptedTyp"))
+        case Some(_) | None =>
+          ZIO.succeed(Response.badRequest(s"The content-type must be $SignedTyp or $EncryptedTyp"))
     },
   )
 }

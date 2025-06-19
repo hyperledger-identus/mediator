@@ -7,21 +7,22 @@ import fmgp.did.comm.*
 import fmgp.did.comm.protocol.*
 import fmgp.did.comm.protocol.oobinvitation.OOBInvitation
 import fmgp.did.comm.protocol.reportproblem2.ProblemReport
+import io.netty.handler.codec.http.HttpHeaderNames
 import org.hyperledger.identus.mediator.*
 import org.hyperledger.identus.mediator.db.*
 import org.hyperledger.identus.mediator.protocols.*
-import io.netty.handler.codec.http.HttpHeaderNames
 import reactivemongo.api.bson.{*, given}
 import zio.*
 import zio.http.*
+import zio.http.*
+import zio.http.Header.AccessControlAllowMethods
+import zio.http.Header.AccessControlAllowOrigin
+import zio.http.Header.HeaderType
 import zio.json.*
 
 import scala.concurrent.ExecutionContext.Implicits.global
-import scala.util.Try
 import scala.io.Source
-import zio.http.Header.AccessControlAllowOrigin
-import zio.http.Header.AccessControlAllowMethods
-import zio.http.Header.HeaderType
+import scala.util.Try
 
 case class MediatorAgent(
     override val id: DID,
@@ -30,7 +31,8 @@ case class MediatorAgent(
 
 object MediatorAgent {
 
-  def didCommApp = didCommAppAux.@@(TraceIdMiddleware.addTraceId).toHttpApp
+  def didCommApp =
+    didCommAppAux @@ TraceIdMiddleware.addTraceId
 
   def make(id: DID, keyStore: KeyStore): ZIO[Any, Nothing, MediatorAgent] = ZIO.succeed(MediatorAgent(id, keyStore))
 

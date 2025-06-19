@@ -208,7 +208,7 @@ object PickupExecuterSpec extends ZIOSpecDefault with DidAccountStubSetup with M
   }
     .provideSomeLayer(MediatorTransportManagerUtil.layerTest)
     .provideSomeLayer(DidPeerResolver.layerDidPeerResolver)
-    .provideSomeLayer(Operations.layerDefault)
+    .provideSomeLayer(Operations.layerOperations)
     .provideSomeLayer(DidPeerResolver.layerDidPeerResolver)
     .provideSomeLayer(AgentStub.agentLayer)
     .provideSomeLayer(ZLayer.succeed(TransportUtil.newTransportEmpty))

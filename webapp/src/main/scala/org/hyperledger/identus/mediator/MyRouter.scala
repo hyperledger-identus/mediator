@@ -1,9 +1,9 @@
 package org.hyperledger.identus.mediator
 
-import com.raquo.laminar.api.L.{_, given}
-import com.raquo.waypoint._
+import com.raquo.laminar.api.L.{*, given}
+import com.raquo.waypoint.*
 import org.scalajs.dom
-import upickle.default._
+import upickle.default.*
 
 object MyRouter {
   sealed abstract class Page(
@@ -25,8 +25,8 @@ object MyRouter {
   val router = new Router[Page](
     routes = routes,
     getPageTitle = _.title, // displayed in the browser tab next to favicon
-    serializePage = page => write(page)(rw), // serialize page data for storage in History API log
-    deserializePage = pageStr => read(pageStr)(rw), // deserialize the above
+    serializePage = page => write(page)(using rw), // serialize page data for storage in History API log
+    deserializePage = pageStr => read(pageStr)(using rw), // deserialize the above
     // routeFallback = { (_: String) => HomePage },
     routeFallback = { (_: String) => MediatorPage },
   )(

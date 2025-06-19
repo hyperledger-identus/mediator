@@ -1,5 +1,5 @@
 package org.hyperledger.identus.mediator.db
-import fmgp.crypto.{Curve, KTY, OKPPrivateKey}
+import fmgp.crypto.{Curve, KTY, OKPPrivateKey, OKPPrivateKeyWithoutKid}
 import fmgp.did.Agent
 import fmgp.did.comm.EncryptedMessage
 import fmgp.did.method.peer.{DIDPeer2, DIDPeerServiceEncoded}
@@ -10,11 +10,11 @@ import java.net.URI
 
 object AgentStub {
 
-  def keyAgreement(d: String, x: String): OKPPrivateKey =
-    OKPPrivateKey(kty = KTY.OKP, crv = Curve.X25519, d = d, x = x, kid = None)
+  def keyAgreement(d: String, x: String): OKPPrivateKeyWithoutKid =
+    OKPPrivateKeyWithoutKid(kty = KTY.OKP, crv = Curve.X25519, d = d, x = x)
 
-  def keyAuthentication(d: String, x: String): OKPPrivateKey =
-    OKPPrivateKey(kty = KTY.OKP, crv = Curve.Ed25519, d = d, x = x, kid = None)
+  def keyAuthentication(d: String, x: String): OKPPrivateKeyWithoutKid =
+    OKPPrivateKeyWithoutKid(kty = KTY.OKP, crv = Curve.Ed25519, d = d, x = x)
 
   val endpoints = "http://localhost:8080"
   val mediatorConfig = MediatorConfig(
