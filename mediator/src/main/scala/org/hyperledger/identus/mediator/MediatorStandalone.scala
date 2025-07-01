@@ -1,16 +1,17 @@
 package org.hyperledger.identus.mediator
 
 import fmgp.crypto.*
+import fmgp.crypto.OKPPrivateKey.*
+import fmgp.crypto.OKPPrivateKeyWithKid.*
 import fmgp.crypto.error.*
 import fmgp.did.*
 import fmgp.did.comm.*
 import fmgp.did.comm.protocol.*
-import fmgp.did.method.peer.*
 import fmgp.did.framework.TransportFactoryImp
+import fmgp.did.method.peer.*
 import org.hyperledger.identus.mediator.db.*
 import org.hyperledger.identus.mediator.protocols.*
 import zio.*
-import zio.stream.*
 import zio.config.*
 import zio.config.magnolia.*
 import zio.config.typesafe.*
@@ -19,10 +20,39 @@ import zio.json.*
 import zio.logging.*
 import zio.logging.LogFormat.*
 import zio.logging.backend.SLF4J
+import zio.stream.*
 
 import java.time.format.DateTimeFormatter
 import scala.io.Source
-case class MediatorConfig(endpoints: String, keyAgreement: OKPPrivateKey, keyAuthentication: OKPPrivateKey) {
+
+object CurveConfig:
+
+  // Config for OKPCurve union type
+  given okpCurveConfig: Config[OKPCurve] =
+    Config.string.mapOrFail:
+      case "X25519"  => Right(Curve.X25519)
+      case "Ed25519" => Right(Curve.Ed25519)
+      case other => Left(Config.Error.InvalidData(message = s"Invalid OKP curve: $other. Expected X25519 or Ed25519"))
+
+  // Config for ECCurve union type
+  given ecCurveConfig: Config[ECCurve] =
+    Config.string.mapOrFail:
+      case "P-256"     => Right(Curve.`P-256`)
+      case "P-384"     => Right(Curve.`P-384`)
+      case "P-521"     => Right(Curve.`P-521`)
+      case "secp256k1" => Right(Curve.secp256k1)
+      case other =>
+        Left(
+          Config.Error.InvalidData(message = s"Invalid EC curve: $other. Expected P-256, P-384, P-521, or secp256k1")
+        )
+
+import CurveConfig.given
+
+case class MediatorConfig(
+    endpoints: String,
+    keyAgreement: OKPPrivateKeyWithoutKid,
+    keyAuthentication: OKPPrivateKeyWithoutKid
+) {
   val did = DIDPeer2.makeAgent(
     Seq(keyAgreement, keyAuthentication),
     endpoints
@@ -34,6 +64,7 @@ case class MediatorConfig(endpoints: String, keyAgreement: OKPPrivateKey, keyAut
   val agentLayer: ZLayer[Any, Nothing, MediatorAgent] =
     ZLayer(MediatorAgent.make(id = did.id, keyStore = did.keyStore))
 }
+
 case class DataBaseConfig(
     protocol: String,
     host: String,
@@ -97,9 +128,8 @@ object MediatorStandalone extends ZIOAppDefault {
       .provideSomeLayer(DidPeerResolver.layerDidPeerResolver)
       .provideSomeLayer(agentLayer)
       .provideSomeLayer(repos)
-      .provideSomeLayer((agentLayer ++ transportFactory ++ repos ++ Scope.default) >>> OperatorImp.layer)
-      .provideSomeLayer(Operations.layerDefault)
-      .provideSomeLayer(Scope.default)
+      .provideSomeLayer(Scope.default >>> ((agentLayer ++ transportFactory ++ repos) >>> OperatorImp.layer))
+      .provideSomeLayer(Operations.layerOperations)
       .provide(Server.defaultWithPort(port))
       .debug
       .fork
