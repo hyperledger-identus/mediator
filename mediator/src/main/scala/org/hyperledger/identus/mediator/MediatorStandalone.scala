@@ -66,6 +66,7 @@ case class MediatorConfig(
 }
 
 case class DataBaseConfig(
+    connectionString: Option[String],
     protocol: String,
     host: String,
     port: Option[String],
@@ -74,9 +75,18 @@ case class DataBaseConfig(
     dbName: String
 ) {
   private def maybePort = port.filter(_.nonEmpty).map(":" + _).getOrElse("")
-  val connectionString = s"$protocol://$userName:$password@$host$maybePort/$dbName"
-  val displayConnectionString = s"$protocol://$userName:******@$host$maybePort/$dbName"
-  override def toString: String = s"""DataBaseConfig($protocol, $host, $port, $userName, "******", $dbName)"""
+  private def buildConnectionString = s"$protocol://$userName:$password@$host$maybePort/$dbName"
+  
+  // Use provided connection string if available, otherwise construct from components
+  val finalConnectionString = connectionString.getOrElse(buildConnectionString)
+  
+  // Display connection string with masked password
+  val displayConnectionString = connectionString match {
+    case Some(connStr) => connStr.replaceAll("://[^:]*:[^@]*@", "://***:***@") // Mask credentials in URI
+    case None => s"$protocol://$userName:******@$host$maybePort/$dbName"
+  }
+  
+  override def toString: String = s"""DataBaseConfig($connectionString, $protocol, $host, $port, $userName, "******", $dbName)"""
 }
 
 object MediatorStandalone extends ZIOAppDefault {
@@ -121,7 +131,7 @@ object MediatorStandalone extends ZIOAppDefault {
       .load(Config.string("escalateTo"))
     _ <- ZIO.log(s"Problem reports escalated to: $escalateTo")
     transportFactory = Scope.default >>> (Client.default >>> TransportFactoryImp.layer)
-    mongo = AsyncDriverResource.layer >>> ReactiveMongoApi.layer(mediatorDbConfig.connectionString)
+    mongo = AsyncDriverResource.layer >>> ReactiveMongoApi.layer(mediatorDbConfig.finalConnectionString)
     repos = mongo >>> (MessageItemRepo.layer ++ UserAccountRepo.layer ++ OutboxMessageRepo.layer)
     myServer <- Server
       .serve((MediatorAgent.didCommApp ++ DIDCommRoutes.app) @@ (Middleware.cors))
