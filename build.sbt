@@ -238,7 +238,7 @@ lazy val mediator = project
     Docker / packageName := "identus-mediator",
     Docker / version := (Compile / version).value.replace("+", "_"),
     dockerExposedPorts := Seq(8080),
-    dockerBaseImage := "openjdk:11",
+    dockerBaseImage := "openjdk:17",
     dockerUpdateLatest := true,
   )
   .settings(Test / parallelExecution := false)
@@ -252,8 +252,6 @@ lazy val mediator = project
     Assets / pipelineStages := Seq(scalaJSPipeline, gzip),
     // pipelineStages ++= Seq(digest, gzip), //Compression - If you serve your Scala.js application from a web server, you should additionally gzip the resulting .js files.
     Compile / unmanagedResourceDirectories += baseDirectory.value / "src" / "main" / "extra-resources",
-    // Compile / unmanagedResourceDirectories += (baseDirectory.value.toPath.getParent.getParent / "docs-build" / "target" / "mdoc").toFile,
-    // Compile / unmanagedResourceDirectories += (baseDirectory.value.toPath.getParent.getParent / "serviceworker" / "target" / "scala-3.3.3" / "fmgp-serviceworker-fastopt").toFile,
     Compile / compile := ((Compile / compile) dependsOn scalaJSPipeline).value,
     // Frontend dependency configuration
     Assets / WebKeys.packagePrefix := "public/",
