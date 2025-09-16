@@ -2,7 +2,7 @@ package org.hyperledger.identus.mediator.protocols
 
 import fmgp.did.comm.protocol.reportproblem2.*
 import fmgp.did.comm.protocol.*
-import fmgp.did.comm.{EncryptedMessage, Operations, PlaintextMessage, SignedMessage, layerDefault}
+import fmgp.did.comm.{EncryptedMessage, Operations, PlaintextMessage, SignedMessage, layerOperations}
 import fmgp.did.method.peer.DidPeerResolver
 import fmgp.util.Base64
 import org.hyperledger.identus.mediator.MediatorTransportManager
@@ -60,7 +60,7 @@ object ForwardMessageExecutorSpec extends ZIOSpecDefault with DidAccountStubSetu
   )
     .provideSomeLayer(org.hyperledger.identus.mediator.MediatorTransportManagerUtil.layerTest)
     .provideSomeLayer(DidPeerResolver.layerDidPeerResolver)
-    .provideSomeLayer(Operations.layerDefault)
+    .provideSomeLayer(Operations.layerOperations)
     .provideSomeLayer(DidPeerResolver.layerDidPeerResolver)
     .provideSomeLayer(AgentStub.agentLayer)
     .provideLayerShared(dataAccessLayer) @@ TestAspect.sequential

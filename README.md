@@ -191,6 +191,12 @@ To set up the mediator storage (MongoDB):
 - `MONGODB_PASSWORD` - is the password used by the Mediator service to connect to the database.
 - `MONGODB_DB_NAME` - is the name of the database used by the Mediator.
 
+This is will the form the connection uri for MongoDBL `<protocol>://<username>:<password>@<host><port>/<dbName>`.
+
+OR it can be set up with the variable:
+
+- `MONGODB_CONNECTION_STRING` - is the connection uri for MongoDB. If present it has precedence over the above variables.
+
 #### Mediator storage
 
 - The `messages` collection contains two types of messages: `Mediator` and `User`.
