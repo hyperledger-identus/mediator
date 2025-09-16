@@ -11,7 +11,7 @@ inThisBuild(
 
 /** Versions */
 lazy val V = new {
-  val scalaDID = "0.1.0-M26"
+  val scalaDID = "0.1.0-M28"
 
   // FIXME another bug in the test framework https://github.com/scalameta/munit/issues/554
   val munit = "1.0.0" // "0.7.29"
@@ -21,26 +21,26 @@ lazy val V = new {
 
 //   // https://mvnrepository.com/artifact/dev.zio/zio
   val zio = "2.1.5"
-  val zioJson = "0.7.42"
+  val zioJson = "0.7.44"
   // val zioMunitTest = "0.1.1"
-  val zioHttp = "3.3.3"
-  val zioConfig = "4.0.4"
-  val zioLogging = "2.2.4"
+  val zioHttp = "3.5.1"
+  val zioConfig = "4.0.5"
+  val zioLogging = "2.5.1"
   val zioSl4j = "2.2.2"
-  val logback = "1.5.6"
-  val logstash = "7.4"
-  val jansi = "2.4.1"
+  val logback = "1.5.18"
+  val logstash = "8.1"
+  val jansi = "2.4.2"
   val mongo = "1.1.0-RC15"
   val embedMongo = "4.14.0"
   val munitZio = "0.1.1"
-  val zioTest = "2.1.5"
-  val zioTestSbt = "2.1.5"
-  val zioTestMagnolia = "2.1.5"
+  val zioTest = "2.1.21"
+  val zioTestSbt = "2.1.21"
+  val zioTestMagnolia = "2.1.21"
 
   // For WEBAPP
-  val laminar = "17.0.0"
+  val laminar = "17.2.1"
   val waypoint = "7.0.0"
-  val upickle = "3.3.1"
+  val upickle = "4.3.2"
   // https://www.npmjs.com/package/material-components-web
   val materialComponents = "12.0.0"
 }
@@ -238,7 +238,7 @@ lazy val mediator = project
     Docker / packageName := "identus-mediator",
     Docker / version := (Compile / version).value.replace("+", "_"),
     dockerExposedPorts := Seq(8080),
-    dockerBaseImage := "openjdk:11",
+    dockerBaseImage := "openjdk:17",
     dockerUpdateLatest := true,
   )
   .settings(Test / parallelExecution := false)
@@ -252,8 +252,6 @@ lazy val mediator = project
     Assets / pipelineStages := Seq(scalaJSPipeline, gzip),
     // pipelineStages ++= Seq(digest, gzip), //Compression - If you serve your Scala.js application from a web server, you should additionally gzip the resulting .js files.
     Compile / unmanagedResourceDirectories += baseDirectory.value / "src" / "main" / "extra-resources",
-    // Compile / unmanagedResourceDirectories += (baseDirectory.value.toPath.getParent.getParent / "docs-build" / "target" / "mdoc").toFile,
-    // Compile / unmanagedResourceDirectories += (baseDirectory.value.toPath.getParent.getParent / "serviceworker" / "target" / "scala-3.3.3" / "fmgp-serviceworker-fastopt").toFile,
     Compile / compile := ((Compile / compile) dependsOn scalaJSPipeline).value,
     // Frontend dependency configuration
     Assets / WebKeys.packagePrefix := "public/",
