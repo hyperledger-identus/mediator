@@ -1,20 +1,19 @@
 package org.hyperledger.identus.mediator
 
-import org.scalajs.dom
 import com.raquo.laminar.api.L.*
-import typings.qrcodeGenerator
-import zio.json.*
 import fmgp.did.*
 import fmgp.did.comm.*
 import fmgp.did.comm.protocol.oobinvitation.OOBInvitation
+import org.scalajs.dom
+import typings.qrcodeGenerator
 import typings.qrcodeGenerator.anon.CellSize
+import zio.json.*
+
 import scala.scalajs.js.Date
 
 @scala.scalajs.js.annotation.JSExportTopLevel("MediatorInfo")
 object MediatorInfo {
-
   val divHealthCheck = div()
-
   @scala.scalajs.js.annotation.JSExport
   def healthCheck = HttpClient.runProgram {
     HttpClient.healthCheck
