@@ -4,14 +4,14 @@ resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
 inThisBuild(
   Seq(
-    scalaVersion := "3.3.3", // Also update docs/publishWebsite.sh and any ref to scala-3.3.3
+    scalaVersion := "3.6.4", // Also update docs/publishWebsite.sh and any ref to scala-3.6.3
     versionScheme := Some("semver-spec"), // https://www.scala-sbt.org/1.x/docs/Publishing.html#Version+scheme
   )
 )
 
 /** Versions */
 lazy val V = new {
-  val scalaDID = "0.1.0-M19"
+  val scalaDID = "0.1.0-M28"
 
   // FIXME another bug in the test framework https://github.com/scalameta/munit/issues/554
   val munit = "1.0.0" // "0.7.29"
@@ -21,26 +21,26 @@ lazy val V = new {
 
 //   // https://mvnrepository.com/artifact/dev.zio/zio
   val zio = "2.1.5"
-  val zioJson = "0.7.1"
+  val zioJson = "0.7.44"
   // val zioMunitTest = "0.1.1"
-  val zioHttp = "3.0.0-RC6"
-  val zioConfig = "4.0.1"
-  val zioLogging = "2.2.4"
+  val zioHttp = "3.5.1"
+  val zioConfig = "4.0.5"
+  val zioLogging = "2.5.1"
   val zioSl4j = "2.2.2"
   val logback = "1.5.18"
-  val logstash = "7.4"
-  val jansi = "2.4.1"
-  val mongo = "1.1.0-RC10"
+  val logstash = "8.1"
+  val jansi = "2.4.2"
+  val mongo = "1.1.0-RC15"
   val embedMongo = "4.14.0"
   val munitZio = "0.1.1"
-  val zioTest = "2.1.5"
-  val zioTestSbt = "2.1.5"
-  val zioTestMagnolia = "2.1.5"
+  val zioTest = "2.1.21"
+  val zioTestSbt = "2.1.21"
+  val zioTestMagnolia = "2.1.21"
 
   // For WEBAPP
-  val laminar = "17.0.0"
+  val laminar = "17.2.1"
   val waypoint = "7.0.0"
-  val upickle = "3.3.1"
+  val upickle = "4.3.2"
   // https://www.npmjs.com/package/material-components-web
   val materialComponents = "12.0.0"
 }
@@ -51,6 +51,7 @@ lazy val D = new {
   val scalaDID_imp = Def.setting("app.fmgp" %%% "did-imp" % V.scalaDID)
   val scalaDID_peer = Def.setting("app.fmgp" %%% "did-method-peer" % V.scalaDID)
   val scalaDID_framework = Def.setting("app.fmgp" %%% "did-framework" % V.scalaDID)
+  val scalaDID_protocols = Def.setting("app.fmgp" %%% "did-comm-protocols" % V.scalaDID)
 
 //   /** The [[java.security.SecureRandom]] is used by the [[java.util.UUID.randomUUID()]] method in [[MsgId]].
 //     *
@@ -207,6 +208,7 @@ lazy val mediator = project
     libraryDependencies += D.scalaDID_imp.value,
     libraryDependencies += D.scalaDID_peer.value,
     libraryDependencies += D.scalaDID_framework.value,
+    libraryDependencies += D.scalaDID_protocols.value,
     libraryDependencies += D.zioHttp.value,
     libraryDependencies ++= Seq(
       D.zioConfig.value,
@@ -236,7 +238,7 @@ lazy val mediator = project
     Docker / packageName := "identus-mediator",
     Docker / version := (Compile / version).value.replace("+", "_"),
     dockerExposedPorts := Seq(8080),
-    dockerBaseImage := "openjdk:11",
+    dockerBaseImage := "openjdk:17",
     dockerUpdateLatest := true,
   )
   .settings(Test / parallelExecution := false)
@@ -250,8 +252,6 @@ lazy val mediator = project
     Assets / pipelineStages := Seq(scalaJSPipeline, gzip),
     // pipelineStages ++= Seq(digest, gzip), //Compression - If you serve your Scala.js application from a web server, you should additionally gzip the resulting .js files.
     Compile / unmanagedResourceDirectories += baseDirectory.value / "src" / "main" / "extra-resources",
-    // Compile / unmanagedResourceDirectories += (baseDirectory.value.toPath.getParent.getParent / "docs-build" / "target" / "mdoc").toFile,
-    // Compile / unmanagedResourceDirectories += (baseDirectory.value.toPath.getParent.getParent / "serviceworker" / "target" / "scala-3.3.3" / "fmgp-serviceworker-fastopt").toFile,
     Compile / compile := ((Compile / compile) dependsOn scalaJSPipeline).value,
     // Frontend dependency configuration
     Assets / WebKeys.packagePrefix := "public/",
@@ -272,7 +272,7 @@ lazy val webapp = project
   .settings(
     libraryDependencies ++= Seq(D.laminar.value, D.waypoint.value, D.upickle.value),
     libraryDependencies ++= Seq(D.zio.value, D.zioJson.value),
-    libraryDependencies ++= Seq(D.scalaDID.value, D.scalaDID_peer.value),
+    libraryDependencies ++= Seq(D.scalaDID.value, D.scalaDID_peer.value, D.scalaDID_protocols.value),
     Compile / npmDependencies ++= NPM.qrcode ++ NPM.materialDesign ++ NPM.sha256,
   )
   .settings(

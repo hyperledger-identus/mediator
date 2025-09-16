@@ -13,6 +13,8 @@ import fmgp.did.framework._
 import org.hyperledger.identus.mediator.db.{UserAccountRepo, MessageItemRepo}
 import org.hyperledger.identus.mediator.protocols.Problems
 import fmgp.did.comm.protocol.reportproblem2.ProblemReport
+import fmgp.did.method.peer.DIDPeer.AgentDIDPeer
+import fmgp.did.framework.AgentProgram
 
 case class AgentExecutorMediator(
     agent: Agent,
@@ -21,7 +23,7 @@ case class AgentExecutorMediator(
     userAccountRepo: UserAccountRepo,
     messageItemRepo: MessageItemRepo,
     scope: Scope,
-) extends AgentExecutar {
+) extends AgentProgram {
   val indentityLayer = ZLayer.succeed(agent)
   val userAccountRepoLayer = ZLayer.succeed(userAccountRepo)
   val messageItemRepoLayer = ZLayer.succeed(messageItemRepo)
@@ -261,7 +263,7 @@ object AgentExecutorMediator {
       userAccountRepo: UserAccountRepo,
       messageItemRepo: MessageItemRepo,
       scope: Scope,
-  ): ZIO[TransportFactory, Nothing, AgentExecutar] =
+  ): ZIO[TransportFactory, Nothing, AgentProgram] =
     for {
       _ <- ZIO.logInfo(s"Make Madiator AgentExecutor for ${agent.id}")
       transportManager <- MediatorTransportManager.make
