@@ -14,11 +14,12 @@ object TraceIdMiddleware {
       .map(h => LogAnnotation(NAME_TRACE_ID, h.renderedValue))
   )
 
-  def addTraceId = {
-    HandlerAspect.interceptHandler(
+  def addTraceId[R] = {
+    HandlerAspect.interceptHandler[R, Unit](
       Handler.fromFunctionZIO[Request] { request =>
-        val effect = requestId(request)
-        effect.map(_ => (request, ()))
+        ZIO.scoped {
+          requestId(request).map(_ => (request, ()))
+        }
       }
     )(Handler.identity)
   }
