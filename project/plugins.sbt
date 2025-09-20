@@ -72,7 +72,7 @@ if (sys.env.get("GITHUB_TOKEN").isDefined) {
 } else libraryDependencies ++= Seq[ModuleID]()
 
 // PUBLISH
-addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.9.3")
+addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.11.2")
 
 // Native Packager
 addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.10.0")
