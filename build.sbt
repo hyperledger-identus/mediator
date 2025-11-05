@@ -238,7 +238,7 @@ lazy val mediator = project
     Docker / packageName := "identus-mediator",
     Docker / version := (Compile / version).value.replace("+", "_"),
     dockerExposedPorts := Seq(8080),
-    dockerBaseImage := "openjdk:17",
+    dockerBaseImage := "eclipse-temurin:17",
     dockerUpdateLatest := true,
   )
   .settings(Test / parallelExecution := false)
