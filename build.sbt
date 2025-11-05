@@ -28,7 +28,7 @@ lazy val V = new {
   val zioLogging = "2.5.1"
   val zioSl4j = "2.2.2"
   val logback = "1.5.20"
-  val logstash = "8.1"
+  val logstash = "9.0"
   val jansi = "2.4.2"
   val mongo = "1.1.0-RC15"
   val embedMongo = "4.14.0"
@@ -40,7 +40,7 @@ lazy val V = new {
   // For WEBAPP
   val laminar = "17.2.1"
   val waypoint = "7.0.0"
-  val upickle = "4.4.0"
+  val upickle = "4.4.1"
   // https://www.npmjs.com/package/material-components-web
   val materialComponents = "12.0.0"
 }
@@ -238,7 +238,7 @@ lazy val mediator = project
     Docker / packageName := "identus-mediator",
     Docker / version := (Compile / version).value.replace("+", "_"),
     dockerExposedPorts := Seq(8080),
-    dockerBaseImage := "openjdk:17",
+    dockerBaseImage := "eclipse-temurin:17",
     dockerUpdateLatest := true,
   )
   .settings(Test / parallelExecution := false)
