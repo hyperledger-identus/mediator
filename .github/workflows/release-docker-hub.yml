@@ -143,6 +143,14 @@ jobs:
           push: ${{ steps.meta.outputs.tags != '' }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
+          
+      - name: Extract Semver Tag Only
+        id: semver_tag
+        uses: docker/metadata-action@v5
+        with:
+          images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
+          tags: |
+            type=semver,pattern={{version}}
       
       - name: Extract SHA Tag Only
         id: sha_tag
@@ -151,11 +159,19 @@ jobs:
           images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
           tags: |
             type=sha,format=long
-
+      
       - name: Trigger component integration
         uses: peter-evans/repository-dispatch@v3
         with:
           token: ${{ secrets.IDENTUS_CI }}
           repository: hyperledger-identus/integration
           event-type: integration
-          client-payload: '{"component": "mediator", "version": "${{ steps.sha_tag.outputs.tags }}"}'
+          client-payload: >
+            {
+              "component": "mediator", 
+              "version": "${{ 
+                github.ref_type == 'tag' 
+                && steps.semver_tag.outputs.tags 
+                || steps.sha_tag.outputs.tags 
+              }}"
+            }
