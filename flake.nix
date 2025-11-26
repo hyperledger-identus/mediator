@@ -26,6 +26,7 @@
           };
         in
         {
+          packages = import ./nix/packages { inherit pkgs; };
           devShells = import ./nix/devShells { inherit pkgs; };
         }
       );
