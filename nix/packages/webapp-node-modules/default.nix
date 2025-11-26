@@ -4,8 +4,8 @@
 }:
 
 buildNpmPackage {
-  version = "1.0.0";
-  pname = "scalajs-node-modules";
+  pname = "webapp-node-modules";
+  version = "latest";
   src = ./.;
 
   nodejs = nodejs_24;
