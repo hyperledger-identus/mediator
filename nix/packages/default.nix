@@ -3,7 +3,6 @@
 }:
 
 {
-  mediator = pkgs.runCommand "mediator" { } ''
-    echo "todo" > $out
-  '';
+  scalajs-node-modules = pkgs.callPackage ./scalajs-node-modules { };
+  mediator = pkgs.callPackage ./mediator.nix { };
 }

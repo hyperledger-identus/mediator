@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "license": "UNLICENSED",
+  "dependencies": {
+    "qrcode-generator": "1.4.4",
+    "material-components-web": "12.0.0",
+    "js-sha256": "0.9.0"
+  },
+  "devDependencies": {
+    "source-map-loader": "2.0.0",
+    "webpack": "5.24.3",
+    "typescript": "4.3",
+    "concat-with-sourcemaps": "1.0.7",
+    "webpack-cli": "4.5.0",
+    "webpack-dev-server": "3.11.2"
+  }
+}

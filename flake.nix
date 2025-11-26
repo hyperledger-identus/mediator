@@ -4,6 +4,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    sbt-derivation = {
+      url = "github:zaninime/sbt-derivation";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -11,6 +15,7 @@
       self,
       nixpkgs,
       flake-utils,
+      sbt-derivation,
     }:
     flake-utils.lib.eachSystem
       [
@@ -23,6 +28,13 @@
           pkgs = import nixpkgs {
             inherit system;
             config.allowUnfree = true;
+            overlays = [
+              (final: prev: rec {
+                jdk17 = pkgs.javaPackages.compiler.openjdk17;
+                sbt = prev.sbt.override { jre = jdk17; };
+                mkSbtDerivation = sbtOptions: sbt-derivation.lib.mkSbtDerivation ({ pkgs = final; } // sbtOptions);
+              })
+            ];
           };
         in
         {

@@ -12,7 +12,6 @@ let
       find . -name "*.nix" -type f -exec nixfmt {} +
     '';
   };
-  jdk17 = pkgs.javaPackages.compiler.openjdk17;
 in
 {
   default = pkgs.mkShell {
@@ -22,7 +21,7 @@ in
       jdk17
       nodejs_24
       openssl
-      (sbt.override { jre = jdk17; })
+      sbt
       # custom scripts
       format-nix
     ];
