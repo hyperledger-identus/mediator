@@ -21,8 +21,7 @@ mkSbtDerivation {
     export NODE_EXTRA_CA_CERTS=${cacert}/etc/ssl/certs/ca-bundle.crt
     export NODE_OPTIONS=--openssl-legacy-provider
 
-    sbt webapp/update
-    sbt mediator/update
+    sbt mediator/compile
   '';
 
   buildPhase = ''

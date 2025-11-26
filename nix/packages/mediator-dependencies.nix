@@ -3,6 +3,10 @@
   stdenv,
   sbt,
   cacert,
+  gnused,
+  findutils,
+  file,
+  strip-nondeterminism,
 }:
 
 stdenv.mkDerivation {
@@ -13,13 +17,15 @@ stdenv.mkDerivation {
 
   outputHashMode = "recursive";
   outputHashAlgo = "sha256";
-
-  # outputHash = "sha256-tlC1QtgbXfdPXwpjlUb8mKzLmxVM29fXOLMU9FLB0EE=";
-  outputHash = "sha256-sx7Gs+z5HFAyHdoUAg4Nt5yQHrVWNUg4rmY9wK3SMEw=";
+  outputHash = "sha256-MaDmMdBX4zeZQRmx6rR+/L2gGZ137HpVKxVrlL/4ukg=";
 
   nativeBuildInputs = [
     sbt
     nodejs_24
+    gnused
+    findutils
+    file
+    strip-nondeterminism
   ];
 
   configurePhase = ''
@@ -55,11 +61,19 @@ stdenv.mkDerivation {
     find $SBT_DEPS/project -name 'org.scala-sbt-compiler-bridge_*' -type f -print0 | xargs -r0 strip-nondeterminism
     find $SBT_DEPS/project -name 'org.scala-sbt-compiler-interface_*' -type f -print0 | xargs -r0 strip-nondeterminism
 
+    # echo "removing timestamps from scalablytyped jar files"
+    # find $SBT_DEPS/project/.ivy/local/org.scalablytyped -name '*.jar' -type f -print0 | xargs -r0 strip-nondeterminism
+
+    # echo "removing timestamps from ivy.xml publication attributes"
+    # find $SBT_DEPS/project -name 'ivy.xml' -type f -exec sed -i 's/publication="[0-9]*"/publication="0"/' {} \;
+
     echo "removing runtime jar"
     find $SBT_DEPS/project -name rt.jar -delete
 
     echo "removing empty directories"
     find $SBT_DEPS/project -type d -empty -delete
+
+    rm -rf $SBT_DEPS/project/.ivy/local/org.scalablytyped
 
     runHook postBuild
   '';
