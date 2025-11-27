@@ -8,6 +8,7 @@
   nodejs_24,
   sbt,
   stdenv,
+  version,
 }:
 
 let
@@ -16,7 +17,7 @@ let
 in
 stdenv.mkDerivation {
   pname = "identus-mediator";
-  version = "1.2.0-SNAPSHOT";
+  inherit version;
 
   src = lib.cleanSourceWith {
     src = lib.cleanSource ./../../..;

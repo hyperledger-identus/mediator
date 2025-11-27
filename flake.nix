@@ -36,9 +36,10 @@
               })
             ];
           };
+          version = self.shortRev or self.dirtyShortRev or "dev";
         in
         {
-          packages = import ./nix/packages { inherit pkgs; };
+          packages = import ./nix/packages { inherit pkgs version; };
           devShells = import ./nix/devShells { inherit pkgs; };
           checks = {
             inherit (self.packages.${system}) mediator mediator-docker;

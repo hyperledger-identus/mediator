@@ -6,6 +6,7 @@
   dockerTools,
   jdkCustom,
   mediator,
+  tag ? mediator.version,
 }:
 
 let
@@ -23,8 +24,8 @@ let
   };
 in
 dockerTools.buildLayeredImage {
+  inherit tag;
   name = "hyperledgeridentus/identus-mediator";
-  tag = "latest";
 
   contents = [
     runtimeEnv
