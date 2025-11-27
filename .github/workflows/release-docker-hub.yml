@@ -143,7 +143,7 @@ jobs:
           push: ${{ steps.meta.outputs.tags != '' }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
-          
+
       - name: Extract Semver Tag Only
         id: semver_tag
         uses: docker/metadata-action@v5
@@ -160,6 +160,8 @@ jobs:
           tags: |
             type=sha,format=long
       
+      # This dispatch is to trigger the automatic E2E execution.
+      # https://github.com/hyperledger-identus/integration
       - name: Trigger component integration
         uses: peter-evans/repository-dispatch@v3
         with:
