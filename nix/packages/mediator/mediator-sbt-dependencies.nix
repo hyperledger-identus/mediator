@@ -38,9 +38,12 @@ stdenv.mkDerivation {
     export NODE_OPTIONS=--openssl-legacy-provider
 
     export SBT_DEPS=$TMPDIR/sbtdeps
-    export SBT_OPTS="-Dsbt.global.base=$SBT_DEPS/project/.sbtboot -Dsbt.boot.directory=$SBT_DEPS/project/.boot -Dsbt.ivy.home=$SBT_DEPS/project/.ivy $SBT_OPTS"
+    export SBT_OPTS="-Dsbt.global.base=$SBT_DEPS/project/.sbtboot -Dsbt.boot.directory=$SBT_DEPS/project/.boot -Dsbt.ivy.home=$SBT_DEPS/project/.ivy $SBT_OPTS -Duser.home=$HOME -Dscalablytyped.cacheDir=$SBT_DEPS/project/scalablytyped-cache"
     export COURSIER_CACHE=$SBT_DEPS/project/.coursier
-    mkdir -p $SBT_DEPS/project/{.sbtboot,.boot,.ivy,.coursier}
+    mkdir -p $SBT_DEPS/project/{.sbtboot,.boot,.ivy,.coursier, scalablytyped-cache}
+
+    # Create a fake Library directory in HOME to prevent ScalablyTyped from trying /var/empty/Library
+    mkdir -p $HOME/Library
 
     runHook postConfigure
   '';
@@ -69,6 +72,7 @@ stdenv.mkDerivation {
 
     echo "removing scalablytyped"
     rm -rf $SBT_DEPS/project/.ivy/local/org.scalablytyped
+    rm -rf $SBT_DEPS/project/scalablytyped-cache
 
     runHook postBuild
   '';
