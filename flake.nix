@@ -30,7 +30,13 @@
             config.allowUnfree = true;
             overlays = [
               (final: prev: rec {
-                jdkCustom = prev.javaPackages.compiler.openjdk17-bootstrap.override { gtkSupport = false; };
+                jdkCustom =
+                  if prev.stdenv.isLinux then
+                    prev.javaPackages.compiler.openjdk17-bootstrap.override { gtkSupport = false; }
+                  else if prev.stdenv.isDarwin then
+                    prev.javaPackages.compiler.openjdk17-bootstrap.override { swingSupport = false; }
+                  else
+                    prev.javaPackages.compiler.openjdk17-bootstrap;
                 sbt = prev.sbt.override { jre = jdkCustom; };
                 mkSbtDerivation = sbtOptions: sbt-derivation.lib.mkSbtDerivation ({ pkgs = final; } // sbtOptions);
               })
