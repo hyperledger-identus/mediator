@@ -35,6 +35,8 @@ stdenv.mkDerivation {
     makeWrapper
   ];
 
+  passthru = { inherit webapp-node-modules mediator-sbt-dependencies; };
+
   configurePhase = ''
     runHook preConfigure
 
@@ -45,8 +47,11 @@ stdenv.mkDerivation {
     export NODE_OPTIONS=--openssl-legacy-provider
 
     export SBT_DEPS=$TMPDIR/sbtdeps
-    export SBT_OPTS="-Dsbt.global.base=$SBT_DEPS/project/.sbtboot -Dsbt.boot.directory=$SBT_DEPS/project/.boot -Dsbt.ivy.home=$SBT_DEPS/project/.ivy $SBT_OPTS"
+    export SBT_OPTS="-Dsbt.global.base=$SBT_DEPS/project/.sbtboot -Dsbt.boot.directory=$SBT_DEPS/project/.boot -Dsbt.ivy.home=$SBT_DEPS/project/.ivy $SBT_OPTS -Duser.home=$HOME -Dscalablytyped.cacheDir=$SBT_DEPS/project/scalablytyped-cache"
     export COURSIER_CACHE=$SBT_DEPS/project/.coursier
+
+    # Create a fake Library directory in HOME to prevent ScalablyTyped from trying /var/empty/Library
+    mkdir -p $HOME/Library
 
     runHook postConfigure
   '';
@@ -55,7 +60,7 @@ stdenv.mkDerivation {
     runHook preBuild
 
     # Setup SBT dependencies
-    mkdir -p $SBT_DEPS/project/{.sbtboot,.boot,.ivy,.coursier}
+    mkdir -p $SBT_DEPS/project/{.sbtboot,.boot,.ivy,.coursier, scalablytyped-cache}
     cp -r ${mediator-sbt-dependencies}/project $SBT_DEPS
     chmod -R u+w $SBT_DEPS/project
 

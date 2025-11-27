@@ -17,7 +17,7 @@ stdenv.mkDerivation {
 
   outputHashMode = "recursive";
   outputHashAlgo = "sha256";
-  outputHash = "sha256-MaDmMdBX4zeZQRmx6rR+/L2gGZ137HpVKxVrlL/4ukg=";
+  outputHash = "sha256-XhFTsKrCK5TNmAnmbL/zcJuxCfXEzzZwQSdXTOJzKVI=";
 
   nativeBuildInputs = [
     sbt
