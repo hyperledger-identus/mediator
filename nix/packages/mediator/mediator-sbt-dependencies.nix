@@ -13,7 +13,7 @@ stdenv.mkDerivation {
   pname = "identus-mediator-dependencies";
   version = "latest";
 
-  src = ./../..;
+  src = ./../../..;
 
   outputHashMode = "recursive";
   outputHashAlgo = "sha256";

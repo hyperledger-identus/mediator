@@ -1,20 +1,20 @@
 {
   nodejs_24,
   cacert,
-  webapp-node-modules,
   stdenv,
   sbt,
   callPackage,
 }:
 
 let
-  dependencies = callPackage ./mediator-dependencies.nix { };
+  webapp-node-modules = callPackage ./webapp-node-modules { };
+  mediator-sbt-dependencies = callPackage ./mediator-sbt-dependencies.nix { };
 in
 stdenv.mkDerivation {
   pname = "identus-mediator";
   version = "1.2.0-SNAPSHOT";
 
-  src = ./../..;
+  src = ./../../..;
 
   nativeBuildInputs = [
     nodejs_24
@@ -42,7 +42,7 @@ stdenv.mkDerivation {
 
     # Setup SBT dependencies
     mkdir -p $SBT_DEPS/project/{.sbtboot,.boot,.ivy,.coursier}
-    cp -r ${dependencies}/project $SBT_DEPS
+    cp -r ${mediator-sbt-dependencies}/project $SBT_DEPS
     chmod -R u+w $SBT_DEPS/project
 
     # Setup node_modules and related files
