@@ -22,7 +22,10 @@
         let
           pkgs = import nixpkgs {
             inherit system;
-            config.allowUnfree = true;
+            config = {
+              allowUnfree = true;
+              allowBroken = true;
+            };
             overlays = [
               (final: prev: rec {
                 jdkCustom =
