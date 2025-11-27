@@ -16,7 +16,7 @@ in
 {
   default = pkgs.mkShell {
     packages = with pkgs; [
-      customJdk
+      jdkCustom
       docker
       git
       nodejs_24

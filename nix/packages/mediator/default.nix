@@ -5,7 +5,7 @@
   sbt,
   callPackage,
   makeWrapper,
-  customJdk,
+  jdkCustom,
   lib,
 }:
 
@@ -72,7 +72,7 @@ stdenv.mkDerivation {
 
     mkdir -p $out
     cp -r mediator/target/universal/stage/* $out/
-    wrapProgram $out/bin/mediator --set JAVA_HOME "${customJdk}"
+    wrapProgram $out/bin/mediator --set JAVA_HOME "${jdkCustom}"
 
     runHook postInstall
   '';

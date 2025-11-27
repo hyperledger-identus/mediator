@@ -30,8 +30,8 @@
             config.allowUnfree = true;
             overlays = [
               (final: prev: rec {
-                customJdk = prev.javaPackages.compiler.openjdk17-bootstrap.override { gtkSupport = false; };
-                sbt = prev.sbt.override { jre = customJdk; };
+                jdkCustom = prev.javaPackages.compiler.openjdk17-bootstrap.override { gtkSupport = false; };
+                sbt = prev.sbt.override { jre = jdkCustom; };
                 mkSbtDerivation = sbtOptions: sbt-derivation.lib.mkSbtDerivation ({ pkgs = final; } // sbtOptions);
               })
             ];

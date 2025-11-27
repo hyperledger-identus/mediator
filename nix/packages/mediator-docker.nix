@@ -2,7 +2,7 @@
   pkgs,
   dockerTools,
   mediator,
-  customJdk,
+  jdkCustom,
   coreutils,
   bash,
   curl,
@@ -12,7 +12,7 @@ let
   runtimeEnv = pkgs.buildEnv {
     name = "mediator-runtime-env";
     paths = [
-      customJdk
+      jdkCustom
       coreutils
       bash
       curl
@@ -39,7 +39,7 @@ dockerTools.buildLayeredImage {
       "8080/tcp" = { };
     };
     Env = [
-      "JAVA_HOME=${customJdk}"
+      "JAVA_HOME=${jdkCustom}"
     ];
     Healthcheck = {
       Test = [
