@@ -43,16 +43,5 @@ dockerTools.buildLayeredImage {
       "LANG=C.UTF-8"
       "LC_ALL=C.UTF-8"
     ];
-    Healthcheck = {
-      Test = [
-        "CMD"
-        "curl"
-        "--fail"
-        "http://localhost:8080/health"
-      ];
-      Interval = 10000000000; # 10 seconds in nanoseconds
-      Timeout = 5000000000; # 5 seconds in nanoseconds
-      Retries = 10;
-    };
   };
 }

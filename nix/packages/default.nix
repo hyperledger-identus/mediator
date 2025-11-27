@@ -12,11 +12,7 @@ rec {
     else
       mediator-docker-linux-amd64;
 
-  mediator-docker-latest =
-    if pkgs.stdenv.hostPlatform.system == "aarch64-darwin" then
-      mediator-docker-linux-arm64.override { tag = "latest"; }
-    else
-      mediator-docker-linux-amd64.override { tag = "latest"; };
+  mediator-docker-latest = mediator-docker.override { tag = "latest"; };
 
   mediator-docker-linux-amd64 = pkgs.pkgsCross.gnu64.callPackage ./mediator-docker.nix {
     mediator = pkgs.pkgsCross.gnu64.callPackage ./mediator { inherit version; };
