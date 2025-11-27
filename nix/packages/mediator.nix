@@ -34,21 +34,21 @@ stdenv.mkDerivation {
     export SBT_OPTS="-Dsbt.global.base=$SBT_DEPS/project/.sbtboot -Dsbt.boot.directory=$SBT_DEPS/project/.boot -Dsbt.ivy.home=$SBT_DEPS/project/.ivy $SBT_OPTS"
     export COURSIER_CACHE=$SBT_DEPS/project/.coursier
 
-    mkdir -p $SBT_DEPS/project/{.sbtboot,.boot,.ivy,.coursier}
-    cp -r ${dependencies}/project $SBT_DEPS
-    chmod -R 777 $SBT_DEPS/project
-
-    mkdir -p ./webapp/target/scala-3.6.4/scalajs-bundler/main
-    cp -r ${webapp-node-modules}/* ./webapp/target/scala-3.6.4/scalajs-bundler/main
-    ls -aoh ./webapp/target/scala-3.6.4/scalajs-bundler/main
-    chmod -R 777 ./webapp/target/scala-3.6.4/scalajs-bundler/main
-    ls -aoh ./webapp/target/scala-3.6.4/scalajs-bundler/main
-
     runHook postConfigure
   '';
 
   buildPhase = ''
     runHook preBuild
+
+    # Setup SBT dependencies
+    mkdir -p $SBT_DEPS/project/{.sbtboot,.boot,.ivy,.coursier}
+    cp -r ${dependencies}/project $SBT_DEPS
+    chmod -R u+w $SBT_DEPS/project
+
+    # Setup node_modules and related files
+    mkdir -p ./webapp/target/scala-3.6.4/scalajs-bundler/main
+    cp -r ${webapp-node-modules}/* ./webapp/target/scala-3.6.4/scalajs-bundler/main
+    chmod -R u+w ./webapp/target/scala-3.6.4/scalajs-bundler/main
 
     sbt mediator/compile
 
