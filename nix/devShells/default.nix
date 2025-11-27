@@ -16,9 +16,9 @@ in
 {
   default = pkgs.mkShell {
     packages = with pkgs; [
+      customJdk
       docker
       git
-      jdk17
       nodejs_24
       openssl
       sbt

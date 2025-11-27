@@ -5,7 +5,8 @@
   sbt,
   callPackage,
   makeWrapper,
-  jdk17,
+  customJdk,
+  lib,
 }:
 
 let
@@ -16,7 +17,15 @@ stdenv.mkDerivation {
   pname = "identus-mediator";
   version = "1.2.0-SNAPSHOT";
 
-  src = ./../../..;
+  src = lib.cleanSourceWith {
+    src = lib.cleanSource ./../../..;
+    filter =
+      path: type:
+      let
+        baseName = baseNameOf path;
+      in
+      !(baseName == "nix" || baseName == "docs" || baseName == ".git");
+  };
 
   nativeBuildInputs = [
     nodejs_24
@@ -63,7 +72,7 @@ stdenv.mkDerivation {
 
     mkdir -p $out
     cp -r mediator/target/universal/stage/* $out/
-    wrapProgram $out/bin/mediator --set JAVA_HOME "${jdk17}"
+    wrapProgram $out/bin/mediator --set JAVA_HOME "${customJdk}"
 
     runHook postInstall
   '';
