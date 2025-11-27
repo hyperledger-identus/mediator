@@ -3,24 +3,27 @@
   version,
 }:
 
-rec {
+let
   mediator = pkgs.callPackage ./mediator { inherit version; };
-
-  mediator-docker =
-    if pkgs.stdenv.hostPlatform.system == "aarch64-darwin" then
-      mediator-docker-linux-arm64
-    else
-      mediator-docker-linux-amd64;
-
-  mediator-docker-latest = mediator-docker.override { tag = "latest"; };
-
-  mediator-docker-linux-amd64 = pkgs.pkgsCross.gnu64.callPackage ./mediator-docker.nix {
-    mediator = pkgs.pkgsCross.gnu64.callPackage ./mediator { inherit version; };
+  nativeDockerOutputs = pkgs.lib.optionalAttrs (!pkgs.stdenv.isDarwin) rec {
+    mediator-docker = pkgs.callPackage ./mediator-docker.nix { inherit mediator; };
+    mediator-docker-latest = mediator-docker.override { tag = "latest"; };
   };
-
-  mediator-docker-linux-arm64 =
-    pkgs.pkgsCross.aarch64-multiplatform.callPackage ./mediator-docker.nix
-      {
-        mediator = pkgs.pkgsCross.aarch64-multiplatform.callPackage ./mediator { inherit version; };
-      };
+  crossDockerOutputs =
+    let
+      mkCrossImage =
+        platform:
+        pkgs.pkgsCross.${platform}.callPackage ./mediator-docker.nix {
+          mediator = pkgs.pkgsCross.gnu64.callPackage ./mediator { inherit version; };
+        };
+    in
+    {
+      mediator-docker-cross-linux-amd64 = mkCrossImage "gnu64";
+      mediator-docker-cross-linux-arm64 = mkCrossImage "aarch64-multiplatform";
+    };
+in
+{
+  inherit mediator;
 }
+// nativeDockerOutputs
+// crossDockerOutputs
