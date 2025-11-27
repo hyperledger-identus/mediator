@@ -39,9 +39,7 @@
       {
         packages = import ./nix/packages { inherit pkgs version; };
         devShells = import ./nix/devShells { inherit pkgs; };
-        checks = {
-          inherit (self.packages.${system}) mediator mediator-docker;
-        };
+        checks = { inherit (self.packages.${system}) mediator; };
       }
     );
 }
