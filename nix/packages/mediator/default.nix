@@ -1,12 +1,13 @@
 {
-  nodejs_24,
   cacert,
-  stdenv,
-  sbt,
   callPackage,
-  makeWrapper,
+  gawk,
   jdkCustom,
   lib,
+  makeWrapper,
+  nodejs_24,
+  sbt,
+  stdenv,
 }:
 
 let
@@ -72,7 +73,9 @@ stdenv.mkDerivation {
 
     mkdir -p $out
     cp -r mediator/target/universal/stage/* $out/
-    wrapProgram $out/bin/mediator --set JAVA_HOME "${jdkCustom}"
+    wrapProgram $out/bin/mediator \
+      --set JAVA_HOME "${jdkCustom}" \
+      --prefix PATH : ${gawk}/bin
 
     runHook postInstall
   '';
