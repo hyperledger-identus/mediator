@@ -4,6 +4,8 @@
   stdenv,
   sbt,
   callPackage,
+  makeWrapper,
+  jdk17,
 }:
 
 let
@@ -19,6 +21,7 @@ stdenv.mkDerivation {
   nativeBuildInputs = [
     nodejs_24
     sbt
+    makeWrapper
   ];
 
   configurePhase = ''
@@ -50,7 +53,7 @@ stdenv.mkDerivation {
     cp -r ${webapp-node-modules}/* ./webapp/target/scala-3.6.4/scalajs-bundler/main
     chmod -R u+w ./webapp/target/scala-3.6.4/scalajs-bundler/main
 
-    sbt mediator/compile
+    sbt mediator/stage
 
     runHook postBuild
   '';
@@ -58,7 +61,9 @@ stdenv.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    touch $out
+    mkdir -p $out
+    cp -r mediator/target/universal/stage/* $out/
+    wrapProgram $out/bin/mediator --set JAVA_HOME "${jdk17}"
 
     runHook postInstall
   '';
