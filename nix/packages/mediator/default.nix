@@ -35,7 +35,10 @@ stdenv.mkDerivation {
     makeWrapper
   ];
 
-  passthru = { inherit webapp-node-modules mediator-sbt-dependencies; };
+  passthru = {
+    inherit webapp-node-modules mediator-sbt-dependencies;
+    updateNodeModules = callPackage ./webapp-node-modules/update-script.nix { };
+  };
 
   configurePhase = ''
     runHook preConfigure

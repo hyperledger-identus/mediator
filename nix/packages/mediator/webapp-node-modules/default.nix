@@ -9,7 +9,7 @@ buildNpmPackage {
   src = ./.;
 
   nodejs = nodejs_24;
-  npmDepsHash = "sha256-Vn3KeIxQhaKn+7nR0vfqWZeNZNLBa0k9NEUrmQ+Oh4I=";
+  npmDepsHash = "sha256-0YcjHDgxoF5S9ZzufulA9KjI8S9ghoayJITQe/UVVFo=";
 
   dontNpmBuild = true;
 
