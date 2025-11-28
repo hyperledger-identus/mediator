@@ -24,10 +24,10 @@ This directory contains Nix package definitions for the Identus Mediator.
 # Build the mediator application
 nix build .#mediator
 
-# Build Docker image (Linux only)
+# Build Docker image (Linux builder only)
 nix build .#mediator-docker
 
-# Build cross-platform Docker images (Linux only)
+# Build cross-platform Docker images (Linux builder only)
 # These create Docker images for specific architectures regardless of your host architecture
 nix build .#mediator-docker-cross-linux-amd64
 nix build .#mediator-docker-cross-linux-arm64
@@ -47,7 +47,7 @@ nix develop
 
 ### Building on macOS
 
-Docker images cannot be built natively on macOS, and cross-compilation is not yet supported in this repository yet.
+Docker images cannot be built natively on macOS, and cross-compilation is not yet supported in this repository.
 To build Docker images or Linux-specific packages from macOS, you need to configure a Linux remote builder.
 
 Nix will automatically delegate builds to the remote builder when you specify a different system architecture:
