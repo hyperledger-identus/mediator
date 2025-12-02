@@ -17,8 +17,6 @@ defaults:
 
 permissions:
   contents: read
-  packages: write
-  actions: write
   pull-requests: write
   checks: write
 
@@ -26,6 +24,10 @@ jobs:
   run-integration-tests:
     name: "Run integration tests"
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
     env:
       GITHUB_ACTOR: "hyperledger-bot"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

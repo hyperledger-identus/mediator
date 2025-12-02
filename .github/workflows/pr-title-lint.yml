@@ -14,6 +14,8 @@ jobs:
   main:
     name: Validate PR Title
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2 # v2.13.3
