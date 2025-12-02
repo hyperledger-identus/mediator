@@ -35,6 +35,8 @@ jobs:
   build-binaries:
     if: ${{ !contains(github.event.head_commit.message, 'chore(release)') }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     env:
       GITHUB_ACTOR: "hyperledger-bot"
       GITHUB_ACTOR_EMAIL: "hyperledger-bot@hyperledger.org"
@@ -80,6 +82,8 @@ jobs:
     name: Build and Push Docker images
     runs-on: ubuntu-latest
     needs: build-binaries
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
     steps:
