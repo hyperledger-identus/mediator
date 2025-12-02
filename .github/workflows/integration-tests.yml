@@ -51,7 +51,7 @@ jobs:
           ref: ${{ env.DIDCOMM_V2_TESTSUITE_VERSION }}
 
       - name: Setup Java and Scala
-        uses: olafurpg/setup-scala@56b893ae09c48f21c16a9793a107c2723ccc123a # v13
+        uses: olafurpg/setup-scala@32ffa16635ff8f19cc21ea253a987f0fdf29844c # v14
         with:
           java-version: openjdk@1.17
 
