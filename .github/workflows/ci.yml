@@ -44,7 +44,7 @@ jobs:
       - name: Setup Scala.JS
         uses: japgolly/setup-scalajs@f530918424acb5cca3d46ccd8f6d6a35f5654fd3 # v1
       - name: Cache sbt
-        uses: coursier/cache-action@288585e12960315492c10d496fafb65b57d9a89b # v6.3.3
+        uses: coursier/cache-action@bebeeb0e6f48ebad66d3783946588ecf43114433 # v7.0.0
       - name: Cache embedmongo
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4.3.0
         with:

@@ -57,7 +57,7 @@ jobs:
           java-version: zulu@1.11.0
 
       - name: Cache sbt
-        uses: coursier/cache-action@288585e12960315492c10d496fafb65b57d9a89b # v6.3.3
+        uses: coursier/cache-action@bebeeb0e6f48ebad66d3783946588ecf43114433 # v7.0.0
 
       - name: Setup Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
