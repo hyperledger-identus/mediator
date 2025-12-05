@@ -1,11 +1,29 @@
 version: 2
 updates:
-  - package-ecosystem: github-actions
-    directory: /
+  # 1. GitHub Actions (Weekly)
+  - package-ecosystem: "github-actions"
+    directory: "/"
     schedule:
-      interval: daily
+      interval: "weekly"
+      day: "monday"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      actions-deps:
+        patterns:
+          - "*"
 
-  - package-ecosystem: npm
-    directory: /
+  # 2. NPM (Root) (Weekly)
+  - package-ecosystem: "npm"
+    directory: "/"
     schedule:
-      interval: daily
+      interval: "weekly"
+      day: "monday"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    groups:
+      npm-deps:
+        patterns:
+          - "*"
