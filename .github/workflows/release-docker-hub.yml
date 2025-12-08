@@ -49,7 +49,7 @@ jobs:
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Setup Java and Scala
         uses: olafurpg/setup-scala@32ffa16635ff8f19cc21ea253a987f0fdf29844c # v14
@@ -57,10 +57,10 @@ jobs:
           java-version: zulu@1.11.0
 
       - name: Cache sbt
-        uses: coursier/cache-action@288585e12960315492c10d496fafb65b57d9a89b # v6.3.3
+        uses: coursier/cache-action@bebeeb0e6f48ebad66d3783946588ecf43114433 # v7.0.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version: "lts/*"
 
@@ -73,7 +73,7 @@ jobs:
         run:  sbt -J-Xmx5120m "docker:stage"
   
       - name: Save build Directory
-        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v5.0.0
         with:
           name: docker-directory-artifact
           path: ./mediator/target/docker/stage
@@ -122,7 +122,7 @@ jobs:
           echo "### JOB_CONTEXT: $JOB_CONTEXT"
 
       - name: Download docker-directory-artifact
-        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4.3.0
+        uses: actions/download-artifact@018cc2cf5baa6db3ef3c5f8a56943fffe632ef53 # v6.0.0
         with:
           name: docker-directory-artifact
           path: docker-artifact
