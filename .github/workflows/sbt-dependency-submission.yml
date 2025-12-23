@@ -8,7 +8,7 @@ on:
     - cron: "0 20 * * *"
   workflow_dispatch:
 permissions:
-      contents: write # this permission is needed to submit the dependency graph
+  contents: read
 jobs:
   dependency-graph:
     name: Update Dependency Graph
@@ -39,8 +39,8 @@ jobs:
       - uses: scalacenter/sbt-dependency-submission@f3c0455a87097de07b66c3dc1b8619b5976c1c89 # v2.3.1
         with:
           working-directory: ./
-         #  modules-ignore:
-         #    identus-mediator_3
-         #    mediator_3
-         #    webapp_sjs1_3
+          #  modules-ignore:
+          #    identus-mediator_3
+          #    mediator_3
+          #    webapp_sjs1_3
           configs-ignore: test scala-tool scala-doc-tool
