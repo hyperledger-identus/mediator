@@ -17,9 +17,6 @@ defaults:
 
 permissions:
   contents: read
-  pull-requests: write
-  checks: write
-
 jobs:
   run-integration-tests:
     name: "Run integration tests"
