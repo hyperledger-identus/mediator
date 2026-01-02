@@ -11,7 +11,7 @@ inThisBuild(
 
 /** Versions */
 lazy val V = new {
-  val scalaDID = "0.1.0-M31"
+  val scalaDID = "0.1.0-M35"
 
   // FIXME another bug in the test framework https://github.com/scalameta/munit/issues/554
   val munit = "1.0.0" // "0.7.29"
@@ -23,7 +23,7 @@ lazy val V = new {
   val zio = "2.1.22"
   val zioJson = "0.7.45"
   // val zioMunitTest = "0.1.1"
-  val zioHttp = "3.5.1"
+  val zioHttp = "3.7.1"
   val zioConfig = "4.0.6"
   val zioLogging = "2.5.1"
   val zioSl4j = "2.2.2"

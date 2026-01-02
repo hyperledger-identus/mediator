@@ -17,15 +17,14 @@ defaults:
 
 permissions:
   contents: read
-  packages: write
-  actions: write
-  pull-requests: write
-  checks: write
-
 jobs:
   run-integration-tests:
     name: "Run integration tests"
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: write
+      checks: write
     env:
       GITHUB_ACTOR: "hyperledger-bot"
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -33,26 +32,31 @@ jobs:
       DIDCOMM_V2_TESTSUITE_VERSION: "d5aac249b6e420f6cce6e842565dd05f994f729f"
       MEDIATOR_DID: "did:peer:2.Ez6LSghwSE437wnDE1pt3X6hVDUQzSjsHzinpX3XFvMjRAm7y.Vz6Mkhh1e5CEYYq6JBUcTZ6Cp2ranCWRrv7Yax3Le4N59R6dd.SeyJ0IjoiZG0iLCJzIjp7InVyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImEiOlsiZGlkY29tbS92MiJdfX0.SeyJ0IjoiZG0iLCJzIjp7InVyaSI6IndzOi8vbG9jYWxob3N0OjgwODAvd3MiLCJhIjpbImRpZGNvbW0vdjIiXX19"
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2 # v2.13.3
+        with:
+          egress-policy: audit
+
       - name: Checkout mediator
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
 
       - name: Checkout tests
-        uses: actions/checkout@v3
+        uses: actions/checkout@f43a0e5ff2bd294095638e18286ca9a3d1956744 # v3.6.0
         with:
           repository: input-output-hk/didcomm-v2-mediator-test-suite
           path: "./didcomm-v2-mediator-test-suite"
           ref: ${{ env.DIDCOMM_V2_TESTSUITE_VERSION }}
 
       - name: Setup Java and Scala
-        uses: olafurpg/setup-scala@v13
+        uses: olafurpg/setup-scala@56b893ae09c48f21c16a9793a107c2723ccc123a # v13
         with:
           java-version: openjdk@1.17
 
       - name: Setup Gradle
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/gradle-build-action@a8f75513eafdebd8141bd1cd4e30fcd194af8dfa # v2.12.0
 
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@3235b876344d2a9aa001b8d1453c930bba69e610 # v3.9.1
         with:
           node-version: "lts/*"
 
@@ -64,7 +68,7 @@ jobs:
       #     password: ${{ env.GITHUB_TOKEN }}
 
       - name: Install Compose
-        uses: ndeloof/install-compose-action@v0.0.1
+        uses: ndeloof/install-compose-action@4a33bc31f327b8231c4f343f6fba704fedc0fa23 # v0.0.1
         with:
           version: v2.19.1 # defaults to 'latest'
           legacy: true # will also install in PATH as `docker-compose`
@@ -78,7 +82,7 @@ jobs:
           # echo "MEDIATOR_VERSION=${MEDIATOR_VERSION}"  >> $GITHUB_ENV
           # echo ${MEDIATOR_VERSION}
       - name: Start Mediator
-        uses: isbang/compose-action@v1.4.1
+        uses: isbang/compose-action@9d0371f9eaa290a6b28f9b8d3030f571ecd7da97 # v1.4.1
         with:
           compose-file: "./docker-compose.yml"
           compose-flags: ""
@@ -92,7 +96,7 @@ jobs:
           ./gradlew reports
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: e2e-tests-result
           path: ${{ env.REPORTS_DIR }}
@@ -100,7 +104,7 @@ jobs:
       - name: Publish e2e test Results
         if: always()
         id: publish-unit-tests
-        uses: EnricoMi/publish-unit-test-result-action@v2
+        uses: EnricoMi/publish-unit-test-result-action@34d7c956a59aed1bfebf31df77b8de55db9bbaaf # v2.21.0
         with:
           junit_files: "${{ env.REPORTS_DIR }}/SERENITY-JUNIT-*.xml"
           comment_title: "Integration Test Results"
@@ -140,7 +144,7 @@ jobs:
 
       - name: Slack Notification
         if: github.ref_name == 'main' && steps.analyze_test_results.outputs.conclusion == 'failure'
-        uses: rtCamp/action-slack-notify@v2
+        uses: rtCamp/action-slack-notify@e31e87e03dd19038e411e38ae27cbad084a90661 # v2.3.3
         env:
           SLACK_COLOR: ${{ steps.analyze_test_results.outputs.conclusion }}
           SLACK_MESSAGE: |
