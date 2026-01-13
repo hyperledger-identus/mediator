@@ -1,5 +1,5 @@
 name: Release to Docker Hub
-# ower: FabioPinheiro
+# owner: FabioPinheiro
 # updated: 2024/11/25
 # How to test:
 # > unset GITHUB_TOKEN
@@ -16,7 +16,6 @@ name: Release to Docker Hub
 # > docker login docker.io -u identus -p $DOCKERHUB_TOKEN
 # > OLD_TAG=ghcr.io/hyperledger/identus-mediator:1.0.0; NEW_TAG=docker.io/identus/identus-mediator:1.0.0; docker buildx imagetools create --tag "$NEW_TAG" "$OLD_TAG"
 
-
 concurrency:
   group: release
 
@@ -26,7 +25,7 @@ on:
     tags:
       - v*
     branches:
-      - 'main'
+      - "main"
 
 permissions:
   contents: read
@@ -70,14 +69,14 @@ jobs:
       - name: Build Binaries
         env:
           NODE_OPTIONS: --openssl-legacy-provider
-        run:  sbt -J-Xmx5120m "docker:stage"
-  
+        run: sbt -J-Xmx5120m "docker:stage"
+
       - name: Save build Directory
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: docker-directory-artifact
           path: ./mediator/target/docker/stage
- 
+
   build-and-push-docker-images:
     name: Build and Push Docker images
     runs-on: ubuntu-latest
@@ -139,14 +138,14 @@ jobs:
               max-parallelism = 1
           platforms: linux/amd64,linux/arm64
 
-      - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}' 
+      - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}'
         uses: docker/login-action@5e57cd118135c172c3672efd75eb46360885c0ef # v3.6.0
         with:
           registry: docker.io
           username: ${{ vars.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-     # TODO FIX These builds the image multiple times (matrix)
+      # TODO FIX These builds the image multiple times (matrix)
       - name: Build and push identus-mediator Image
         id: push
         uses: docker/build-push-action@263435318d21b8e681c14492fe198d362a7d2c83 # v6.18.0
