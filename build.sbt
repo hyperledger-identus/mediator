@@ -4,7 +4,7 @@ resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
 inThisBuild(
   Seq(
-    scalaVersion := "3.6.4", // Also update docs/publishWebsite.sh and any ref to scala-3.6.3
+    scalaVersion := "3.8.1", // Also update docs/publishWebsite.sh and any ref to scala-3.6.3
     versionScheme := Some("semver-spec"), // https://www.scala-sbt.org/1.x/docs/Publishing.html#Version+scheme
   )
 )
