@@ -46,7 +46,7 @@ jobs:
       - name: Launch Scala Steward
         uses: scala-steward-org/scala-steward-action@df2a4cec1721d0b48be3e1d1f0acdf7543ea0fb4 # v2.84.0
         with:
-          github-token: ${{ secrets.HYP_BOT_STEWARD_GITHUB_TOKEN }}
+          github-token: ${{ secrets.FABIO_BOT_STEWARD_GITHUB_TOKEN }}
           sign-commits: true
           signing-key: ${{ steps.import_gpg.outputs.keyid }}
           author-email: ${{ steps.import_gpg.outputs.email }}
