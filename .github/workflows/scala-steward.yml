@@ -6,17 +6,10 @@ on:
 
 name: Scala Steward
 
-permissions:
-  contents: read
-
 jobs:
   scala-steward:
     runs-on: ubuntu-latest
     name: Scala Steward
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@df199fb7be9f65074067a9eb93f12bb4c5547cf2 # v2.13.3
@@ -51,11 +44,9 @@ jobs:
           echo "email:       ${{ steps.import_gpg.outputs.email }}"
 
       - name: Launch Scala Steward
-        uses: scala-steward-org/scala-steward-action@f60ccd18bc9d8083e6809d9dc3db4a69a71d856c # v2.78.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: scala-steward-org/scala-steward-action@df2a4cec1721d0b48be3e1d1f0acdf7543ea0fb4 # v2.84.0
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-token: ${{ secrets.HYP_BOT_STEWARD_GITHUB_TOKEN }}
           sign-commits: true
           signing-key: ${{ steps.import_gpg.outputs.keyid }}
           author-email: ${{ steps.import_gpg.outputs.email }}
