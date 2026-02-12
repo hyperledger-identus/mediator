@@ -41,14 +41,14 @@ addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.12.0")
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.6.4") // sbt> dependencyUpdates
 
 // TEST COVERAGE
-addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.4.2") // Needs scala version 3.3.0
+addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.4.4") // Needs scala version 3.3.0
 
 // Revolver use for command 'reStart' (like the command 'run' but run on the backgroun by forking the app from sbt)
 addSbtPlugin("io.spray" % "sbt-revolver" % "0.10.0")
 
 // https://zio.dev/howto/migrate/zio-2.x-migration-guide%20v0.9.31
 //sbt "scalafixEnable; scalafixAll github:zio/zio/Zio2Upgrade?sha=series/2.x"
-addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.4")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.5")
 
 // Deploy demo
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.2.0")
