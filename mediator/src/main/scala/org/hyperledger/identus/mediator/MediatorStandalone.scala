@@ -9,6 +9,7 @@ import fmgp.did.comm.*
 import fmgp.did.comm.protocol.*
 import fmgp.did.framework.TransportFactoryImp
 import fmgp.did.method.peer.*
+import fmgp.did.method.prism.*
 import org.hyperledger.identus.mediator.db.*
 import org.hyperledger.identus.mediator.protocols.*
 import zio.*
@@ -49,44 +50,51 @@ object CurveConfig:
 import CurveConfig.given
 
 case class MediatorConfig(
-    endpoints: String,
-    keyAgreement: OKPPrivateKeyWithoutKid,
-    keyAuthentication: OKPPrivateKeyWithoutKid
+    did: DIDSubject,
+    keyStore: KeyStore
 ) {
-  val did = DIDPeer2.makeAgent(
-    Seq(keyAgreement, keyAuthentication),
-    endpoints
-      .split(";")
-      .toSeq
-      .map { endpoint => fmgp.util.Base64.encode(s"""{"t":"dm","s":{"uri":"$endpoint","a":["didcomm/v2"]}}""") }
-      .map(DIDPeerServiceEncodedNew(_))
-  )
   val agentLayer: ZLayer[Any, Nothing, MediatorAgent] =
-    ZLayer(MediatorAgent.make(id = did.id, keyStore = did.keyStore))
+    ZLayer(MediatorAgent.make(id = did, keyStore = keyStore))
+}
+object MediatorConfig {
+  // val configPrivateKeyWithKid: Config[PrivateKeyWithKid] = { // hack to drop the nested name
+  //   val tmp = Config.derived[PrivateKeyWithKid] // ECPrivateKeyWithKid OKPPrivateKeyWithKid
+  //   tmp
+  //     .asInstanceOf[Config.Fallback[PrivateKeyWithKid]]
+  //     .first
+  //     .asInstanceOf[Config.Lazy[PrivateKeyWithKid]]
+  //     .thunk()
+  //     .asInstanceOf[Config.Nested[PrivateKeyWithKid]]
+  //     .config
+  // }
+
+  val config = {
+    Config
+      .string("did")
+      .mapOrFail(str =>
+        DIDSubject.either(str) match
+          case Left(value)  => Left(Config.Error.InvalidData(Chunk("did"), "Fail to parse the DID: " + value.error))
+          case Right(value) => Right(value)
+      ) ++
+      Config
+        .Sequence(
+          Config.Fallback[PrivateKeyWithKid](Config.derived[OKPPrivateKeyWithKid], Config.derived[ECPrivateKeyWithKid])
+        )
+        .map(keys => KeyStore(keys.toSet))
+        .nested("keyStore")
+  }.map((did, keyStore) => MediatorConfig(did = did, keyStore = keyStore))
 }
 
 case class DataBaseConfig(
-    connectionString: Option[String],
-    protocol: String,
-    host: String,
-    port: Option[String],
-    userName: String,
-    password: String,
-    dbName: String
+    connectionString: String,
 ) {
-  private def maybePort = port.filter(_.nonEmpty).map(":" + _).getOrElse("")
-  private def buildConnectionString = s"$protocol://$userName:$password@$host$maybePort/$dbName"
-  
-  // Use provided connection string if available, otherwise construct from components
-  val finalConnectionString = connectionString.getOrElse(buildConnectionString)
-  
+  val finalConnectionString = connectionString
+
   // Display connection string with masked password
-  val displayConnectionString = connectionString match {
-    case Some(connStr) => connStr.replaceAll("://[^:]*:[^@]*@", "://***:***@") // Mask credentials in URI
-    case None => s"$protocol://$userName:******@$host$maybePort/$dbName"
-  }
-  
-  override def toString: String = s"""DataBaseConfig($connectionString, $protocol, $host, $port, $userName, "******", $dbName)"""
+  val displayConnectionString = connectionString.replaceAll("://[^:]*:[^@]*@", "://***:***@")
+
+  override def toString: String =
+    s"""DataBaseConfig($displayConnectionString)"""
 }
 
 object MediatorStandalone extends ZIOAppDefault {
@@ -111,11 +119,14 @@ object MediatorStandalone extends ZIOAppDefault {
         |Visit: https://github.com/hyperledger-identus/mediator""".stripMargin
     )
     configs = ConfigProvider.fromResourcePath()
-    mediatorConfig <- configs.nested("identity").nested("mediator").load(deriveConfig[MediatorConfig])
+    mediatorConfig <- configs
+      .nested("identity")
+      .nested("mediator")
+      .load(MediatorConfig.config) // deriveConfig[MediatorConfig]
     agentLayer = mediatorConfig.agentLayer
     _ <- ZIO.log(s"Identus Mediator APP. See https://github.com/hyperledger-identus/mediator")
     _ <- ZIO.log(s"MediatorConfig: $mediatorConfig")
-    _ <- ZIO.log(s"DID: ${mediatorConfig.did.id.string}")
+    _ <- ZIO.log(s"DID: ${mediatorConfig.did.string}")
     mediatorDbConfig <- configs.nested("database").nested("mediator").load(deriveConfig[DataBaseConfig])
     _ <- ZIO.log(s"MediatorDb Connection String: ${mediatorDbConfig.displayConnectionString}")
     port <- configs
@@ -130,12 +141,20 @@ object MediatorStandalone extends ZIOAppDefault {
       .nested("mediator")
       .load(Config.string("escalateTo"))
     _ <- ZIO.log(s"Problem reports escalated to: $escalateTo")
-    transportFactory = Scope.default >>> (Client.default >>> TransportFactoryImp.layer)
+    httpClient = Scope.default ++ Client.default
+    transportFactory = httpClient >>> TransportFactoryImp.layer
     mongo = AsyncDriverResource.layer >>> ReactiveMongoApi.layer(mediatorDbConfig.finalConnectionString)
     repos = mongo >>> (MessageItemRepo.layer ++ UserAccountRepo.layer ++ OutboxMessageRepo.layer)
+    baseUrlForDIDPrismResolverVar <- configs
+      .nested("mediator")
+      .load(Config.string("didPrismResolver"))
+    didResolver = for {
+      peer <- DidPeerResolver.layerDidPeerResolver
+      prism <- DIDPrismResolver.layerDIDPrismResolver(baseUrlForDIDPrismResolverVar)
+    } yield ZEnvironment(MultiFallbackResolver(peer.get, prism.get): Resolver) // MultiParResolver(peer, prism)
     myServer <- Server
       .serve((MediatorAgent.didCommApp ++ DIDCommRoutes.app) @@ (Middleware.cors))
-      .provideSomeLayer(DidPeerResolver.layerDidPeerResolver)
+      .provideSomeLayer(httpClient >>> HttpUtils.layer >>> didResolver)
       .provideSomeLayer(agentLayer)
       .provideSomeLayer(repos)
       .provideSomeLayer(Scope.default >>> ((agentLayer ++ transportFactory ++ repos) >>> OperatorImp.layer))

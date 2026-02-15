@@ -50,6 +50,7 @@ lazy val D = new {
   val scalaDID = Def.setting("app.fmgp" %%% "did" % V.scalaDID)
   val scalaDID_imp = Def.setting("app.fmgp" %%% "did-imp" % V.scalaDID)
   val scalaDID_peer = Def.setting("app.fmgp" %%% "did-method-peer" % V.scalaDID)
+  val scalaDID_prism = Def.setting("app.fmgp" %%% "did-method-prism" % V.scalaDID)
   val scalaDID_framework = Def.setting("app.fmgp" %%% "did-framework" % V.scalaDID)
   val scalaDID_protocols = Def.setting("app.fmgp" %%% "did-comm-protocols" % V.scalaDID)
 
@@ -207,6 +208,7 @@ lazy val mediator = project
   .settings(
     libraryDependencies += D.scalaDID_imp.value,
     libraryDependencies += D.scalaDID_peer.value,
+    libraryDependencies += D.scalaDID_prism.value,
     libraryDependencies += D.scalaDID_framework.value,
     libraryDependencies += D.scalaDID_protocols.value,
     libraryDependencies += D.zioHttp.value,
@@ -272,7 +274,7 @@ lazy val webapp = project
   .settings(
     libraryDependencies ++= Seq(D.laminar.value, D.waypoint.value, D.upickle.value),
     libraryDependencies ++= Seq(D.zio.value, D.zioJson.value),
-    libraryDependencies ++= Seq(D.scalaDID.value, D.scalaDID_peer.value, D.scalaDID_protocols.value),
+    libraryDependencies ++= Seq(D.scalaDID.value, D.scalaDID_protocols.value),
     Compile / npmDependencies ++= NPM.qrcode ++ NPM.materialDesign ++ NPM.sha256,
   )
   .settings(
