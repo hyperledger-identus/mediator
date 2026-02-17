@@ -82,7 +82,7 @@ jobs:
           # echo "MEDIATOR_VERSION=${MEDIATOR_VERSION}"  >> $GITHUB_ENV
           # echo ${MEDIATOR_VERSION}
       - name: Start Mediator
-        uses: isbang/compose-action@9d0371f9eaa290a6b28f9b8d3030f571ecd7da97 # v1.4.1
+        uses: isbang/compose-action@4894d2492015c1774ee5a13a95b1072093087ec3 # v2.5.0
         with:
           compose-file: "./docker-compose.yml"
           compose-flags: ""
