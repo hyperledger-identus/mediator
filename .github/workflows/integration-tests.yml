@@ -66,11 +66,11 @@ jobs:
       #     registry: ghcr.io
       #     username: ${{ env.GITHUB_ACTOR }}
       #     password: ${{ env.GITHUB_TOKEN }}
-
+          
       - name: Install Compose
         uses: ndeloof/install-compose-action@4a33bc31f327b8231c4f343f6fba704fedc0fa23 # v0.0.1
         with:
-          version: v2.19.1 # defaults to 'latest'
+          version: v2.26.1 # defaults to 'latest'
           legacy: true # will also install in PATH as `docker-compose`
 
       - name: Build local version of Mediator Agent
