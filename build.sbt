@@ -27,7 +27,7 @@ lazy val V = new {
   val zioConfig = "4.0.6"
   val zioLogging = "2.5.3"
   val zioSl4j = "2.2.2"
-  val logback = "1.5.29"
+  val logback = "1.5.32"
   val logstash = "9.0"
   val jansi = "2.4.2"
   val mongo = "1.1.0-RC15"
@@ -40,7 +40,7 @@ lazy val V = new {
   // For WEBAPP
   val laminar = "17.2.1"
   val waypoint = "7.0.0"
-  val upickle = "4.4.1"
+  val upickle = "4.4.3"
   // https://www.npmjs.com/package/material-components-web
   val materialComponents = "12.0.0"
 }
