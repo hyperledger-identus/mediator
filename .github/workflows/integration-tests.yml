@@ -82,13 +82,10 @@ jobs:
           # echo "MEDIATOR_VERSION=${MEDIATOR_VERSION}"  >> $GITHUB_ENV
           # echo ${MEDIATOR_VERSION}
       - name: Start Mediator
-        env:
-          DOCKER_API_VERSION: "1.44"
         uses: hoverkraft-tech/compose-action@4894d2492015c1774ee5a13a95b1072093087ec3 # v2.5.0
         with:
           compose-file: "./docker-compose.yml"
           compose-flags: ""
-          docker-flags: "DOCKER_API_VERSION=1.44"
           up-flags: "--wait"
           down-flags: "--volumes"
 
