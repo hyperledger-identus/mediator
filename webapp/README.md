@@ -2,14 +2,6 @@
 
 ## Compile
 
-Run sbt with the following NODE_OPTIONS.
-
-This will prevent `Error: error:0308010C:digital envelope routines::unsupported`. See [Troubleshooting (Node v17)](../README.md#Troubleshooting)
-
-```shell
-NODE_OPTIONS=--openssl-legacy-provider sbt
-```
-
 ## build and run app (open chrome)
 
 `sbt>` `webapp / Compile / fastOptJS / webpack`

@@ -68,8 +68,6 @@ jobs:
         uses: japgolly/setup-scalajs@f530918424acb5cca3d46ccd8f6d6a35f5654fd3 # v1
 
       - name: Build Binaries
-        env:
-          NODE_OPTIONS: --openssl-legacy-provider
         run:  sbt -J-Xmx5120m "docker:stage"
   
       - name: Save build Directory

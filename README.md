@@ -151,10 +151,10 @@ invitation for the Mediator.
 
 It is possible to run everything with a single command with Docker compose docker-compose.yml
 The latest stable image version is available in the Hyperledger Identus-Mediator repository.
-To build a docker image locally, run `NODE_OPTIONS=--openssl-legacy-provider sbt docker:publishLocal`.
+To build a docker image locally, run `sbt docker:publishLocal`.
 
 ```shell
-shell> NODE_OPTIONS=--openssl-legacy-provider sbt docker:publishLocal
+shell> sbt docker:publishLocal
 shell> MEDIATOR_VERSION=?; docker compose up
 ```
 
@@ -236,18 +236,6 @@ Everything runs with a single Docker compose command: `docker compose up`.
 You can set up a specific version with `MEDIATOR_VERSION` like `MEDIATOR_VERSION=0.9.2-SNAPSHOT docker-compose up`.
 
 #### Troubleshooting
-
-If you see
-the [compilation error](https://stackoverflow.com/questions/69719601/getting-error-digital-envelope-routines-reason-unsupported-code-err-oss)
-
-```shell
-[error]   opensslErrorStack: [ 'error:03000086:digital envelope routines::initialization error' ],
-[error]   library: 'digital envelope routines',
-[error]   reason: 'unsupported',
-[error]   code: 'ERR_OSSL_EVP_UNSUPPORTED'
-```
-
-You can try to run with `NODE_OPTIONS=--openssl-legacy-provider` to use the legacy provider.
 
 ### MongoDB In the cloud
 

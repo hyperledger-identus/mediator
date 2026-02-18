@@ -266,6 +266,7 @@ lazy val webapp = project
   .in(file("webapp"))
   .settings(publish / skip := true)
   .settings(Test / test := {})
+  .settings(coverageEnabled := false) // Scoverage doesn't support Scala.js
   .settings(name := "webapp")
   .configure(scalaJSBundlerConfigure)
   .configure(buildInfoConfigure)
@@ -278,6 +279,7 @@ lazy val webapp = project
   .settings(
     stShortModuleNames := true,
     webpackBundlingMode := BundlingMode.LibraryAndApplication(), // BundlingMode.Application,
+    webpack / version := "5.75.0",
     Compile / scalaJSModuleInitializers += {
       org.scalajs.linker.interface.ModuleInitializer.mainMethod("org.hyperledger.identus.mediator.App", "main")
     },
