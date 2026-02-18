@@ -117,6 +117,8 @@ lazy val ENV = new {
 
 inThisBuild(
   Seq(
+    // Exclude webapp and generated sources from coverage (Coveralls)
+    coverageExcludedFiles := ".*/webapp/.*;.*/target/.*/src_managed/.*",
     scalacOptions ++= Seq(
       // ### https://docs.scala-lang.org/scala3/guides/migration/options-new.html
       // ### https://docs.scala-lang.org/scala3/guides/migration/options-lookup.html
