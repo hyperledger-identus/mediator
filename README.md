@@ -1,10 +1,17 @@
-| Live Demo                        | Discord Identus                          | Discord Linux Foundation Decentralized Trust |
-| -------------------------------- | ---------------------------------------- | -------------------------------------------- |
-| [![Atala-Symbol]][Link-LiveDemo] | [![Badge-Discord]][Link-Discord Identus] | [![Badge-Discord]][Link-Discord LFDT]        |
+<p align="center">
+    <a href="https://www.lfdecentralizedtrust.org/projects/identus">
+        <img src="https://raw.githubusercontent.com/hyperledger-identus/docs/refs/heads/main/static/img/graphics/identus-hero.svg" alt="identus-logo" height="99px" />
+    </a>
+</p>
 
-| CI              | Project Stage  | Commits since latest release       |
-| --------------- | -------------- | ---------------------------------- |
-| ![CI][Badge-CI] | ![Badge-Stage] | ![Badge-CommitsSinceLatestRelease] |
+[![Coverage Status](https://coveralls.io/repos/github/hyperledger-identus/mediator/badge.svg?branch=main)](https://coveralls.io/github/hyperledger-identus/mediator?branch=main)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hyperledger-identus_mediator&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=hyperledger-identus_mediator)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11793/badge)](https://www.bestpractices.dev/projects/11793)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/hyperledger-identus/mediator/badge)](https://scorecard.dev/viewer/?uri=github.com/hyperledger-identus/mediator)
+
+[![GitHub release](https://img.shields.io/github/release/hyperledger-identus/mediator.svg)](https://github.com/hyperledger-identus/mediator/releases)
+[![Docker Pulls](https://img.shields.io/docker/pulls/hyperledgeridentus/identus-mediator)](https://hub.docker.com/r/hyperledgeridentus/identus-mediator)
+[![Discord](https://img.shields.io/discord/905194001349627914?label=discord)](https://discord.com/channels/905194001349627914/1230596020790886490)
 
 # Mediator
 
@@ -151,10 +158,10 @@ invitation for the Mediator.
 
 It is possible to run everything with a single command with Docker compose docker-compose.yml
 The latest stable image version is available in the Hyperledger Identus-Mediator repository.
-To build a docker image locally, run `NODE_OPTIONS=--openssl-legacy-provider sbt docker:publishLocal`.
+To build a docker image locally, run `sbt docker:publishLocal`.
 
 ```shell
-shell> NODE_OPTIONS=--openssl-legacy-provider sbt docker:publishLocal
+shell> sbt docker:publishLocal
 shell> MEDIATOR_VERSION=?; docker compose up
 ```
 
@@ -236,18 +243,6 @@ Everything runs with a single Docker compose command: `docker compose up`.
 You can set up a specific version with `MEDIATOR_VERSION` like `MEDIATOR_VERSION=0.9.2-SNAPSHOT docker-compose up`.
 
 #### Troubleshooting
-
-If you see
-the [compilation error](https://stackoverflow.com/questions/69719601/getting-error-digital-envelope-routines-reason-unsupported-code-err-oss)
-
-```shell
-[error]   opensslErrorStack: [ 'error:03000086:digital envelope routines::initialization error' ],
-[error]   library: 'digital envelope routines',
-[error]   reason: 'unsupported',
-[error]   code: 'ERR_OSSL_EVP_UNSUPPORTED'
-```
-
-You can try to run with `NODE_OPTIONS=--openssl-legacy-provider` to use the legacy provider.
 
 ### MongoDB In the cloud
 
