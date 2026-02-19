@@ -9,6 +9,9 @@
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11793/badge)](https://www.bestpractices.dev/projects/11793)
 [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/hyperledger-identus/mediator/badge)](https://scorecard.dev/viewer/?uri=github.com/hyperledger-identus/mediator)
 
+[![GitHub release](https://img.shields.io/github/release/hyperledger-identus/mediator.svg)](https://github.com/hyperledger-identus/mediator/releases)
+[![Docker Pulls](https://img.shields.io/docker/pulls/hyperledgeridentus/identus-mediator)](https://hub.docker.com/r/hyperledgeridentus/identus-mediator)
+[![Discord](https://img.shields.io/discord/905194001349627914?label=discord)](https://discord.com/channels/905194001349627914/1230596020790886490)
 # Mediator
 
 A DID Comm v2 mediator  
