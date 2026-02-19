@@ -1,10 +1,13 @@
-| Live Demo                        | Discord Identus                          | Discord Linux Foundation Decentralized Trust |
-| -------------------------------- | ---------------------------------------- | -------------------------------------------- |
-| [![Atala-Symbol]][Link-LiveDemo] | [![Badge-Discord]][Link-Discord Identus] | [![Badge-Discord]][Link-Discord LFDT]        |
+<p align="center">
+    <a href="https://www.lfdecentralizedtrust.org/projects/identus">
+        <img src="https://raw.githubusercontent.com/hyperledger-identus/docs/refs/heads/main/static/img/graphics/identus-hero.svg" alt="identus-logo" height="99px" />
+    </a>
+</p>
 
-| CI              | Project Stage  | Commits since latest release       |
-| --------------- | -------------- | ---------------------------------- |
-| ![CI][Badge-CI] | ![Badge-Stage] | ![Badge-CommitsSinceLatestRelease] |
+[![Coverage Status](https://coveralls.io/repos/github/hyperledger-identus/mediator/badge.svg?branch=main)](https://coveralls.io/github/hyperledger-identus/mediator?branch=main)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hyperledger-identus_mediator&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=hyperledger-identus_mediator)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11793/badge)](https://www.bestpractices.dev/projects/11793)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/hyperledger-identus/mediator/badge)](https://scorecard.dev/viewer/?uri=github.com/hyperledger-identus/mediator)
 
 # Mediator
 
