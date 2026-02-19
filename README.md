@@ -12,6 +12,7 @@
 [![GitHub release](https://img.shields.io/github/release/hyperledger-identus/mediator.svg)](https://github.com/hyperledger-identus/mediator/releases)
 [![Docker Pulls](https://img.shields.io/docker/pulls/hyperledgeridentus/identus-mediator)](https://hub.docker.com/r/hyperledgeridentus/identus-mediator)
 [![Discord](https://img.shields.io/discord/905194001349627914?label=discord)](https://discord.com/channels/905194001349627914/1230596020790886490)
+
 # Mediator
 
 A DID Comm v2 mediator  
