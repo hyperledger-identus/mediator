@@ -11,7 +11,7 @@ inThisBuild(
 
 /** Versions */
 lazy val V = new {
-  val scalaDID = "0.1.0-M36"
+  val scalaDID = "0.1.0-M41"
 
   // FIXME another bug in the test framework https://github.com/scalameta/munit/issues/554
   val munit = "1.0.0" // "0.7.29"
@@ -20,10 +20,10 @@ lazy val V = new {
 //   // val scalajsLogging = "1.1.2-SNAPSHOT" //"1.1.2"
 
 //   // https://mvnrepository.com/artifact/dev.zio/zio
-  val zio = "2.1.22"
-  val zioJson = "0.7.45"
+  // val zio = "2.1.22" // also import from scala DID
+  // val zioJson = "0.7.45" // also import from scala DID
   // val zioMunitTest = "0.1.1"
-  val zioHttp = "3.8.1"
+  // val zioHttp = "3.8.1" // also import from scala DID
   val zioConfig = "4.0.6"
   val zioLogging = "2.5.3"
   val zioSl4j = "2.2.2"
@@ -62,11 +62,10 @@ lazy val D = new {
 //       .cross(CrossVersion.for3Use2_13)
 //   )
 
-  val zio = Def.setting("dev.zio" %%% "zio" % V.zio)
+  // val zio = Def.setting("dev.zio" %%% "zio" % V.zio) // also import from scala DID
 //   val zioStreams = Def.setting("dev.zio" %%% "zio-streams" % V.zio)
-  val zioJson = Def.setting("dev.zio" %%% "zio-json" % V.zioJson)
-
-  val zioHttp = Def.setting("dev.zio" %% "zio-http" % V.zioHttp)
+  // val zioJson = Def.setting("dev.zio" %%% "zio-json" % V.zioJson) // also import from scala DID
+  // val zioHttp = Def.setting("dev.zio" %% "zio-http" % V.zioHttp) // also import from scala DID
   val zioConfig = Def.setting("dev.zio" %% "zio-config" % V.zioConfig)
   val zioConfigMagnolia = Def.setting("dev.zio" %% "zio-config-magnolia" % V.zioConfig) // For deriveConfig
   val zioConfigTypesafe = Def.setting("dev.zio" %% "zio-config-typesafe" % V.zioConfig) // For HOCON
@@ -211,7 +210,7 @@ lazy val mediator = project
     libraryDependencies += D.scalaDID_peer.value,
     libraryDependencies += D.scalaDID_framework.value,
     libraryDependencies += D.scalaDID_protocols.value,
-    libraryDependencies += D.zioHttp.value,
+    // libraryDependencies += D.zioHttp.value, // also import from scala DID
     libraryDependencies ++= Seq(
       D.zioConfig.value,
       D.zioConfigMagnolia.value,
@@ -274,7 +273,7 @@ lazy val webapp = project
   .configure(buildInfoConfigure)
   .settings(
     libraryDependencies ++= Seq(D.laminar.value, D.waypoint.value, D.upickle.value),
-    libraryDependencies ++= Seq(D.zio.value, D.zioJson.value),
+    // libraryDependencies ++= Seq(D.zio.value, D.zioJson.value), // also import from scala DID
     libraryDependencies ++= Seq(D.scalaDID.value, D.scalaDID_peer.value, D.scalaDID_protocols.value),
     Compile / npmDependencies ++= NPM.qrcode ++ NPM.materialDesign ++ NPM.sha256,
   )

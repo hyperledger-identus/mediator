@@ -13,3 +13,4 @@ extension (mediaType: MediaTypes)
     case MediaTypes.ENCRYPTED | MediaTypes.ANONCRYPT | MediaTypes.AUTHCRYPT | MediaTypes.ANONCRYPT_SIGN |
         MediaTypes.AUTHCRYPT_SIGN | MediaTypes.ANONCRYPT_AUTHCRYPT =>
       Header.ContentType(MediaType(MediaTypes.ENCRYPTED.mainType, MediaTypes.ENCRYPTED.subType))
+    case _: MediaTypes => ???
