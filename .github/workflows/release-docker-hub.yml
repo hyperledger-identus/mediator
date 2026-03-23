@@ -45,7 +45,7 @@ jobs:
       SBT_OPTS: -Xmx2G
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
         with:
           egress-policy: audit
 
@@ -57,10 +57,10 @@ jobs:
           java-version: zulu@1.11.0
 
       - name: Cache sbt
-        uses: coursier/cache-action@e47d7d35a0d3a2c7f649ca5c63dfc2bbfaa002e7 # v8.0.1
+        uses: coursier/cache-action@90c37294538be80a558fd665531fcdc2b467b475 # v8.1.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "lts/*"
 
@@ -86,13 +86,13 @@ jobs:
       fail-fast: false
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
         with:
           egress-policy: audit
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@c299e40c65443455700f0fdfc63efafe5b349051 # v5.10.0
+        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
         with:
           images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
           tags: |
@@ -120,16 +120,16 @@ jobs:
           echo "### JOB_CONTEXT: $JOB_CONTEXT"
 
       - name: Download docker-directory-artifact
-        uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v8.0.0
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: docker-directory-artifact
           path: docker-artifact
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@c7c53464625b32c7a7e944ae62b3e17d2b600130 # v3.7.0
+        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
         with:
           buildkitd-flags: --debug
           buildkitd-config-inline: |
@@ -138,7 +138,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
 
       - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}' 
-        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
+        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
         with:
           registry: docker.io
           username: ${{ vars.DOCKERHUB_USERNAME }}
@@ -147,7 +147,7 @@ jobs:
      # TODO FIX These builds the image multiple times (matrix)
       - name: Build and push identus-mediator Image
         id: push
-        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
+        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
         with:
           context: ./docker-artifact/
           platforms: linux/amd64,linux/arm64
