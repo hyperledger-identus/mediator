@@ -17,7 +17,7 @@ jobs:
       contents: write
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@a90bcbc6539c36a85cdfeb73f7e2f433735f215b # v2.15.0
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
         with:
           egress-policy: audit
 
@@ -27,13 +27,13 @@ jobs:
         with:
           java-version: openjdk@1.17.0
       - name: Setup Node
-        uses: actions/setup-node@6044e13b5dc448c55e2357c09f80417699197238 # v6.2.0
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "18" # or whatever
       - name: Setup Scala.JS
         uses: japgolly/setup-scalajs@f530918424acb5cca3d46ccd8f6d6a35f5654fd3 # v1
       - name: Cache sbt
-        uses: coursier/cache-action@e47d7d35a0d3a2c7f649ca5c63dfc2bbfaa002e7 # v8.0.1
+        uses: coursier/cache-action@90c37294538be80a558fd665531fcdc2b467b475 # v8.1.0
       - name: npm install
         run: npm install
       - uses: scalacenter/sbt-dependency-submission@f43202114d7522a4b233e052f82c2eea8d658134 # v3.2.1
