@@ -1,3 +1,21 @@
+# Scala Steward: Reformat with scalafmt 3.7.1
+85f0100dc0133df11c5577ba3c9e70029f04ea1f
+
+# Scala Steward: Reformat with scalafmt 3.7.8
+7f0ad6980840682687eb6bc0017014e08ae46421
+
+# Scala Steward: Reformat with scalafmt 3.7.15
+3e95a584d68fdb4506caa91a0c7833d277dc8c8d
+
+# Scala Steward: Reformat with scalafmt 3.7.17
+de9b2865bc74e8768f518d10d860cb1408828fff
+
+# Rename Atala Prism to Hyperledger Identus (#274)
+d9492416b3aee967513f0e71aa37347701a1fd61
+
+# Scala Steward: Reformat with scalafmt 3.8.2
+dfe92ddafcd5d60f27e99a04d1c05bbf630b07da
+
 # style: auto-fix and manually resolve all lint errors across the repo
-# Mass formatting — markdownlint auto-fix and manual fixes. No logic changes.
-0bd503dfbcc7de3bcec38a85da31ac667d4e82a7
+# Mass formatting — markdownlint, yamllint. No logic changes.
+1d7091efa15160d21af075e262812bec382011a9
