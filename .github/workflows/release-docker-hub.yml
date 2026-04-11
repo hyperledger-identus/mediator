@@ -68,14 +68,14 @@ jobs:
         uses: japgolly/setup-scalajs@f530918424acb5cca3d46ccd8f6d6a35f5654fd3 # v1
 
       - name: Build Binaries
-        run:  sbt -J-Xmx5120m "docker:stage"
-  
+        run: sbt -J-Xmx5120m "docker:stage"
+
       - name: Save build Directory
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
         with:
           name: docker-directory-artifact
           path: ./mediator/target/docker/stage
- 
+
   build-and-push-docker-images:
     name: Build and Push Docker images
     runs-on: ubuntu-latest
@@ -138,7 +138,7 @@ jobs:
               max-parallelism = 1
           platforms: linux/amd64,linux/arm64
 
-      - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}' 
+      - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}'
         uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
         with:
           registry: docker.io
