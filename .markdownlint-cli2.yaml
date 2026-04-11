@@ -1,0 +1,6 @@
+ignores:
+  - ".claude/**"
+  - "node_modules/**"
+  - "**/node_modules/**"
+  - "target/**"
+  - "**/target/**"
