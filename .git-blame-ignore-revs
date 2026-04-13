@@ -15,3 +15,7 @@ d9492416b3aee967513f0e71aa37347701a1fd61
 
 # Scala Steward: Reformat with scalafmt 3.8.2
 dfe92ddafcd5d60f27e99a04d1c05bbf630b07da
+
+# style: auto-fix and manually resolve all lint errors across the repo
+# Mass formatting — markdownlint, yamllint. No logic changes.
+314d86de702195a4fc7c7a723f62aa600db0fc26

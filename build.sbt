@@ -11,7 +11,7 @@ inThisBuild(
 
 /** Versions */
 lazy val V = new {
-  val scalaDID = "0.1.0-M31"
+  val scalaDID = "0.1.0-M45"
 
   // FIXME another bug in the test framework https://github.com/scalameta/munit/issues/554
   val munit = "1.0.0" // "0.7.29"
@@ -20,27 +20,27 @@ lazy val V = new {
 //   // val scalajsLogging = "1.1.2-SNAPSHOT" //"1.1.2"
 
 //   // https://mvnrepository.com/artifact/dev.zio/zio
-  val zio = "2.1.22"
-  val zioJson = "0.7.45"
+  // val zio = "2.1.22" // also import from scala DID
+  // val zioJson = "0.7.45" // also import from scala DID
   // val zioMunitTest = "0.1.1"
-  val zioHttp = "3.5.1"
-  val zioConfig = "4.0.5"
-  val zioLogging = "2.5.1"
+  // val zioHttp = "3.8.1" // also import from scala DID
+  val zioConfig = "4.0.7"
+  val zioLogging = "2.5.3"
   val zioSl4j = "2.2.2"
-  val logback = "1.5.21"
+  val logback = "1.5.32"
   val logstash = "9.0"
-  val jansi = "2.4.2"
+  val jansi = "2.4.3"
   val mongo = "1.1.0-RC15"
   val embedMongo = "4.14.0"
   val munitZio = "0.1.1"
-  val zioTest = "2.1.22"
-  val zioTestSbt = "2.1.22"
-  val zioTestMagnolia = "2.1.22"
+  val zioTest = "2.1.25"
+  val zioTestSbt = "2.1.25"
+  val zioTestMagnolia = "2.1.25"
 
   // For WEBAPP
   val laminar = "17.2.1"
   val waypoint = "7.0.0"
-  val upickle = "4.4.1"
+  val upickle = "4.4.3"
   // https://www.npmjs.com/package/material-components-web
   val materialComponents = "12.0.0"
 }
@@ -62,11 +62,10 @@ lazy val D = new {
 //       .cross(CrossVersion.for3Use2_13)
 //   )
 
-  val zio = Def.setting("dev.zio" %%% "zio" % V.zio)
+  // val zio = Def.setting("dev.zio" %%% "zio" % V.zio) // also import from scala DID
 //   val zioStreams = Def.setting("dev.zio" %%% "zio-streams" % V.zio)
-  val zioJson = Def.setting("dev.zio" %%% "zio-json" % V.zioJson)
-
-  val zioHttp = Def.setting("dev.zio" %% "zio-http" % V.zioHttp)
+  // val zioJson = Def.setting("dev.zio" %%% "zio-json" % V.zioJson) // also import from scala DID
+  // val zioHttp = Def.setting("dev.zio" %% "zio-http" % V.zioHttp) // also import from scala DID
   val zioConfig = Def.setting("dev.zio" %% "zio-config" % V.zioConfig)
   val zioConfigMagnolia = Def.setting("dev.zio" %% "zio-config-magnolia" % V.zioConfig) // For deriveConfig
   val zioConfigTypesafe = Def.setting("dev.zio" %% "zio-config-typesafe" % V.zioConfig) // For HOCON
@@ -117,6 +116,8 @@ lazy val ENV = new {
 
 inThisBuild(
   Seq(
+    // Exclude webapp and generated sources from coverage (Coveralls)
+    coverageExcludedFiles := ".*/webapp/.*;.*/target/.*/src_managed/.*",
     scalacOptions ++= Seq(
       // ### https://docs.scala-lang.org/scala3/guides/migration/options-new.html
       // ### https://docs.scala-lang.org/scala3/guides/migration/options-lookup.html
@@ -209,7 +210,7 @@ lazy val mediator = project
     libraryDependencies += D.scalaDID_peer.value,
     libraryDependencies += D.scalaDID_framework.value,
     libraryDependencies += D.scalaDID_protocols.value,
-    libraryDependencies += D.zioHttp.value,
+    // libraryDependencies += D.zioHttp.value, // also import from scala DID
     libraryDependencies ++= Seq(
       D.zioConfig.value,
       D.zioConfigMagnolia.value,
@@ -266,18 +267,20 @@ lazy val webapp = project
   .in(file("webapp"))
   .settings(publish / skip := true)
   .settings(Test / test := {})
+  .settings(coverageEnabled := false) // Scoverage doesn't support Scala.js
   .settings(name := "webapp")
   .configure(scalaJSBundlerConfigure)
   .configure(buildInfoConfigure)
   .settings(
     libraryDependencies ++= Seq(D.laminar.value, D.waypoint.value, D.upickle.value),
-    libraryDependencies ++= Seq(D.zio.value, D.zioJson.value),
+    // libraryDependencies ++= Seq(D.zio.value, D.zioJson.value), // also import from scala DID
     libraryDependencies ++= Seq(D.scalaDID.value, D.scalaDID_peer.value, D.scalaDID_protocols.value),
     Compile / npmDependencies ++= NPM.qrcode ++ NPM.materialDesign ++ NPM.sha256,
   )
   .settings(
     stShortModuleNames := true,
     webpackBundlingMode := BundlingMode.LibraryAndApplication(), // BundlingMode.Application,
+    webpack / version := "5.75.0",
     Compile / scalaJSModuleInitializers += {
       org.scalajs.linker.interface.ModuleInitializer.mainMethod("org.hyperledger.identus.mediator.App", "main")
     },

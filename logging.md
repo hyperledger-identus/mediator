@@ -1,6 +1,7 @@
 # Logging
 
 We want traceability from HTTP calls.
+
 - Each HTTP call needs to generate a call ID (preferably on the proxy). The ID must be within the scope of the ZIO application. So, every log will mention this ID. This ID must return to the user as an HTTP header.
 - In case of errors and problem reports, the user can use those IDs to get support.
 
@@ -8,7 +9,7 @@ A user can receive Level 3 support during the logging retention policies. The us
 
 ## Annotates
 
-We have special annotations in the log so there is traceability between the different logs. 
+We have special annotations in the log so there is traceability between the different logs.
 Here is the list of annotations and their meaning that we currently have:
 
 - `request-id` - Is the HTTP header `X-Request-Id` from the caller.

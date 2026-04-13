@@ -1,10 +1,17 @@
-| Live Demo                        | Discord Identus                          | Discord Linux Foundation Decentralized Trust |
-|----------------------------------|------------------------------------------|----------------------------------------------|
-| [![Atala-Symbol]][Link-LiveDemo] | [![Badge-Discord]][Link-Discord Identus] | [![Badge-Discord]][Link-Discord LFDT]        |
+<p align="center">
+    <a href="https://www.lfdecentralizedtrust.org/projects/identus">
+        <img src="https://raw.githubusercontent.com/hyperledger-identus/docs/refs/heads/main/static/img/graphics/identus-hero.svg" alt="identus-logo" height="99px" />
+    </a>
+</p>
 
-| CI              | Project Stage  | Commits since latest release       |
-|-----------------|----------------|------------------------------------|
-| ![CI][Badge-CI] | ![Badge-Stage] | ![Badge-CommitsSinceLatestRelease] |
+[![Coverage Status](https://coveralls.io/repos/github/hyperledger-identus/mediator/badge.svg?branch=main)](https://coveralls.io/github/hyperledger-identus/mediator?branch=main)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=hyperledger-identus_mediator&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=hyperledger-identus_mediator)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11793/badge)](https://www.bestpractices.dev/projects/11793)
+[![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/hyperledger-identus/mediator/badge)](https://scorecard.dev/viewer/?uri=github.com/hyperledger-identus/mediator)
+
+[![GitHub release](https://img.shields.io/github/release/hyperledger-identus/mediator.svg)](https://github.com/hyperledger-identus/mediator/releases)
+[![Docker Pulls](https://img.shields.io/docker/pulls/hyperledgeridentus/identus-mediator)](https://hub.docker.com/r/hyperledgeridentus/identus-mediator)
+[![Discord](https://img.shields.io/discord/905194001349627914?label=discord)](https://discord.com/channels/905194001349627914/1230596020790886490)
 
 # Mediator
 
@@ -26,23 +33,23 @@ graph LR
 
 **#identus-mediator on Discord:**
 
-For the fastest answers, join the [#identus-mediator][Link-Discord Identus] channel in the official Identus Discord and ask your
+For the fastest answers, join the [#identus-mediator][Link-Discord LFDT] channel in the official Identus Discord and ask your
 questions, or chat with other Identus developers and pioneers!
 
 **More documentation:**
 
 - [LICENSE](LICENSE) - Apache License, Version 2.0
 - [Mediation Flows](Mediation-Flows.md) - Examples of mediation flows
-- [Mediator Purpose](#Description)
-- [Protocols Supported](#Protocols)
-    - [Mediator Protocol State and Flow](Coordinate-Mediation-Protocol.md)
+- [Mediator Purpose](#description)
+- [Protocols Supported](#protocols)
+  - [Mediator Protocol State and Flow](Coordinate-Mediation-Protocol.md)
 - [Pre-reqs](#pre-reqs)
 - [Getting started](#getting-started)
-    - [Docker only](#docker-only)
+  - [Docker only](#docker-only)
 - [Configuring the mediator](#configure-the-mediator)
-    - [Mediator identity](#identity)
-    - [Mediator storage](#mediator-storage)
-        - [Mediator-Storage-In-cloud](#mongodb-in-cloud)
+  - [Mediator identity](#identity)
+  - [Mediator storage](#mediator-storage)
+    - [Mediator-Storage-In-cloud](#mongodb-in-the-cloud)
 - [Mediator Deployment](#deploy)
 - [Mediator Test suite](#mediator-tests)
 - [Mediator Error Handling](Mediator-Error_Handling.md#error-handling)
@@ -100,13 +107,13 @@ can assume that the mediator is always online.
 
 ## Protocols
 
-- [DONE] `BasicMessage 2.0` - https://didcomm.org/basicmessage/2.0
-- [DONE] `CoordinateMediation 2.0` - https://didcomm.org/coordinate-mediation/2.0/
+- [DONE] `BasicMessage 2.0` - <https://didcomm.org/basicmessage/2.0>
+- [DONE] `CoordinateMediation 2.0` - <https://didcomm.org/coordinate-mediation/2.0/>
 - See [link for the protocol specs](Coordinate-Mediation-Protocol.md)
-- [TODO] `CoordinateMediation 3.0` - https://didcomm.org/coordinate-mediation/3.0
-- [DONE] `MessagePickup 3` - https://didcomm.org/messagepickup/3.0/
-- [DONE] `TrustPing 2.0` - https://didcomm.org/trust-ping/2.0/
-- [DONE] `Report Problem 2.0` https://didcomm.org/report-problem/2.0/
+- [TODO] `CoordinateMediation 3.0` - <https://didcomm.org/coordinate-mediation/3.0>
+- [DONE] `MessagePickup 3` - <https://didcomm.org/messagepickup/3.0/>
+- [DONE] `TrustPing 2.0` - <https://didcomm.org/trust-ping/2.0/>
+- [DONE] `Report Problem 2.0` <https://didcomm.org/report-problem/2.0/>
 
 ### Pre-reqs
 
@@ -124,18 +131,18 @@ page
 
 - Clone the repository
 
-```
+```bash
 git clone git@github.com:hyperledger/identus-mediator.git
 ```
 
-```
+```bash
 shell> cd atala-prism-mediator
 shell> docker compose up mongo
 ```
 
-In another shell from the project root directory `atala-prism-mediator`
+In another shell from the project root directory `mediator`
 
-```
+```bash
 shell> sbt
 sbt> mediator/reStart
 ```
@@ -151,10 +158,10 @@ invitation for the Mediator.
 
 It is possible to run everything with a single command with Docker compose docker-compose.yml
 The latest stable image version is available in the Hyperledger Identus-Mediator repository.
-To build a docker image locally, run `NODE_OPTIONS=--openssl-legacy-provider sbt docker:publishLocal`.
+To build a docker image locally, run `sbt docker:publishLocal`.
 
 ```shell
-shell> NODE_OPTIONS=--openssl-legacy-provider sbt docker:publishLocal
+shell> sbt docker:publishLocal
 shell> MEDIATOR_VERSION=?; docker compose up
 ```
 
@@ -202,25 +209,26 @@ OR it can be set up with the variable:
 - The `messages` collection contains two types of messages: `Mediator` and `User`.
 
 1. **Mediator Messages**:
-    - Any Message to interacts with the mediator. For example: messages for setting up mediation, requesting mediation,
-      picking up messages from the mediator, or forward message to another agent through the mediator.
-    - The messages stored in the collection are usable for debugging purposes, mediator functionality, and interactions
-      with the mediator. Hence, after a predetermined period, deleting them is possible.
-    - This message type `Mediator` can be set up to have a configurable Time-To-Live (TTL) value, after which they can
-      expire.
-    - This is how the TTL is configurable for the collection messages [initdb.js](initdb.js)
+   - Any Message to interacts with the mediator. For example: messages for setting up mediation, requesting mediation,
+     picking up messages from the mediator, or forward message to another agent through the mediator.
+   - The messages stored in the collection are usable for debugging purposes, mediator functionality, and interactions
+     with the mediator. Hence, after a predetermined period, deleting them is possible.
+   - This message type `Mediator` can be set up to have a configurable Time-To-Live (TTL) value, after which they can
+     expire.
+   - This is how the TTL is configurable for the collection messages [initdb.js](initdb.js)
 2. **User Messages**:
-    - These are the actual messages, e.g. the Forward message from the mediator, containing a User message inside. This
-      inside message gets stored as User deliverable to the user.
-    - They do not have a TTL and will persist in the system until the user retrieves them using a pickup protocol and
-      deletes them.
-    - The mediator is responsible for storing and making these user messages available for delivery to the intended
-      recipients.
-      For existing users, please utilize the migration script migration_mediator_collection.js to migrate the
-      collection.
 
-    - For existing users, please utilize the migration
-      script [migration_mediator_collection.js](migration_mediator_collection.js) to migrate the collection.
+   - These are the actual messages, e.g. the Forward message from the mediator, containing a User message inside. This
+     inside message gets stored as User deliverable to the user.
+   - They do not have a TTL and will persist in the system until the user retrieves them using a pickup protocol and
+     deletes them.
+   - The mediator is responsible for storing and making these user messages available for delivery to the intended
+     recipients.
+     For existing users, please utilize the migration script migration_mediator_collection.js to migrate the
+     collection.
+
+   - For existing users, please utilize the migration
+     script [migration_mediator_collection.js](migration_mediator_collection.js) to migrate the collection.
 
 ## Run
 
@@ -236,18 +244,6 @@ You can set up a specific version with `MEDIATOR_VERSION` like `MEDIATOR_VERSION
 
 #### Troubleshooting
 
-If you see
-the [compilation error](https://stackoverflow.com/questions/69719601/getting-error-digital-envelope-routines-reason-unsupported-code-err-oss)
-
-```shell
-[error]   opensslErrorStack: [ 'error:03000086:digital envelope routines::initialization error' ],
-[error]   library: 'digital envelope routines',
-[error]   reason: 'unsupported',
-[error]   code: 'ERR_OSSL_EVP_UNSUPPORTED'
-```
-
-You can try to run with `NODE_OPTIONS=--openssl-legacy-provider` to use the legacy provider.
-
 ### MongoDB In the cloud
 
 Use the Mongodb from the cloud like MongoDB Atlas.
@@ -259,29 +255,17 @@ You can easily deploy the image everywhere. We recommend a minimum of 250 mb ram
 
 ## mediator-tests
 
-https://github.com/input-output-hk/didcomm-v2-mediator-test-suite
-https://input-output-hk.github.io/didcomm-v2-mediator-test-suite/Reports.html
-
+<https://github.com/input-output-hk/didcomm-v2-mediator-test-suite>
+<https://input-output-hk.github.io/didcomm-v2-mediator-test-suite/Reports.html>
 
 ---
+
 [LICENSE](LICENSE) - Apache License, Version 2.0
 
-[Live-LiveDemo]:https://mediator.atalaprism.io/
-
-[Link-Identus]:https://github/hyperledger-identus/identus
-
-[Link-Discord Identus]:https://discord.gg/25uWZtDJzH
-
-[Link-Discord LFDT]:https://discord.gg/bN5CrUCdpj
-
+[Live-LiveDemo]: https://mediator.atalaprism.io/
+[Link-Identus]: https://github.com/hyperledger-identus/hyperledger-identus
+[Link-Discord LFDT]: https://discord.gg/bN5CrUCdpj
 [Badge-Stage]: https://img.shields.io/badge/0.9.2-Production%20Ready-brightgreen.svg
-
 [Badge-Discord]: https://img.shields.io/discord/1146426895114702858?logo=discord "chat on discord"
-
 [Badge-CI]: https://github.com/hyperledger-identus/mediator/workflows/CI/badge.svg
-
-[Badge-CommitsSinceLatestRelease]:https://img.shields.io/github/commits-since/hyperledger-identus/mediator/v1.0.0/main?logo=github
-
-[Atala-Symbol]:https://img.shields.io/badge/Mediator-Instance-blue.svg?logo=data:image/svg%2bxml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8yIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMTguMjEgMzI1LjE4Ij48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6IzU1NTlmMjtmaWxsLXJ1bGU6ZXZlbm9kZDt9PC9zdHlsZT48L2RlZnM+PGcgaWQ9IkxheWVyXzEtMiI+PGc+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTU5LjkxLDIxLjU4TDc0LjIzLDE2OC45MmMtMy4wOSw1LjMxLTEwLjc3LDUuMy0xMy44NC0uMDJsLTUuNS05LjU0Yy0xLjQzLTIuNDgtMS40My01LjU0LC4wMS04LjAyTDE0MC42LDMuOThjMy4wOS01LjMyLDEwLjc5LTUuMywxMy44NSwuMDRsNS40OSw5LjU2YzEuNDIsMi40OCwxLjQyLDUuNTMtLjAyLDhaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNjAuMywxOTIuODhsLTM0LjM1LDU5LjA3Yy0xLjQ0LDIuNDctNC4wOSwzLjk5LTYuOTUsMy45OGwtMTEuMDItLjA0Yy02LjE1LS4wMi05Ljk4LTYuNy02Ljg4LTEyLjAybDM0LjM1LTU5LjA3YzEuNDQtMi40Nyw0LjA5LTMuOTksNi45NS0zLjk4bDExLjAyLC4wNGM2LjE1LC4wMiw5Ljk4LDYuNyw2Ljg4LDEyLjAyWiIvPjxwYXRoIGlkPSJGaWxsLTIiIGNsYXNzPSJjbHMtMSIgZD0iTTY2Ljk2LDI1Ni4xbDExLjAyLC4wNGMyLjg2LC4wMSw1LjUxLTEuNTEsNi45NC0zLjk4TDE4OS4yOCw3Mi43MmMxLjQ0LTIuNDcsMS40NS01LjUyLC4wMi04bC01LjQ5LTkuNTZjLTMuMDYtNS4zNC0xMC43Ni01LjM2LTEzLjg1LS4wNEw2MC4wNywyNDQuMDhjLTMuMDksNS4zMiwuNzMsMTEuOTksNi44OCwxMi4wMloiLz48cGF0aCBpZD0iRmlsbC0zIiBjbGFzcz0iY2xzLTEiIGQ9Ik0xMjUuOTMsMjU2LjMzbDExLjAyLC4wNGMyLjg2LC4wMSw1LjUxLTEuNTEsNi45NS0zLjk4TDIxOC42NCwxMjMuODZjMS40NC0yLjQ3LDEuNDUtNS41MiwuMDItOGwtNS40OS05LjU2Yy0zLjA2LTUuMzQtMTAuNzYtNS4zNi0xMy44NS0uMDRMMTE5LjA0LDI0NC4zMWMtMy4wOSw1LjMyLC43MywxMS45OSw2Ljg4LDEyLjAyWiIvPjxwYXRoIGlkPSJGaWxsLTQiIGNsYXNzPSJjbHMtMSIgZD0iTTE3My4zOCwyNjAuNTJsNS41MSw5LjUyYzMuMDgsNS4zMiwxMC43NSw1LjMyLDEzLjg0LC4wMWw2NS4zOS0xMTIuNDVjMy4wOS01LjMyLS43My0xMS45OS02Ljg4LTEyLjAybC0xMS4wMi0uMDRjLTIuODYtLjAxLTUuNTEsMS41MS02Ljk1LDMuOThsLTU5Ljg4LDEwMi45N2MtMS40NCwyLjQ4LTEuNDUsNS41NCwwLDguMDNaIi8+PHBhdGggaWQ9IkZpbGwtNSIgY2xhc3M9ImNscy0xIiBkPSJNMjIyLjEsMzIxLjJsMTkuNS0zMy41NGMxLjQ0LTIuNDcsMS40NS01LjUyLC4wMi04bC01LjQ5LTkuNTZjLTMuMDYtNS4zNC0xMC43Ni01LjM2LTEzLjg1LS4wNGwtMTkuNTIsMzMuNThjLTEuNDQsMi40OC0xLjQ1LDUuNTQsMCw4LjAzbDUuNTEsOS41MmMzLjA4LDUuMzIsMTAuNzUsNS4zMiwxMy44NCwuMDFaIi8+PHBhdGggaWQ9IkZpbGwtNiIgY2xhc3M9ImNscy0xIiBkPSJNMzEwLjI2LDE0NS43N2wtMTEtLjA4Yy0yLjg3LS4wMi01LjUzLDEuNS02Ljk3LDMuOThsLTU2LjA5LDk2LjQ2Yy0zLjA5LDUuMzIsLjczLDEyLDYuODgsMTIuMDJsMTEuMDIsLjA0YzIuODYsLjAxLDUuNTEtMS41MSw2Ljk0LTMuOThsNTYuMDctOTYuNDJjMy4wOS01LjMxLS43MS0xMS45Ny02Ljg2LTEyLjAyWiIvPjwvZz48L2c+PC9zdmc+
-
-[Atala-Favicon]:https://img.shields.io/badge/AtalaPrism-website-blue.svg?logo=data:image/svg%2bxml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8yIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNDIzLjkzIDQyMy45MyI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOnVybCgjbGluZWFyLWdyYWRpZW50KTt9LmNscy0ye2ZpbGw6I2ZmZjtmaWxsLXJ1bGU6ZXZlbm9kZDt9PC9zdHlsZT48bGluZWFyR3JhZGllbnQgaWQ9ImxpbmVhci1ncmFkaWVudCIgeDE9IjYxLjIxIiB5MT0iNjMxLjY2IiB4Mj0iMzY4LjEyIiB5Mj0iLTIyMi43NiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzlmOWZmMCIvPjxzdG9wIG9mZnNldD0iLjc5IiBzdG9wLWNvbG9yPSIjNTU1OWYyIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PGcgaWQ9IkxheWVyXzEtMiI+PGc+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iNDIzLjkzIiBoZWlnaHQ9IjQyMy45MyIgcng9Ijg2LjA2IiByeT0iODYuMDYiLz48Zz48cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Ik0yMTIuNzcsNzAuOTVMMTI3LjA5LDIxOC4zYy0zLjA5LDUuMzEtMTAuNzcsNS4zLTEzLjg0LS4wMmwtNS41LTkuNTRjLTEuNDMtMi40OC0xLjQzLTUuNTQsLjAxLTguMDJMMTkzLjQ1LDUzLjM1YzMuMDktNS4zMiwxMC43OS01LjMsMTMuODUsLjA0bDUuNDksOS41NmMxLjQyLDIuNDgsMS40Miw1LjUzLS4wMiw4WiIvPjxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTExMy4xNSwyNDIuMjZsLTM0LjM1LDU5LjA3Yy0xLjQ0LDIuNDctNC4wOSwzLjk5LTYuOTUsMy45OGwtMTEuMDItLjA0Yy02LjE1LS4wMi05Ljk4LTYuNy02Ljg4LTEyLjAybDM0LjM1LTU5LjA3YzEuNDQtMi40Nyw0LjA5LTMuOTksNi45NS0zLjk4bDExLjAyLC4wNGM2LjE1LC4wMiw5Ljk4LDYuNyw2Ljg4LDEyLjAyWiIvPjxwYXRoIGlkPSJGaWxsLTIiIGNsYXNzPSJjbHMtMiIgZD0iTTExOS44MSwzMDUuNDhsMTEuMDIsLjA0YzIuODYsLjAxLDUuNTEtMS41MSw2Ljk0LTMuOThMMjQyLjE0LDEyMi4wOWMxLjQ0LTIuNDcsMS40NS01LjUyLC4wMi04bC01LjQ5LTkuNTZjLTMuMDYtNS4zNC0xMC43Ni01LjM2LTEzLjg1LS4wNGwtMTA5Ljg5LDE4OC45N2MtMy4wOSw1LjMyLC43MywxMS45OSw2Ljg4LDEyLjAyWiIvPjxwYXRoIGlkPSJGaWxsLTMiIGNsYXNzPSJjbHMtMiIgZD0iTTE3OC43OSwzMDUuNzFsMTEuMDIsLjA0YzIuODYsLjAxLDUuNTEtMS41MSw2Ljk1LTMuOThsNzQuNzUtMTI4LjU0YzEuNDQtMi40NywxLjQ1LTUuNTIsLjAyLThsLTUuNDktOS41NmMtMy4wNi01LjM0LTEwLjc2LTUuMzYtMTMuODUtLjA0bC04MC4yOCwxMzguMDZjLTMuMDksNS4zMiwuNzMsMTEuOTksNi44OCwxMi4wMloiLz48cGF0aCBpZD0iRmlsbC00IiBjbGFzcz0iY2xzLTIiIGQ9Ik0yMjYuMjQsMzA5LjlsNS41MSw5LjUyYzMuMDgsNS4zMiwxMC43NSw1LjMyLDEzLjg0LC4wMWw2NS4zOS0xMTIuNDVjMy4wOS01LjMyLS43My0xMS45OS02Ljg4LTEyLjAybC0xMS4wMi0uMDRjLTIuODYtLjAxLTUuNTEsMS41MS02Ljk1LDMuOThsLTU5Ljg4LDEwMi45N2MtMS40NCwyLjQ4LTEuNDUsNS41NCwwLDguMDNaIi8+PGcgaWQ9IkZpbGwtNSI+PHBhdGggY2xhc3M9ImNscy0yIiBkPSJNMjc0Ljk1LDM3MC41OGwxOS41LTMzLjU0YzEuNDQtMi40NywxLjQ1LTUuNTIsLjAyLThsLTUuNDktOS41NmMtMy4wNi01LjM0LTEwLjc2LTUuMzYtMTMuODUtLjA0bC0xOS41MiwzMy41OGMtMS40NCwyLjQ4LTEuNDUsNS41NCwwLDguMDNsNS41MSw5LjUyYzMuMDgsNS4zMiwxMC43NSw1LjMyLDEzLjg0LC4wMVoiLz48L2c+PHBhdGggaWQ9IkZpbGwtNiIgY2xhc3M9ImNscy0yIiBkPSJNMzYzLjEyLDE5NS4xNWwtMTEtLjA4Yy0yLjg3LS4wMi01LjUzLDEuNS02Ljk3LDMuOThsLTU2LjA5LDk2LjQ2Yy0zLjA5LDUuMzIsLjczLDEyLDYuODgsMTIuMDJsMTEuMDIsLjA0YzIuODYsLjAxLDUuNTEtMS41MSw2Ljk0LTMuOThsNTYuMDctOTYuNDJjMy4wOS01LjMxLS43MS0xMS45Ny02Ljg2LTEyLjAyWiIvPjwvZz48L2c+PC9nPjwvc3ZnPg==
+[Badge-CommitsSinceLatestRelease]: https://img.shields.io/github/commits-since/hyperledger-identus/mediator/v1.0.0/main?logo=github

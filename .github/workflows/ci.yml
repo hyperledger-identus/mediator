@@ -1,15 +1,17 @@
 name: CI
 
 on:
-  workflow_dispatch:
   pull_request:
     branches-ignore:
       - "gh-pages"
   push:
     paths-ignore:
       - ".git-blame-ignore-revs"
-    branches: [main]
-    # tags: ["v*"]
+    branches:
+      - main
+
+permissions:
+  contents: read
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -18,31 +20,36 @@ jobs:
   Run-Tests:
     name: CI
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       # https://github.com/japgolly/setup-everything-scala
-      - uses: actions/checkout@v3
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           fetch-depth: 0 # Needed for the release tag // `git fetch --tags` will also work
+
       - name: Setup Java and Scala
-        uses: olafurpg/setup-scala@v14
+        uses: olafurpg/setup-scala@32ffa16635ff8f19cc21ea253a987f0fdf29844c # v14
         with:
           java-version: openjdk@1.17
+
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "lts/*"
+
       - name: Setup Scala.JS
-        uses: japgolly/setup-scalajs@v1
-      - name: Cache sbt
-        uses: coursier/cache-action@v6.3
-      - name: Cache embedmongo
-        uses: actions/cache@v4
-        with:
-          path: ~/.embedmongo
-          key: ${{ runner.os }}-embedmongo-4.14.0
-          restore-keys: |
-            ${{ runner.os }}-embedmongo-4.14.0
-      ### Compile and TESTS ###
-      - run: sbt -mem 2048 -J-Xmx5120m "test"
+        uses: japgolly/setup-scalajs@f530918424acb5cca3d46ccd8f6d6a35f5654fd3 # v1
+
+      - name: Run tests
+        run: sbt -v -mem 2048 -J-Xmx5120m coverage test coverageReport coverageAggregate
+
+      - name: Upload coverage to Coveralls
         env:
-          NODE_OPTIONS: "--openssl-legacy-provider"
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+        run: sbt -mem 2048 coverageReport coverageAggregate coveralls

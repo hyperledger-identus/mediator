@@ -35,6 +35,8 @@ jobs:
   build-binaries:
     if: ${{ !contains(github.event.head_commit.message, 'chore(release)') }}
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     env:
       GITHUB_ACTOR: "hyperledger-bot"
       GITHUB_ACTOR_EMAIL: "hyperledger-bot@hyperledger.org"
@@ -42,52 +44,63 @@ jobs:
       JAVA_TOOL_OPTIONS: -Djava.net.preferIPv4Stack=true
       SBT_OPTS: -Xmx2G
     steps:
-      - uses: actions/checkout@v4
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
       - name: Setup Java and Scala
-        uses: olafurpg/setup-scala@v14
+        uses: olafurpg/setup-scala@32ffa16635ff8f19cc21ea253a987f0fdf29844c # v14
         with:
           java-version: zulu@1.11.0
 
       - name: Cache sbt
-        uses: coursier/cache-action@v6.3
+        uses: coursier/cache-action@90c37294538be80a558fd665531fcdc2b467b475 # v8.1.0
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "lts/*"
 
       - name: Setup Scala.JS
-        uses: japgolly/setup-scalajs@v1
+        uses: japgolly/setup-scalajs@f530918424acb5cca3d46ccd8f6d6a35f5654fd3 # v1
 
       - name: Build Binaries
-        env:
-          NODE_OPTIONS: --openssl-legacy-provider
-        run:  sbt -J-Xmx5120m "docker:stage"
-  
+        run: sbt -J-Xmx5120m "docker:stage"
+
       - name: Save build Directory
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: docker-directory-artifact
           path: ./mediator/target/docker/stage
- 
+
   build-and-push-docker-images:
     name: Build and Push Docker images
     runs-on: ubuntu-latest
     needs: build-binaries
+    permissions:
+      contents: read
     strategy:
       fail-fast: false
     steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
         with:
           images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
           tags: |
             type=semver,pattern={{version}}
             type=sha,format=long
             type=edge,branch=main
-            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') && !contains(github.ref, 'RC') && !contains(github.ref, 'rc') }}
+            type=raw,value=edge,enable=${{ startsWith(github.ref, 'refs/tags/v') && (contains(github.ref, 'RC') || contains(github.ref, 'rc')) }}
 
       - name: JOB INFO
         env:
@@ -108,16 +121,16 @@ jobs:
           echo "### JOB_CONTEXT: $JOB_CONTEXT"
 
       - name: Download docker-directory-artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: docker-directory-artifact
           path: docker-artifact
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@4d04d5d9486b7bd6fa91e7baf45bbb4f8b9deedd # v4.0.0
         with:
           buildkitd-flags: --debug
           buildkitd-config-inline: |
@@ -125,8 +138,8 @@ jobs:
               max-parallelism = 1
           platforms: linux/amd64,linux/arm64
 
-      - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}' 
-        uses: docker/login-action@v3
+      - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}'
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
           registry: docker.io
           username: ${{ vars.DOCKERHUB_USERNAME }}
@@ -135,7 +148,7 @@ jobs:
      # TODO FIX These builds the image multiple times (matrix)
       - name: Build and push identus-mediator Image
         id: push
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
         with:
           context: ./docker-artifact/
           platforms: linux/amd64,linux/arm64

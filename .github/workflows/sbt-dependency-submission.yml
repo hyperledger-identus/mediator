@@ -8,32 +8,39 @@ on:
     - cron: "0 20 * * *"
   workflow_dispatch:
 permissions:
-      contents: write # this permission is needed to submit the dependency graph
+  contents: read
 jobs:
   dependency-graph:
     name: Update Dependency Graph
     runs-on: ubuntu-latest # or windows-latest, or macOS-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v3
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
+        with:
+          egress-policy: audit
+
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Setup Java and Scala
-        uses: olafurpg/setup-scala@v14
+        uses: olafurpg/setup-scala@32ffa16635ff8f19cc21ea253a987f0fdf29844c # v14
         with:
           java-version: openjdk@1.17.0
       - name: Setup Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
         with:
           node-version: "18" # or whatever
       - name: Setup Scala.JS
-        uses: japgolly/setup-scalajs@v1
+        uses: japgolly/setup-scalajs@f530918424acb5cca3d46ccd8f6d6a35f5654fd3 # v1
       - name: Cache sbt
-        uses: coursier/cache-action@v6.3
+        uses: coursier/cache-action@90c37294538be80a558fd665531fcdc2b467b475 # v8.1.0
       - name: npm install
         run: npm install
-      - uses: scalacenter/sbt-dependency-submission@v2
+      - uses: scalacenter/sbt-dependency-submission@f43202114d7522a4b233e052f82c2eea8d658134 # v3.2.1
         with:
           working-directory: ./
-         #  modules-ignore:
-         #    identus-mediator_3
-         #    mediator_3
-         #    webapp_sjs1_3
+          #  modules-ignore:
+          #    identus-mediator_3
+          #    mediator_3
+          #    webapp_sjs1_3
           configs-ignore: test scala-tool scala-doc-tool
