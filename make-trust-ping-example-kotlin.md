@@ -1,11 +1,12 @@
 # Test Mediator (Trust Ping)
 
+Start the mediator from repo using sbt
 
-Start the mediator from repo using sbt 
 ```sbt
  sbt mediator/run  
 ```
-Using  Docker 
+
+Using  Docker
 ***if you have mac os comment the the line
  #network_mode: host in docker-compose.yaml***
 
@@ -13,7 +14,6 @@ Using  Docker
 docker:publishLocal # Compile and create the mediator image
 docker-compose up #docker run -p 8080:8080 docker.io/hyperledgeridentus/identus-mediator:0.1.0-SNAPSHOT
 ```
-
 
 ### Required Dependencies  for e.g. add to your build.gradle.kts
 

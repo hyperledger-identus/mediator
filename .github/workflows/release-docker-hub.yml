@@ -45,7 +45,7 @@ jobs:
       SBT_OPTS: -Xmx2G
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
         with:
           egress-policy: audit
 
@@ -68,14 +68,14 @@ jobs:
         uses: japgolly/setup-scalajs@f530918424acb5cca3d46ccd8f6d6a35f5654fd3 # v1
 
       - name: Build Binaries
-        run:  sbt -J-Xmx5120m "docker:stage"
-  
+        run: sbt -J-Xmx5120m "docker:stage"
+
       - name: Save build Directory
-        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: docker-directory-artifact
           path: ./mediator/target/docker/stage
- 
+
   build-and-push-docker-images:
     name: Build and Push Docker images
     runs-on: ubuntu-latest
@@ -86,7 +86,7 @@ jobs:
       fail-fast: false
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        uses: step-security/harden-runner@f808768d1510423e83855289c910610ca9b43176 # v2.17.0
         with:
           egress-policy: audit
 
@@ -138,8 +138,8 @@ jobs:
               max-parallelism = 1
           platforms: linux/amd64,linux/arm64
 
-      - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}' 
-        uses: docker/login-action@b45d80f862d83dbcd57f89517bcf500b2ab88fb2 # v4.0.0
+      - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}'
+        uses: docker/login-action@4907a6ddec9925e35a0a9e82d7399ccc52663121 # v4.1.0
         with:
           registry: docker.io
           username: ${{ vars.DOCKERHUB_USERNAME }}
@@ -148,7 +148,7 @@ jobs:
      # TODO FIX These builds the image multiple times (matrix)
       - name: Build and push identus-mediator Image
         id: push
-        uses: docker/build-push-action@d08e5c354a6adb9ed34480a06d141179aa583294 # v7.0.0
+        uses: docker/build-push-action@bcafcacb16a39f128d818304e6c9c0c18556b85f # v7.1.0
         with:
           context: ./docker-artifact/
           platforms: linux/amd64,linux/arm64

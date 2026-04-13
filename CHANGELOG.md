@@ -1,17 +1,14 @@
 # [1.0.0](https://github.com/hyperledger-identus/mediator/compare/v0.15.0...v1.0.0) (2024-10-02)
 
-
 ### Bug Fixes
 
 * add env vars for SERVICE_ENDPOINTS ([#335](https://github.com/hyperledger-identus/mediator/issues/335)) ([f2b078a](https://github.com/hyperledger-identus/mediator/commit/f2b078aa3b58fddc7f85af9e1d46503680263761))
 * rename repo link to hyperledger/identus-mediator ([#331](https://github.com/hyperledger-identus/mediator/issues/331)) ([69f0124](https://github.com/hyperledger-identus/mediator/commit/69f012453fe29d7c1da6846b4137f187dfe4e8ac))
 * wrong mediator repository in docker compose ([#334](https://github.com/hyperledger-identus/mediator/issues/334)) ([a43fe38](https://github.com/hyperledger-identus/mediator/commit/a43fe38ddbcf5d75fcade7f62d416ef3f752cf0a))
 
-
 ### chore
 
 * Mediator Version 1.0.0 ([#354](https://github.com/hyperledger-identus/mediator/issues/354)) ([af65517](https://github.com/hyperledger-identus/mediator/commit/af65517c1337e540d0a92d1f758c8ce9fe3ebe67))
-
 
 ### BREAKING CHANGES
 
@@ -20,7 +17,6 @@
 Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 # 0.15.0 (2024-07-10)
-
 
 ### Bug Fixes
 
@@ -76,7 +72,6 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 * UserAccountRepo.createOrFindDidAccount ([#69](https://github.com/hyperledger-identus/mediator/issues/69)) ([dc2ccfd](https://github.com/hyperledger-identus/mediator/commit/dc2ccfd80cc041f4acaf2484466cd541c35a47d2))
 * websocket correct indentation ([#182](https://github.com/hyperledger-identus/mediator/issues/182)) ([4a5b607](https://github.com/hyperledger-identus/mediator/commit/4a5b60780b9f608dc2e9137d4b3d80bf826cc83f))
 
-
 ### Features
 
 * Add config from application.conf and docker-compose and an example ([#10](https://github.com/hyperledger-identus/mediator/issues/10)) ([0031067](https://github.com/hyperledger-identus/mediator/commit/0031067c19aeb03457048bc34a4e5cd9e35230d8))
@@ -110,13 +105,11 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 # [0.15.0-beta.2](https://github.com/hyperledger-identus/mediator/compare/v0.15.0-beta.1...v0.15.0-beta.2) (2024-07-10)
 
-
 ### Bug Fixes
 
 * Hyperledger Bot DCO ([0d9ca67](https://github.com/hyperledger-identus/mediator/commit/0d9ca67950dedca5c6f4389b17a70fd496073df3))
 
 ## [0.14.2](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.14.1...prism-mediator-v0.14.2) (2024-04-04)
-
 
 ### Bug Fixes
 
@@ -124,18 +117,15 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 ## [0.14.1](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.14.0...prism-mediator-v0.14.1) (2024-02-20)
 
-
 ### Bug Fixes
 
 * Support alias (DID) in Live mode ([#235](https://github.com/hyperledger-identus/mediator/issues/235)) ([2de77ed](https://github.com/hyperledger-identus/mediator/commit/2de77ed707e90c6356eaaf3ed9b7ced7325c8949)), closes [#230](https://github.com/hyperledger-identus/mediator/issues/230)
 
 # [0.14.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.13.0...prism-mediator-v0.14.0) (2024-02-06)
 
-
 ### Bug Fixes
 
 * re-enable the logging based on X-Request-Id header ([#211](https://github.com/hyperledger-identus/mediator/issues/211)) ([dee7dc2](https://github.com/hyperledger-identus/mediator/commit/dee7dc2bd9a0de689e2c6fb8141383aa7779d6a4))
-
 
 ### Features
 
@@ -143,11 +133,9 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 # [0.13.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.12.3...prism-mediator-v0.13.0) (2023-11-30)
 
-
 ### Bug Fixes
 
 * register the transport ([#192](https://github.com/hyperledger-identus/mediator/issues/192)) ([e73a2ab](https://github.com/hyperledger-identus/mediator/commit/e73a2ab74c60916eec68f0415ba9a1d3da5c2587))
-
 
 ### Features
 
@@ -155,20 +143,17 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 ## [0.12.3](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.12.2...prism-mediator-v0.12.3) (2023-11-30)
 
-
 ### Bug Fixes
 
 * force release.. ([#190](https://github.com/hyperledger-identus/mediator/issues/190)) ([b02f628](https://github.com/hyperledger-identus/mediator/commit/b02f628bd4a5d0ef1d234b5a3c211cfee96e17fa))
 
 ## [0.12.2](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.12.1...prism-mediator-v0.12.2) (2023-11-22)
 
-
 ### Bug Fixes
 
 * websocket correct indentation ([#182](https://github.com/hyperledger-identus/mediator/issues/182)) ([c30fc1f](https://github.com/hyperledger-identus/mediator/commit/c30fc1f7f15ab3fc14cf0fc36bcf2fc5b5bdc0b6))
 
 ## [0.12.1](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.12.0...prism-mediator-v0.12.1) (2023-11-22)
-
 
 ### Bug Fixes
 
@@ -177,18 +162,15 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 # [0.12.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.11.0...prism-mediator-v0.12.0) (2023-11-22)
 
-
 ### Features
 
 * websockets support ([#172](https://github.com/hyperledger-identus/mediator/issues/172)) ([30da5e7](https://github.com/hyperledger-identus/mediator/commit/30da5e7603e5373b96762214f82b0329a5d4000d))
 
 # [0.11.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.10.2...prism-mediator-v0.11.0) (2023-11-10)
 
-
 ### Bug Fixes
 
 * incorrect body of the message results in problem report ([#161](https://github.com/hyperledger-identus/mediator/issues/161)) ([6d8b9b8](https://github.com/hyperledger-identus/mediator/commit/6d8b9b8493f32d27c31c44c170268cdd3cb5170b))
-
 
 ### Features
 
@@ -197,13 +179,11 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 ## [0.10.2](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.10.1...prism-mediator-v0.10.2) (2023-11-06)
 
-
 ### Bug Fixes
 
 * Send problemReport for duplicate message ([#157](https://github.com/hyperledger-identus/mediator/issues/157)) ([df522cf](https://github.com/hyperledger-identus/mediator/commit/df522cf57e550827dbfa3bff665c00b63051018e))
 
 ## [0.10.1](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.10.0...prism-mediator-v0.10.1) (2023-10-13)
-
 
 ### Bug Fixes
 
@@ -216,7 +196,6 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 # [0.10.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.9.2...prism-mediator-v0.10.0) (2023-09-21)
 
-
 ### Bug Fixes
 
 * Added DidSubject to report problem when not enrolled ([#111](https://github.com/hyperledger-identus/mediator/issues/111)) ([40c5d06](https://github.com/hyperledger-identus/mediator/commit/40c5d066840d2e0ae119fccee10d03bb10d7a5e9))
@@ -224,7 +203,6 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 * Encoder for VerificationMethodReferenced as String ([#110](https://github.com/hyperledger-identus/mediator/issues/110)) ([761d422](https://github.com/hyperledger-identus/mediator/commit/761d4227b8eef486fa12510814bb4c075f0b9c87))
 * sign ProblemReport when TO is unspecified ([#105](https://github.com/hyperledger-identus/mediator/issues/105)) ([586dd9f](https://github.com/hyperledger-identus/mediator/commit/586dd9f1cce1763fd4cf5f1db93cf53f94740816))
 * Update local docker compose configuration by adding the SERVICE_ENDPOINT port ([#128](https://github.com/hyperledger-identus/mediator/issues/128)) ([2adc6aa](https://github.com/hyperledger-identus/mediator/commit/2adc6aac26593e0f868dfee2e81afae7c4337b32))
-
 
 ### Features
 
@@ -234,7 +212,6 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 ## [0.9.2](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.9.1...prism-mediator-v0.9.2) (2023-08-30)
 
-
 ### Bug Fixes
 
 * **mediator:** Enabled X-Request-Id ATL-5568 ([#104](https://github.com/hyperledger-identus/mediator/issues/104)) ([b0d4fee](https://github.com/hyperledger-identus/mediator/commit/b0d4feec19b3d4dc796e580789b163d2c3855d55))
@@ -243,13 +220,11 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 ## [0.9.1](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.9.0...prism-mediator-v0.9.1) (2023-08-22)
 
-
 ### Bug Fixes
 
 * collectionName messages.outbound ([#92](https://github.com/hyperledger-identus/mediator/issues/92)) ([a1bd657](https://github.com/hyperledger-identus/mediator/commit/a1bd657df0cc12a30bcc910028a84104efb9f65a))
 
 # [0.9.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.8.2...prism-mediator-v0.9.0) (2023-08-21)
-
 
 ### Features
 
@@ -257,13 +232,11 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 ## [0.8.2](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.8.1...prism-mediator-v0.8.2) (2023-08-18)
 
-
 ### Bug Fixes
 
 * alias list is empty in new accounts by default ([#87](https://github.com/hyperledger-identus/mediator/issues/87)) ([39484e6](https://github.com/hyperledger-identus/mediator/commit/39484e68b87bf2c20570c271b9ee8fd447471b9f))
 
 ## [0.8.1](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.8.0...prism-mediator-v0.8.1) (2023-08-18)
-
 
 ### Bug Fixes
 
@@ -271,13 +244,11 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 # [0.8.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.7.0...prism-mediator-v0.8.0) (2023-08-18)
 
-
 ### Features
 
 * reply asynchronous unless return_route all ([#86](https://github.com/hyperledger-identus/mediator/issues/86)) ([6249f37](https://github.com/hyperledger-identus/mediator/commit/6249f3701e2247614a5b42042cdbd8e0ab4541bb))
 
 # [0.7.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.6.0...prism-mediator-v0.7.0) (2023-08-18)
-
 
 ### Bug Fixes
 
@@ -285,13 +256,11 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 * parsing error when return_route is none ([#77](https://github.com/hyperledger-identus/mediator/issues/77)) ([02dde1e](https://github.com/hyperledger-identus/mediator/commit/02dde1efc3b051b8c65e0d819c8737ebe769a66c))
 * UserAccountRepo.createOrFindDidAccount ([#69](https://github.com/hyperledger-identus/mediator/issues/69)) ([3526f0a](https://github.com/hyperledger-identus/mediator/commit/3526f0a358b9928d74d1600b5705d42e36c90791))
 
-
 ### Features
 
 * Error handling and Send Problem Reports ([#65](https://github.com/hyperledger-identus/mediator/issues/65)) ([fe46055](https://github.com/hyperledger-identus/mediator/commit/fe460550e8f1906eeaf29eb8cec45f6170fe7cbd))
 
 # [0.6.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.5.0...prism-mediator-v0.6.0) (2023-07-27)
-
 
 ### Features
 
@@ -300,13 +269,11 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 # [0.5.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.4.1...prism-mediator-v0.5.0) (2023-07-21)
 
-
 ### Features
 
 * add endpoint to get the OOB mediate invitation ([#63](https://github.com/hyperledger-identus/mediator/issues/63)) ([c82282c](https://github.com/hyperledger-identus/mediator/commit/c82282ca8c7061cc1ec702af538ab77e2c9a1f3c))
 
 ## [0.4.1](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.4.0...prism-mediator-v0.4.1) (2023-07-20)
-
 
 ### Bug Fixes
 
@@ -314,11 +281,9 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 # [0.4.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.3.1...prism-mediator-v0.4.0) (2023-07-13)
 
-
 ### Bug Fixes
 
 * Id/hash of the message must be deterministic ([#53](https://github.com/hyperledger-identus/mediator/issues/53)) ([d122b99](https://github.com/hyperledger-identus/mediator/commit/d122b993d54b3a8e557374709b9d8628c38ee74e))
-
 
 ### Features
 
@@ -327,13 +292,11 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 ## [0.3.1](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.3.0...prism-mediator-v0.3.1) (2023-07-10)
 
-
 ### Bug Fixes
 
 * mediator oob webpage added logo  ([#42](https://github.com/hyperledger-identus/mediator/issues/42)) ([45debc8](https://github.com/hyperledger-identus/mediator/commit/45debc8c2d607cb298af0f1b047fb2083a334b71))
 
 # [0.3.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.2.0...prism-mediator-v0.3.0) (2023-07-07)
-
 
 ### Bug Fixes
 
@@ -341,13 +304,11 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 * mediator docker compose image repo and version ([#39](https://github.com/hyperledger-identus/mediator/issues/39)) ([116174b](https://github.com/hyperledger-identus/mediator/commit/116174ba616c31f5f28c099dfb1b04a360d258e0))
 * mediator rename package and refactoring ([#41](https://github.com/hyperledger-identus/mediator/issues/41)) ([c755c99](https://github.com/hyperledger-identus/mediator/commit/c755c99f3547561b46d3b2cbac4e3cecc467d0c6))
 
-
 ### Features
 
 * fix mongo config when no port & support gzip ([#35](https://github.com/hyperledger-identus/mediator/issues/35)) ([b2b2a02](https://github.com/hyperledger-identus/mediator/commit/b2b2a02261ffdd5a4362e4b8e28f34479f4eccef))
 
 # [0.2.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.1.1...prism-mediator-v0.2.0) (2023-07-04)
-
 
 ### Bug Fixes
 
@@ -358,7 +319,6 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 * mediator db not storing the original value for protected header ([#15](https://github.com/hyperledger-identus/mediator/issues/15)) ([bd119f1](https://github.com/hyperledger-identus/mediator/commit/bd119f162b1735d1e7c386e7e421877e19bec7b2))
 * mediator unique constraint issue ([#25](https://github.com/hyperledger-identus/mediator/issues/25)) ([576d7a3](https://github.com/hyperledger-identus/mediator/commit/576d7a3090598eca325b7c5ddc9834298253ba8b))
 * trustPing call back not working ([#23](https://github.com/hyperledger-identus/mediator/issues/23)) ([e8bf356](https://github.com/hyperledger-identus/mediator/commit/e8bf356de2b8143e7728e5414e6b2cfc24ae4957))
-
 
 ### Features
 
@@ -373,7 +333,6 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 ## [0.1.1](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.1.0...prism-mediator-v0.1.1) (2023-05-23)
 
-
 ### Bug Fixes
 
 * execute the ProtocolExecute's jobToRun zio ([#8](https://github.com/hyperledger-identus/mediator/issues/8)) ([5034499](https://github.com/hyperledger-identus/mediator/commit/503449991e10a78b82b1094d239703a0c9cd167b))
@@ -381,11 +340,9 @@ Signed-off-by: FabioPinheiro <fabiomgpinheiro@gmail.com>
 
 # [0.1.0](https://github.com/hyperledger-identus/mediator/compare/prism-mediator-v0.0.1...prism-mediator-v0.1.0) (2023-05-18)
 
-
 ### Bug Fixes
 
 * sbt config enable docker plugin ([#6](https://github.com/hyperledger-identus/mediator/issues/6)) ([a102724](https://github.com/hyperledger-identus/mediator/commit/a102724bf9ed14f3a51b876c0e6acfbccbc96a6c))
-
 
 ### Features
 
