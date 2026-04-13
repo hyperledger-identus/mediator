@@ -33,15 +33,15 @@ graph LR
 
 **#identus-mediator on Discord:**
 
-For the fastest answers, join the [#identus-mediator][Link-Discord Identus] channel in the official Identus Discord and ask your
+For the fastest answers, join the [#identus-mediator][Link-Discord LFDT] channel in the official Identus Discord and ask your
 questions, or chat with other Identus developers and pioneers!
 
 **More documentation:**
 
 - [LICENSE](LICENSE) - Apache License, Version 2.0
 - [Mediation Flows](Mediation-Flows.md) - Examples of mediation flows
-- [Mediator Purpose](#Description)
-- [Protocols Supported](#Protocols)
+- [Mediator Purpose](#description)
+- [Protocols Supported](#protocols)
   - [Mediator Protocol State and Flow](Coordinate-Mediation-Protocol.md)
 - [Pre-reqs](#pre-reqs)
 - [Getting started](#getting-started)
@@ -49,7 +49,7 @@ questions, or chat with other Identus developers and pioneers!
 - [Configuring the mediator](#configure-the-mediator)
   - [Mediator identity](#identity)
   - [Mediator storage](#mediator-storage)
-    - [Mediator-Storage-In-cloud](#mongodb-in-cloud)
+    - [Mediator-Storage-In-cloud](#mongodb-in-the-cloud)
 - [Mediator Deployment](#deploy)
 - [Mediator Test suite](#mediator-tests)
 - [Mediator Error Handling](Mediator-Error_Handling.md#error-handling)
@@ -107,13 +107,13 @@ can assume that the mediator is always online.
 
 ## Protocols
 
-- [DONE] `BasicMessage 2.0` - https://didcomm.org/basicmessage/2.0
-- [DONE] `CoordinateMediation 2.0` - https://didcomm.org/coordinate-mediation/2.0/
+- [DONE] `BasicMessage 2.0` - <https://didcomm.org/basicmessage/2.0>
+- [DONE] `CoordinateMediation 2.0` - <https://didcomm.org/coordinate-mediation/2.0/>
 - See [link for the protocol specs](Coordinate-Mediation-Protocol.md)
-- [TODO] `CoordinateMediation 3.0` - https://didcomm.org/coordinate-mediation/3.0
-- [DONE] `MessagePickup 3` - https://didcomm.org/messagepickup/3.0/
-- [DONE] `TrustPing 2.0` - https://didcomm.org/trust-ping/2.0/
-- [DONE] `Report Problem 2.0` https://didcomm.org/report-problem/2.0/
+- [TODO] `CoordinateMediation 3.0` - <https://didcomm.org/coordinate-mediation/3.0>
+- [DONE] `MessagePickup 3` - <https://didcomm.org/messagepickup/3.0/>
+- [DONE] `TrustPing 2.0` - <https://didcomm.org/trust-ping/2.0/>
+- [DONE] `Report Problem 2.0` <https://didcomm.org/report-problem/2.0/>
 
 ### Pre-reqs
 
@@ -131,18 +131,18 @@ page
 
 - Clone the repository
 
-```
+```bash
 git clone git@github.com:hyperledger/identus-mediator.git
 ```
 
-```
+```bash
 shell> cd atala-prism-mediator
 shell> docker compose up mongo
 ```
 
 In another shell from the project root directory `mediator`
 
-```
+```bash
 shell> sbt
 sbt> mediator/reStart
 ```
@@ -255,20 +255,17 @@ You can easily deploy the image everywhere. We recommend a minimum of 250 mb ram
 
 ## mediator-tests
 
-https://github.com/input-output-hk/didcomm-v2-mediator-test-suite
-https://input-output-hk.github.io/didcomm-v2-mediator-test-suite/Reports.html
+<https://github.com/input-output-hk/didcomm-v2-mediator-test-suite>
+<https://input-output-hk.github.io/didcomm-v2-mediator-test-suite/Reports.html>
 
 ---
 
 [LICENSE](LICENSE) - Apache License, Version 2.0
 
 [Live-LiveDemo]: https://mediator.atalaprism.io/
-[Link-Identus]: https://github/hyperledger-identus/identus
-[Link-Discord Identus]: https://discord.gg/25uWZtDJzH
+[Link-Identus]: https://github.com/hyperledger-identus/hyperledger-identus
 [Link-Discord LFDT]: https://discord.gg/bN5CrUCdpj
 [Badge-Stage]: https://img.shields.io/badge/0.9.2-Production%20Ready-brightgreen.svg
 [Badge-Discord]: https://img.shields.io/discord/1146426895114702858?logo=discord "chat on discord"
 [Badge-CI]: https://github.com/hyperledger-identus/mediator/workflows/CI/badge.svg
 [Badge-CommitsSinceLatestRelease]: https://img.shields.io/github/commits-since/hyperledger-identus/mediator/v1.0.0/main?logo=github
-[Atala-Symbol]: https://img.shields.io/badge/Mediator-Instance-blue.svg?logo=data:image/svg%2bxml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8yIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMTguMjEgMzI1LjE4Ij48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6IzU1NTlmMjtmaWxsLXJ1bGU6ZXZlbm9kZDt9PC9zdHlsZT48L2RlZnM+PGcgaWQ9IkxheWVyXzEtMiI+PGc+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNMTU5LjkxLDIxLjU4TDc0LjIzLDE2OC45MmMtMy4wOSw1LjMxLTEwLjc3LDUuMy0xMy44NC0uMDJsLTUuNS05LjU0Yy0xLjQzLTIuNDgtMS40My01LjU0LC4wMS04LjAyTDE0MC42LDMuOThjMy4wOS01LjMyLDEwLjc5LTUuMywxMy44NSwuMDRsNS40OSw5LjU2YzEuNDIsMi40OCwxLjQyLDUuNTMtLjAyLDhaIi8+PHBhdGggY2xhc3M9ImNscy0xIiBkPSJNNjAuMywxOTIuODhsLTM0LjM1LDU5LjA3Yy0xLjQ0LDIuNDctNC4wOSwzLjk5LTYuOTUsMy45OGwtMTEuMDItLjA0Yy02LjE1LS4wMi05Ljk4LTYuNy02Ljg4LTEyLjAybDM0LjM1LTU5LjA3YzEuNDQtMi40Nyw0LjA5LTMuOTksNi45NS0zLjk4bDExLjAyLC4wNGM2LjE1LC4wMiw5Ljk4LDYuNyw2Ljg4LDEyLjAyWiIvPjxwYXRoIGlkPSJGaWxsLTIiIGNsYXNzPSJjbHMtMSIgZD0iTTY2Ljk2LDI1Ni4xbDExLjAyLC4wNGMyLjg2LC4wMSw1LjUxLTEuNTEsNi45NC0zLjk4TDE4OS4yOCw3Mi43MmMxLjQ0LTIuNDcsMS40NS01LjUyLC4wMi04bC01LjQ5LTkuNTZjLTMuMDYtNS4zNC0xMC43Ni01LjM2LTEzLjg1LS4wNEw2MC4wNywyNDQuMDhjLTMuMDksNS4zMiwuNzMsMTEuOTksNi44OCwxMi4wMloiLz48cGF0aCBpZD0iRmlsbC0zIiBjbGFzcz0iY2xzLTEiIGQ9Ik0xMjUuOTMsMjU2LjMzbDExLjAyLC4wNGMyLjg2LC4wMSw1LjUxLTEuNTEsNi45NS0zLjk4TDIxOC42NCwxMjMuODZjMS40NC0yLjQ3LDEuNDUtNS41MiwuMDItOGwtNS40OS05LjU2Yy0zLjA2LTUuMzQtMTAuNzYtNS4zNi0xMy44NS0uMDRMMTE5LjA0LDI0NC4zMWMtMy4wOSw1LjMyLC43MywxMS45OSw2Ljg4LDEyLjAyWiIvPjxwYXRoIGlkPSJGaWxsLTQiIGNsYXNzPSJjbHMtMSIgZD0iTTE3My4zOCwyNjAuNTJsNS41MSw5LjUyYzMuMDgsNS4zMiwxMC43NSw1LjMyLDEzLjg0LC4wMWw2NS4zOS0xMTIuNDVjMy4wOS01LjMyLS43My0xMS45OS02Ljg4LTEyLjAybC0xMS4wMi0uMDRjLTIuODYtLjAxLTUuNTEsMS41MS02Ljk1LDMuOThsLTU5Ljg4LDEwMi45N2MtMS40NCwyLjQ4LTEuNDUsNS41NCwwLDguMDNaIi8+PHBhdGggaWQ9IkZpbGwtNSIgY2xhc3M9ImNscy0xIiBkPSJNMjIyLjEsMzIxLjJsMTkuNS0zMy41NGMxLjQ0LTIuNDcsMS40NS01LjUyLC4wMi04bC01LjQ5LTkuNTZjLTMuMDYtNS4zNC0xMC43Ni01LjM2LTEzLjg1LS4wNGwtMTkuNTIsMzMuNThjLTEuNDQsMi40OC0xLjQ1LDUuNTQsMCw4LjAzbDUuNTEsOS41MmMzLjA4LDUuMzIsMTAuNzUsNS4zMiwxMy44NCwuMDFaIi8+PHBhdGggaWQ9IkZpbGwtNiIgY2xhc3M9ImNscy0xIiBkPSJNMzEwLjI2LDE0NS43N2wtMTEtLjA4Yy0yLjg3LS4wMi01LjUzLDEuNS02Ljk3LDMuOThsLTU2LjA5LDk2LjQ2Yy0zLjA5LDUuMzIsLjczLDEyLDYuODgsMTIuMDJsMTEuMDIsLjA0YzIuODYsLjAxLDUuNTEtMS41MSw2Ljk0LTMuOThsNTYuMDctOTYuNDJjMy4wOS01LjMxLS43MS0xMS45Ny02Ljg2LTEyLjAyWiIvPjwvZz48L2c+PC9zdmc+
-[Atala-Favicon]: https://img.shields.io/badge/AtalaPrism-website-blue.svg?logo=data:image/svg%2bxml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8yIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB2aWV3Qm94PSIwIDAgNDIzLjkzIDQyMy45MyI+PGRlZnM+PHN0eWxlPi5jbHMtMXtmaWxsOnVybCgjbGluZWFyLWdyYWRpZW50KTt9LmNscy0ye2ZpbGw6I2ZmZjtmaWxsLXJ1bGU6ZXZlbm9kZDt9PC9zdHlsZT48bGluZWFyR3JhZGllbnQgaWQ9ImxpbmVhci1ncmFkaWVudCIgeDE9IjYxLjIxIiB5MT0iNjMxLjY2IiB4Mj0iMzY4LjEyIiB5Mj0iLTIyMi43NiIgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPjxzdG9wIG9mZnNldD0iMCIgc3RvcC1jb2xvcj0iIzlmOWZmMCIvPjxzdG9wIG9mZnNldD0iLjc5IiBzdG9wLWNvbG9yPSIjNTU1OWYyIi8+PC9saW5lYXJHcmFkaWVudD48L2RlZnM+PGcgaWQ9IkxheWVyXzEtMiI+PGc+PHJlY3QgY2xhc3M9ImNscy0xIiB3aWR0aD0iNDIzLjkzIiBoZWlnaHQ9IjQyMy45MyIgcng9Ijg2LjA2IiByeT0iODYuMDYiLz48Zz48cGF0aCBjbGFzcz0iY2xzLTIiIGQ9Ik0yMTIuNzcsNzAuOTVMMTI3LjA5LDIxOC4zYy0zLjA5LDUuMzEtMTAuNzcsNS4zLTEzLjg0LS4wMmwtNS41LTkuNTRjLTEuNDMtMi40OC0xLjQzLTUuNTQsLjAxLTguMDJMMTkzLjQ1LDUzLjM1YzMuMDktNS4zMiwxMC43OS01LjMsMTMuODUsLjA0bDUuNDksOS41NmMxLjQyLDIuNDgsMS40Miw1LjUzLS4wMiw4WiIvPjxwYXRoIGNsYXNzPSJjbHMtMiIgZD0iTTExMy4xNSwyNDIuMjZsLTM0LjM1LDU5LjA3Yy0xLjQ0LDIuNDctNC4wOSwzLjk5LTYuOTUsMy45OGwtMTEuMDItLjA0Yy02LjE1LS4wMi05Ljk4LTYuNy02Ljg4LTEyLjAybDM0LjM1LTU5LjA3YzEuNDQtMi40Nyw0LjA5LTMuOTksNi45NS0zLjk4bDExLjAyLC4wNGM2LjE1LC4wMiw5Ljk4LDYuNyw2Ljg4LDEyLjAyWiIvPjxwYXRoIGlkPSJGaWxsLTIiIGNsYXNzPSJjbHMtMiIgZD0iTTExOS44MSwzMDUuNDhsMTEuMDIsLjA0YzIuODYsLjAxLDUuNTEtMS41MSw2Ljk0LTMuOThMMjQyLjE0LDEyMi4wOWMxLjQ0LTIuNDcsMS40NS01LjUyLC4wMi04bC01LjQ5LTkuNTZjLTMuMDYtNS4zNC0xMC43Ni01LjM2LTEzLjg1LS4wNGwtMTA5Ljg5LDE4OC45N2MtMy4wOSw1LjMyLC43MywxMS45OSw2Ljg4LDEyLjAyWiIvPjxwYXRoIGlkPSJGaWxsLTMiIGNsYXNzPSJjbHMtMiIgZD0iTTE3OC43OSwzMDUuNzFsMTEuMDIsLjA0YzIuODYsLjAxLDUuNTEtMS41MSw2Ljk1LTMuOThsNzQuNzUtMTI4LjU0YzEuNDQtMi40NywxLjQ1LTUuNTIsLjAyLThsLTUuNDktOS41NmMtMy4wNi01LjM0LTEwLjc2LTUuMzYtMTMuODUtLjA0bC04MC4yOCwxMzguMDZjLTMuMDksNS4zMiwuNzMsMTEuOTksNi44OCwxMi4wMloiLz48cGF0aCBpZD0iRmlsbC00IiBjbGFzcz0iY2xzLTIiIGQ9Ik0yMjYuMjQsMzA5LjlsNS41MSw5LjUyYzMuMDgsNS4zMiwxMC43NSw1LjMyLDEzLjg0LC4wMWw2NS4zOS0xMTIuNDVjMy4wOS01LjMyLS43My0xMS45OS02Ljg4LTEyLjAybC0xMS4wMi0uMDRjLTIuODYtLjAxLTUuNTEsMS41MS02Ljk1LDMuOThsLTU5Ljg4LDEwMi45N2MtMS40NCwyLjQ4LTEuNDUsNS41NCwwLDguMDNaIi8+PGcgaWQ9IkZpbGwtNSI+PHBhdGggY2xhc3M9ImNscy0yIiBkPSJNMjc0Ljk1LDM3MC41OGwxOS41LTMzLjU0YzEuNDQtMi40NywxLjQ1LTUuNTIsLjAyLThsLTUuNDktOS41NmMtMy4wNi01LjM0LTEwLjc2LTUuMzYtMTMuODUtLjA0bC0xOS41MiwzMy41OGMtMS40NCwyLjQ4LTEuNDUsNS41NCwwLDguMDNsNS41MSw5LjUyYzMuMDgsNS4zMiwxMC43NSw1LjMyLDEzLjg0LC4wMVoiLz48L2c+PHBhdGggaWQ9IkZpbGwtNiIgY2xhc3M9ImNscy0yIiBkPSJNMzYzLjEyLDE5NS4xNWwtMTEtLjA4Yy0yLjg3LS4wMi01LjUzLDEuNS02Ljk3LDMuOThsLTU2LjA5LDk2LjQ2Yy0zLjA5LDUuMzIsLjczLDEyLDYuODgsMTIuMDJsMTEuMDIsLjA0YzIuODYsLjAxLDUuNTEtMS41MSw2Ljk0LTMuOThsNTYuMDctOTYuNDJjMy4wOS01LjMxLS43MS0xMS45Ny02Ljg2LTEyLjAyWiIvPjwvZz48L2c+PC9nPjwvc3ZnPg==

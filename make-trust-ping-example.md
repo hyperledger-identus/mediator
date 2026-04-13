@@ -18,7 +18,6 @@ scala-cli repl \
   --repo https://oss.sonatype.org/content/repositories/releases
 ```
 
-
 ```scala
 import zio._
 import zio.json._
