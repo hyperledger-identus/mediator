@@ -1,12 +1,12 @@
 # Error Handling
 
-
 When processing any step of any protocol, if something is wrong, the mediator tries to:
+
 - Update the record to a documented error state
 - Log the error in the service logs
 - Send the problem report message when appropriate
 
-https://identity.foundation/didcomm-messaging/spec/#problem-reports
+<https://identity.foundation/didcomm-messaging/spec/#problem-reports>
 
 ## Custom behavior table
 
@@ -31,17 +31,17 @@ This table defines the expected behavior of the mediator in different scenarios 
 
 ### Scenarios Description
 
-#### General Scenarios:
+#### General Scenarios
 
 - **G1** - Received the exact same message (encrypted with the same ephemeral keys) (possible replay attack)
   - S1A - (default) executes the protocol as normal
-  - S1B - ignore (no effect/output) 
+  - S1B - ignore (no effect/output)
   - S1C - Send a problem report "e.p.cryto.dejavu" ??? or "e.p.crypto.replay"
   - S1D - Reply with the exact same message (encrypted with the same ephemeral keys)
 
 - **G2** - Receive a message for an unsupported protocol
-  https://input-output.atlassian.net/browse/ATL-5840
-  - G2A - ignore (no effect/output) 
+  <https://input-output.atlassian.net/browse/ATL-5840>
+  - G2A - ignore (no effect/output)
   - G2B - Send a problem report `e.p.msg.unsupported`
 
 - **G3** - Receive a message for an unsupported version of the protocol.
@@ -49,16 +49,16 @@ This table defines the expected behavior of the mediator in different scenarios 
   - G3B - Send a problem report `e.p.msg.unsupported` and say what version(s) its supported
 
 - **G4** - When an internal error or any unexpected error happens.
-  - G4A - ignore (no effect/output) 
+  - G4A - ignore (no effect/output)
   - G4B - Send a problem report "e.p.error"
 
 - **G5** - If the message is tampered or got any crypto errors when decoding.
-  - G5A - ignore (no effect/output) 
+  - G5A - ignore (no effect/output)
   - G5B - (sync!) Send a problem report "e.p.crypto"
 
 - **G6** - If the DID method is not supported (`did.peer` in this case)
   - G6A - ignore (no effect/output)
-  - G6B - (sync!) e.p.did 
+  - G6B - (sync!) e.p.did
 
 - **G7** - If the DID method is malformed.
   - G7A - ignore (no effect/output)
@@ -66,13 +66,13 @@ This table defines the expected behavior of the mediator in different scenarios 
 
 - **G8** - When a parsing error from the decrypted message.
   - G8A - ignore (no effect/output)
-  - G8B - (sync!) Send a problem report `e.p.msg` if the plaintext message is malformed 
+  - G8B - (sync!) Send a problem report `e.p.msg` if the plaintext message is malformed
   - G8C - Send a problem report `e.p.msg.<PIURI>` if the plaintext message is malformed or if parsing into a specific protocol's data model fails.
 
-#### Mediator especific Scenarios:
+#### Mediator especific Scenarios
 
 - **M1** - Receive a pickup message from a DID not enrolled.
-  - M1A - ignore (no effect/output) 
+  - M1A - ignore (no effect/output)
   - M1B - Send a problem report "e.p.req.not_enroll"
 
 - **M2** - Connection to the BD is not working (at the moment of the call).
@@ -89,7 +89,7 @@ This table defines the expected behavior of the mediator in different scenarios 
   - M4A - ignore (no effect/output)
   - M4B - Send a problem report "e.p.req.not_enroll" (the `next` DID is not enrolled)
 
-- **M5** - LiveModeChange https://didcomm.org/messagepickup/3.0/live-delivery-change
+- **M5** - LiveModeChange <https://didcomm.org/messagepickup/3.0/live-delivery-change>
   - Follow the protocol -> Upon receiving the `live_delivery_change` message with `live_delivery` set to `true``:
     - M5A - If the connection supports live delivery respond with a [`status`](https://didcomm.org/messagepickup/3.0/status) message.
     - M5B - If the connection is incapable of live delivery send a problem report `e.m.live-mode-not-supported`
@@ -97,19 +97,21 @@ This table defines the expected behavior of the mediator in different scenarios 
 ### Considerations
 
 In the Identus Mediator, when an issue arises, we undertake the following steps:
-* Log the error.
-* Dispatch a problem report as outlined in the table above.
-* Record the problem report and error information in the database.
+
+- Log the error.
+- Dispatch a problem report as outlined in the table above.
+- Record the problem report and error information in the database.
 Every one of these steps should be traceable back to the initial call via an `XRequestID`, and by the MsgID (the SHA-251 hash of the encrypted message).
 This procedure will enhance Level 3 support and debugging capabilities. (For [ATL-4147](https://input-output.atlassian.net/browse/ATL-4147))
 
 [TODO optional] Would be nice to propose a list/table of new tokens to the protocol specs:
-  - `e.p.me.res.storage`
-  - `e.p.me.res.not_enroll`
+
+- `e.p.me.res.storage`
+- `e.p.me.res.not_enroll`
 
 ## Problem Reports in Mediator flow
 
-https://didcomm.org/coordinate-mediation/2.0/mediate-request
+<https://didcomm.org/coordinate-mediation/2.0/mediate-request>
 
 ```mermaid
 stateDiagram-v2
@@ -125,7 +127,8 @@ stateDiagram-v2
   class request_processing processing
 ```
 
-https://didcomm.org/coordinate-mediation/2.0/keylist-update
+<https://didcomm.org/coordinate-mediation/2.0/keylist-update>
+
 ```mermaid
 stateDiagram-v2
   classDef processing fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow
@@ -140,7 +143,8 @@ stateDiagram-v2
   class mediation_granted grant
 ```
 
-https://didcomm.org/coordinate-mediation/2.0/keylist-query
+<https://didcomm.org/coordinate-mediation/2.0/keylist-query>
+
 ```mermaid
 stateDiagram-v2
   classDef processing fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow
@@ -155,9 +159,10 @@ stateDiagram-v2
   class mediation_granted grant
 ```
 
-MessagePickup 3.0 https://didcomm.org/messagepickup/3.0/
+MessagePickup 3.0 <https://didcomm.org/messagepickup/3.0/>
 
-https://didcomm.org/messagepickup/3.0/status-request
+<https://didcomm.org/messagepickup/3.0/status-request>
+
 ```mermaid
 stateDiagram-v2
   classDef processing fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow
@@ -172,7 +177,9 @@ stateDiagram-v2
   class request_processing processing
   class mediation_granted,Key_list_updated success
 ```
-https://didcomm.org/messagepickup/3.0/delivery-request
+
+<https://didcomm.org/messagepickup/3.0/delivery-request>
+
 ```mermaid
 stateDiagram-v2
   classDef processing fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow
@@ -188,7 +195,8 @@ stateDiagram-v2
   class mediation_granted,Key_list_updated success
 ```
 
-https://didcomm.org/messagepickup/3.0/messages-received
+<https://didcomm.org/messagepickup/3.0/messages-received>
+
 ```mermaid
 stateDiagram-v2
   classDef processing fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow
@@ -204,9 +212,9 @@ stateDiagram-v2
   class mediation_granted,Key_list_updated success
 ```
 
-
 Sender to Recipient (Sender use the type forward message)
-https://didcomm.org/routing/2.0/forward
+<https://didcomm.org/routing/2.0/forward>
+
 ```mermaid
 stateDiagram-v2
   classDef processing fill:#f00,color:white,font-weight:bold,stroke-width:2px,stroke:yellow
