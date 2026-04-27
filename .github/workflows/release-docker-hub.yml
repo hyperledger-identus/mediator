@@ -159,7 +159,7 @@ jobs:
 
       - name: Extract Semver Tag Only
         id: semver_tag
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
         with:
           images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
           tags: |
@@ -167,7 +167,7 @@ jobs:
 
       - name: Extract SHA Tag Only
         id: sha_tag
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
         with:
           images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
           tags: |
