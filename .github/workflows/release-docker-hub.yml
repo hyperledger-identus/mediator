@@ -156,3 +156,37 @@ jobs:
           push: ${{ steps.meta.outputs.tags != '' }}
           labels: ${{ steps.meta.outputs.labels }}
           annotations: ${{ steps.meta.outputs.annotations }}
+
+      - name: Extract Semver Tag Only
+        id: semver_tag
+        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
+        with:
+          images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
+          tags: |
+            type=semver,pattern={{version}}
+
+      - name: Extract SHA Tag Only
+        id: sha_tag
+        uses: docker/metadata-action@030e881283bb7a6894de51c315a6bfe6a94e05cf # v6.0.0
+        with:
+          images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
+          tags: |
+            type=sha,format=long
+
+      # This dispatch is to trigger the automatic E2E execution.
+      # https://github.com/hyperledger-identus/integration
+      - name: Trigger component integration
+        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # v4.0.1
+        with:
+          token: ${{ secrets.IDENTUS_CI }}
+          repository: hyperledger-identus/integration
+          event-type: integration
+          client-payload: >
+            {
+              "component": "mediator",
+              "version": "${{
+                github.ref_type == 'tag'
+                && steps.semver_tag.outputs.tags
+                || steps.sha_tag.outputs.tags
+              }}"
+            }
