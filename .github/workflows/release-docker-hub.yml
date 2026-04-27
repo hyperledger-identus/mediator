@@ -164,7 +164,7 @@ jobs:
           images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
           tags: |
             type=semver,pattern={{version}}
-      
+
       - name: Extract SHA Tag Only
         id: sha_tag
         uses: docker/metadata-action@v5
