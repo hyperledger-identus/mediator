@@ -172,7 +172,7 @@ jobs:
           images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
           tags: |
             type=sha,format=long
-      
+
       # This dispatch is to trigger the automatic E2E execution.
       # https://github.com/hyperledger-identus/integration
       - name: Trigger component integration
@@ -183,10 +183,10 @@ jobs:
           event-type: integration
           client-payload: >
             {
-              "component": "mediator", 
-              "version": "${{ 
-                github.ref_type == 'tag' 
-                && steps.semver_tag.outputs.tags 
-                || steps.sha_tag.outputs.tags 
+              "component": "mediator",
+              "version": "${{
+                github.ref_type == 'tag'
+                && steps.semver_tag.outputs.tags
+                || steps.sha_tag.outputs.tags
               }}"
             }
