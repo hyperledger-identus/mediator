@@ -47,20 +47,6 @@ sbt coverage test coverageReport coverageAggregate  # With coverage (as CI does)
 Test source root: `mediator/src/test/scala/`
 Test suites: `protocols/` (per-protocol specs), `db/` (repo specs with embedded MongoDB).
 
-## Lint and Format Commands
-
-```bash
-sbt scalafmtCheckAll         # Check formatting without changing files (CI gate)
-sbt scalafmtAll              # Auto-format all Scala files
-```
-
-**scalafmt config** (`.scalafmt.conf`):
-
-- Version: 3.8.2
-- Dialect: Scala 3
-- Max column: 120
-- Trailing commas: preserve
-
 There is no separate scalac "typecheck" step — `sbt compile` includes full Scala 3 type checking. The build also sets `-Xfatal-warnings` in `scalacOptions` (in `build.sbt`), so warnings are errors.
 
 ## Local Development
@@ -279,7 +265,6 @@ Unit tests that need MongoDB use **embedded MongoDB** (`de.flapdoodle.embed.mong
 
 Before submitting a PR:
 
-1. `sbt scalafmtCheckAll` — verify formatting
-2. `sbt compile` — must pass with no warnings (`-Xfatal-warnings` is set)
-3. `sbt test` — all tests pass
-4. `sbt coverage test coverageReport coverageAggregate` — if running coverage
+1. `sbt compile` — must pass with no warnings (`-Xfatal-warnings` is set)
+2. `sbt test` — all tests pass
+3. `sbt coverage test coverageReport coverageAggregate` — if running coverage
