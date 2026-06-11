@@ -210,7 +210,7 @@ case class AgentExecutorMediator(
                   }
                   .tapError(ex => ZIO.logError(s"Error when execute Protocol: $ex"))
           } yield goodAction
-      ret <- action match
+      ret <- (action match
         case NoReply => ZIO.unit // TODO Maybe infor transport of immediately reply/close
         case reply: AnyReply =>
           import fmgp.did.comm.Operations._
@@ -252,7 +252,42 @@ case class AgentExecutorMediator(
                   case Some(ReturnRoute.all) | Some(ReturnRoute.thread) => transport.send(message)
               }
           } yield ()
+      ).catchSome { case MediatorDidError(didFail) =>
+        handleResolverFailure(pMsgOrProblemReport, transport, didFail)
+      }
     } yield ()
+
+  private def handleResolverFailure(
+      pMsgOrProblemReport: Either[ProblemReport, PlaintextMessage],
+      transport: TransportDIDComm[Any],
+      didFail: DidFail
+  ): ZIO[Agent & Operations & Resolver, Nothing, Unit] =
+    import fmgp.did.comm.Operations._
+    pMsgOrProblemReport match
+      case Left(problemReport) =>
+        ZIO.logWarning(s"Resolver failure while replying with problem-report: $didFail") *>
+          sign(problemReport.toPlaintextMessage)
+            .flatMap(transport.send)
+            .tapError(error => ZIO.logError(s"Unable to sign fallback problem-report: $error"))
+            .ignore
+      case Right(plaintextMessage) =>
+        for {
+          agent <- ZIO.service[Agent]
+          fallbackProblem = Problems.resolutionError(
+            to = plaintextMessage.from.toSet.map(_.asTO),
+            from = agent.id.asFROM,
+            pthid = plaintextMessage.id,
+            piuri = plaintextMessage.`type`,
+            comment = s"Unable to resolve DID while handling message: $didFail"
+          )
+          _ <- ZIO.logWarning(
+            s"Resolver failure while handling '${plaintextMessage.`type`}' for thid '${plaintextMessage.id}': $didFail"
+          )
+          _ <- sign(fallbackProblem.toPlaintextMessage)
+            .flatMap(transport.send)
+            .tapError(error => ZIO.logError(s"Unable to sign fallback resolver problem-report: $error"))
+            .ignore
+        } yield ()
 }
 
 object AgentExecutorMediator {
