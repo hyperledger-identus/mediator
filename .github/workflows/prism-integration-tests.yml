@@ -1,0 +1,94 @@
+name: PRISM Integration Tests
+
+concurrency:
+  group: ${{ github.head_ref }}${{ github.ref }}-prism-integration-tests
+  cancel-in-progress: true
+
+on:
+  pull_request:
+  push:
+    branches:
+      - "main"
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+permissions:
+  contents: read
+
+jobs:
+  prism-integration:
+    name: Run PRISM integration tests
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    env:
+      NEOPRISM_VERSION: "0.14.1"
+      NEOPRISM_BASE_URL: "http://127.0.0.1:18081"
+      MEDIATOR_PRISM_MONGO_URI: "mongodb://127.0.0.1:27018/messages"
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        with:
+          egress-policy: audit
+
+      - name: Checkout mediator
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+
+      - name: Setup Java and Scala
+        uses: olafurpg/setup-scala@32ffa16635ff8f19cc21ea253a987f0fdf29844c # v14
+        with:
+          java-version: openjdk@1.17
+
+      - name: Start NeoPRISM dev node
+        run: |
+          docker run --rm -d \
+            --name neoprism \
+            -p 18081:8080 \
+            -e NPRISM_DB_URL=sqlite::memory: \
+            hyperledgeridentus/identus-neoprism:${NEOPRISM_VERSION} dev
+
+      - name: Start MongoDB
+        run: |
+          docker run --rm -d \
+            --name mediator-prism-mongo \
+            -p 27018:27017 \
+            mongo:7
+
+      - name: Wait for NeoPRISM
+        run: |
+          for i in {1..60}; do
+            if curl --fail --silent "${NEOPRISM_BASE_URL}/api/_system/health" > /dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "NeoPRISM failed to become healthy" >&2
+          docker logs neoprism || true
+          exit 1
+
+      - name: Wait for MongoDB
+        run: |
+          for i in {1..60}; do
+            if docker exec mediator-prism-mongo mongosh --quiet --eval 'db.runCommand({ ping: 1 }).ok' | grep -qx '1'; then
+              exit 0
+            fi
+            sleep 1
+          done
+          echo "MongoDB failed to become healthy" >&2
+          docker logs mediator-prism-mongo || true
+          exit 1
+
+      - name: Run mediator PRISM integration test
+        run: |
+          sbt -mem 2048 -J-Xmx5120m "mediator/testOnly org.hyperledger.identus.mediator.prism.MediatorPrismE2ESpec"
+
+      - name: Show NeoPRISM logs on failure
+        if: failure()
+        run: docker logs neoprism || true
+
+      - name: Show MongoDB logs on failure
+        if: failure()
+        run: docker logs mediator-prism-mongo || true

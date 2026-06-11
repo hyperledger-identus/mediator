@@ -36,6 +36,7 @@ lazy val V = new {
   val zioTest = "2.1.26"
   val zioTestSbt = "2.1.26"
   val zioTestMagnolia = "2.1.26"
+  val apollo = "1.8.4-kt2.1.20"
 
   // For WEBAPP
   val laminar = "17.2.1"
@@ -86,6 +87,15 @@ lazy val D = new {
   val zioTest = Def.setting("dev.zio" %% "zio-test" % V.zioTest % Test)
   val zioTestSbt = Def.setting("dev.zio" %% "zio-test-sbt" % V.zioTestSbt % Test)
   val zioTestMagnolia = Def.setting("dev.zio" %% "zio-test-magnolia" % V.zioTestMagnolia % Test)
+  val scalaPbRuntime =
+    Def.setting("com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % Test)
+  val apolloJvm = Def.setting(
+    ("org.hyperledger.identus" % "apollo-jvm" % V.apollo exclude (
+      "net.jcip",
+      "jcip-annotations"
+    )) % Test
+  )
+  val jcip = Def.setting("com.github.stephenc.jcip" % "jcip-annotations" % "1.0-1" % Test)
 
   // For WEBAPP
   val laminar = Def.setting("com.raquo" %%% "laminar" % V.laminar)
@@ -207,6 +217,11 @@ lazy val mediator = project
   )
   .settings((setupTestConfig): _*)
   .settings(
+    Test / scalacOptions ~= (_.filterNot(_ == "-Xfatal-warnings")),
+    Test / PB.protoSources += baseDirectory.value / "src" / "test" / "protobuf",
+    Test / PB.targets := Seq(
+      scalapb.gen() -> (Test / sourceManaged).value / "scalapb"
+    ),
     libraryDependencies += D.scalaDID_imp.value,
     libraryDependencies += D.scalaDID_peer.value,
     libraryDependencies += D.scalaDID_prism.value,
@@ -230,6 +245,9 @@ lazy val mediator = project
       D.zioTest.value,
       D.zioTestSbt.value,
       D.zioTestMagnolia.value,
+      D.scalaPbRuntime.value,
+      D.apolloJvm.value,
+      D.jcip.value,
     ),
     testFrameworks += new TestFramework("zio.test.sbt.ZTestFramework")
   )
