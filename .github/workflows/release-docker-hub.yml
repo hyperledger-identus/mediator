@@ -54,7 +54,8 @@ jobs:
       - name: Setup Java and Scala
         uses: olafurpg/setup-scala@32ffa16635ff8f19cc21ea253a987f0fdf29844c # v14
         with:
-          java-version: zulu@1.11.0
+          # Keep this aligned with CI. Current dependencies require Java 17 bytecode support.
+          java-version: openjdk@1.17
 
       - name: Cache sbt
         uses: coursier/cache-action@95e5b1029b6b86e7bac033ee44a0697d8a527d2d # v8.1.1
@@ -176,6 +177,7 @@ jobs:
       # This dispatch is to trigger the automatic E2E execution.
       # https://github.com/hyperledger-identus/integration
       - name: Trigger component integration
+        continue-on-error: true
         uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # v4.0.1
         with:
           token: ${{ secrets.IDENTUS_CI }}
@@ -186,7 +188,7 @@ jobs:
               "component": "mediator",
               "version": "${{
                 github.ref_type == 'tag'
-                && steps.semver_tag.outputs.tags
-                || steps.sha_tag.outputs.tags
+                && steps.semver_tag.outputs.version
+                || steps.sha_tag.outputs.version
               }}"
             }
