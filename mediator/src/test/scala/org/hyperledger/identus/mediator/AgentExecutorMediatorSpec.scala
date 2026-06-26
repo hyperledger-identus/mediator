@@ -119,7 +119,9 @@ object AgentExecutorMediatorSpec extends ZIOSpecDefault {
       transport: CaptureTransport,
       didFail: DidFail
   ): ZIO[Agent & Operations & Resolver, Nothing, Unit] = {
-    val method = classOf[AgentExecutorMediator].getDeclaredMethods.find(_.getName.contains("handleResolverFailure")).get
+    val method = classOf[AgentExecutorMediator].getDeclaredMethods.find { method =>
+      method.getName.endsWith("$$handleResolverFailure") && method.getParameterCount == 3
+    }.get
     method.setAccessible(true)
     method
       .invoke(agentExecutor, input.asInstanceOf[AnyRef], transport.transport.asInstanceOf[AnyRef], didFail.asInstanceOf[AnyRef])
