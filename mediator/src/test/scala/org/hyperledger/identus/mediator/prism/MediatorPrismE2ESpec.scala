@@ -34,6 +34,7 @@ import java.util.Base64
 
 object MediatorPrismE2ESpec extends ZIOSpecDefault {
 
+  private val prismE2eEnabled = sys.env.get("MEDIATOR_PRISM_E2E_ENABLED").contains("true")
   private val neoprismBaseUrl = sys.env.getOrElse("NEOPRISM_BASE_URL", "http://127.0.0.1:18081")
   private val neoprismResolverBaseUrl = s"$neoprismBaseUrl/api/dids"
   private val mongoConnectionString =
@@ -81,7 +82,7 @@ object MediatorPrismE2ESpec extends ZIOSpecDefault {
     partialFilter = Some(BSONDocument("alias.0" -> BSONDocument("$exists" -> true)))
   )
 
-  override def spec =
+  private val prismE2eSpec =
     suite("MediatorPrismE2ESpec")(
       test("resolves PRISM long-form and short-form DIDs through NeoPRISM") {
         ZIO.scoped {
@@ -246,6 +247,15 @@ object MediatorPrismE2ESpec extends ZIOSpecDefault {
       @@ TestAspect.sequential
       @@ TestAspect.withLiveClock
       @@ TestAspect.timeout(2.minutes)
+
+  override def spec =
+    if prismE2eEnabled then prismE2eSpec
+    else
+      suite("MediatorPrismE2ESpec")(
+        test("skips PRISM E2E suite unless explicitly enabled") {
+          assertTrue(true)
+        } @@ TestAspect.ignore
+      )
 
   private def resolverLayer(didPrismResolverBaseUrl: String): ZLayer[Client & Scope, Nothing, Resolver] =
     (
