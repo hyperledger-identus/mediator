@@ -25,6 +25,7 @@ jobs:
     permissions:
       contents: read
     env:
+      MEDIATOR_PRISM_E2E_ENABLED: "true"
       NEOPRISM_VERSION: "0.14.1"
       NEOPRISM_BASE_URL: "http://127.0.0.1:18081"
       MEDIATOR_PRISM_MONGO_URI: "mongodb://127.0.0.1:27018/messages"
