@@ -180,12 +180,17 @@ To set up the mediator identity:
 
 [How to generate mediator identity](./mediator-identity-key-generation.md)
 
+By default, the mediator still builds a `did:peer:2` DID from the configured keys and service endpoints.
+Optionally, operators can provide an explicit DID and `keyStore` directly in `application.conf`, which enables using
+other DID methods such as `did:prism`.
+
 - `KEY_AGREEMENT_D` - is the key agreement private key (MUST be a X25519 OKP key type).
 - `KEY_AGREEMENT_X` - is the key agreement public key (MUST be a X25519 OKP key type).
 - `KEY_AUTHENTICATION_D` - is the key authentication private key (MUST be an Ed25519 OKP key type).
 - `KEY_AUTHENTICATION_X` - is the key authentication public key (MUST be an Ed25519 OKP key type).
 - `SERVICE_ENDPOINTS` - is the list of endpoints of the mediator split by ';' where the mediator will listen to incoming
   DIDComm messages.
+- `DID_PRISM_RESOLVER` - overrides the base URL used to resolve `did:prism` DID documents.
 
 #### mediator-storage
 
