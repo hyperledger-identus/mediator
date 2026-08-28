@@ -45,11 +45,11 @@ jobs:
       SBT_OPTS: -Xmx2G
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
         with:
           egress-policy: audit
 
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Java and Scala
         uses: olafurpg/setup-scala@32ffa16635ff8f19cc21ea253a987f0fdf29844c # v14
@@ -61,7 +61,7 @@ jobs:
         uses: coursier/cache-action@95e5b1029b6b86e7bac033ee44a0697d8a527d2d # v8.1.1
 
       - name: Setup Node.js
-        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: "lts/*"
 
@@ -87,13 +87,13 @@ jobs:
       fail-fast: false
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
         with:
           egress-policy: audit
 
       - name: Docker meta
         id: meta
-        uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
           tags: |
@@ -128,10 +128,10 @@ jobs:
           path: docker-artifact
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@ce360397dd3f832beb865e1373c09c0e9f86d70a # v4.0.0
+        uses: docker/setup-qemu-action@96fe6ef7f33517b61c61be40b68a1882f3264fb8 # v4.2.0
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5 # v4.1.0
+        uses: docker/setup-buildx-action@37fe631027851001ddb9b187196cc803df7f5f0e # v4.3.0
         with:
           buildkitd-flags: --debug
           buildkitd-config-inline: |
@@ -140,7 +140,7 @@ jobs:
           platforms: linux/amd64,linux/arm64
 
       - name: Login to the 'docker.io' Container Registry with  user '${{ vars.DOCKERHUB_USERNAME }}' as '${{ vars.DOCKERHUB_ORG }}'
-        uses: docker/login-action@650006c6eb7dba73a995cc03b0b2d7f5ca915bee # v4.2.0
+        uses: docker/login-action@dbcb813823bdd20940b903addbd779551569679f # v4.6.0
         with:
           registry: docker.io
           username: ${{ vars.DOCKERHUB_USERNAME }}
@@ -149,7 +149,7 @@ jobs:
      # TODO FIX These builds the image multiple times (matrix)
       - name: Build and push identus-mediator Image
         id: push
-        uses: docker/build-push-action@f9f3042f7e2789586610d6e8b85c8f03e5195baf # v7.2.0
+        uses: docker/build-push-action@53b7df96c91f9c12dcc8a07bcb9ccacbed38856a # v7.3.0
         with:
           context: ./docker-artifact/
           platforms: linux/amd64,linux/arm64
@@ -160,7 +160,7 @@ jobs:
 
       - name: Extract Semver Tag Only
         id: semver_tag
-        uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
           tags: |
@@ -168,7 +168,7 @@ jobs:
 
       - name: Extract SHA Tag Only
         id: sha_tag
-        uses: docker/metadata-action@80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9 # v6.1.0
+        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
         with:
           images: docker.io/${{ vars.DOCKERHUB_ORG }}/identus-mediator
           tags: |

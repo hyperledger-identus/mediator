@@ -1,5 +1,5 @@
 val scalaJSVersion = sys.env.getOrElse("SCALAJS_VERSION", "1.22.0")
-addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.3.2")
+addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.4.0")
 
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion)
 addSbtPlugin("org.scala-js" % "sbt-jsdependencies" % "1.0.2")
@@ -52,7 +52,7 @@ addSbtPlugin("io.spray" % "sbt-revolver" % "0.10.0")
 addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.7")
 
 // Deploy demo
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.2.0")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.4.1")
 addSbtPlugin("com.github.sbt" % "sbt-gzip" % "2.0.0")
 
 // Release
@@ -73,7 +73,7 @@ if (sys.env.get("GITHUB_TOKEN").isDefined) {
 } else libraryDependencies ++= Seq[ModuleID]()
 
 // PUBLISH
-addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.11.2")
+addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.12.0")
 
 // Native Packager
 addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.10.0")
