@@ -85,6 +85,7 @@ The mediator serves on port 8080 by default (`mediator.server.http.port` in `app
 | `MONGODB_DB_NAME` | Database name | `mediator` |
 | `PORT` | HTTP server port override | `8080` |
 | `ESCALATE_TO` | Problem report escalation email | `atala@iohk.io` |
+| `DID_PRISM_RESOLVER` | Base URL for resolving `did:prism` DID documents | Default in `application.conf` |
 
 ## MongoDB Dependency
 
@@ -124,7 +125,7 @@ The mediator identity requires two OKP key pairs in JOSE (JWK) format:
 3. Generate Ed25519 key: `openssl genpkey -algorithm Ed25519 -out private_key_ed25519.pem`
 4. Format to JWK similarly for `d` and `x` fields
 
-The keys are set via environment variables (`KEY_AGREEMENT_D`, `KEY_AGREEMENT_X`, `KEY_AUTHENTICATION_D`, `KEY_AUTHENTICATION_X`). The mediator builds a `did:peer:2` DID from these keys and the service endpoints at startup (see `MediatorStandalone.scala` → `MediatorConfig.did`).
+The keys are set via environment variables (`KEY_AGREEMENT_D`, `KEY_AGREEMENT_X`, `KEY_AUTHENTICATION_D`, `KEY_AUTHENTICATION_X`). By default, the mediator builds a `did:peer:2` DID from these keys and the service endpoints at startup. Operators can also provide an explicit DID plus `keyStore` directly in `application.conf`, which enables mediator identities such as `did:prism`.
 
 **⚠️ Never use the demo keys from `build.sbt` in production.**
 
@@ -135,7 +136,7 @@ The keys are set via environment variables (`KEY_AGREEMENT_D`, `KEY_AGREEMENT_X`
 `MediatorStandalone` (`mediator/src/main/scala/.../MediatorStandalone.scala`) — ZIO application that:
 
 1. Loads HOCON config via `zio-config-typesafe` + `zio-config-magnolia`
-2. Constructs a `did:peer:2` DID from the configured keys + endpoints
+2. Constructs a `did:peer:2` DID from the configured keys + endpoints, or uses an explicitly configured DID + `keyStore`
 3. Wires ZIO layers: `ReactiveMongoApi` → repos (`UserAccountRepo`, `MessageItemRepo`, `OutboxMessageRepo`) → `OperatorImp` → protocol handlers
 4. Starts ZIO HTTP server on configured port (default 8080)
 
