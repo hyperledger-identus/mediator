@@ -13,10 +13,29 @@ object EmbeddedMongoDBInstance {
   val hostIp = "localhost"
   val connectionString = s"mongodb://$hostIp:$port/messages"
 
+  private val platformOverrideProperty = "de.flapdoodle.os.override"
+
+  /** flapdoodle detects the host platform to pick the mongod package to download, and its OS detection only knows
+    * Ubuntu releases up to 25.10. On any newer release (for example the ubuntu-26.04 runner image) the lookup fails
+    * with `could not resolve package for V6_0`. Pin the distribution mongod 6.0 is published for (ubuntu2204) via
+    * flapdoodle's documented override, unless the caller already provided one.
+    */
+  private def pinMongodPlatform(): Unit = {
+    val architecture = sys.props.get("os.arch").getOrElse("") match {
+      case "aarch64" | "arm64" => "ARM_64"
+      case _ => "X86_64"
+    }
+    val isMissingOverride = sys.props.get(platformOverrideProperty).forall(_.isBlank)
+    if (scala.util.Properties.isLinux && isMissingOverride) {
+      System.setProperty(platformOverrideProperty, s"Linux|$architecture|Ubuntu|Ubuntu_22_04")
+    }
+  }
+
   def layer(
       port: Int = 27077,
       hostIp: String = "localhost"
   ): ZLayer[Any, Throwable, TransitionWalker.ReachedState[RunningMongodProcess]] = {
+    pinMongodPlatform()
     ZLayer.scoped(
       ZIO.acquireRelease(
         ZIO.attemptBlocking {

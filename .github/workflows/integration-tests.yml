@@ -20,7 +20,7 @@ permissions:
 jobs:
   run-integration-tests:
     name: "Run integration tests"
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
       pull-requests: write
@@ -33,7 +33,7 @@ jobs:
       MEDIATOR_DID: "did:peer:2.Ez6LSghwSE437wnDE1pt3X6hVDUQzSjsHzinpX3XFvMjRAm7y.Vz6Mkhh1e5CEYYq6JBUcTZ6Cp2ranCWRrv7Yax3Le4N59R6dd.SeyJ0IjoiZG0iLCJzIjp7InVyaSI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODA4MCIsImEiOlsiZGlkY29tbS92MiJdfX0.SeyJ0IjoiZG0iLCJzIjp7InVyaSI6IndzOi8vbG9jYWxob3N0OjgwODAvd3MiLCJhIjpbImRpZGNvbW0vdjIiXX19"
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@e14015d583714f6e62063499dc959a02595150a1 # v2.21.1
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
         with:
           egress-policy: audit
 
@@ -56,7 +56,7 @@ jobs:
         uses: gradle/gradle-build-action@ac2d340dc04d9e1113182899e983b5400c17cda1 # v3.5.0
 
       - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "lts/*"
 
@@ -71,7 +71,7 @@ jobs:
           sbt -mem 2048 -J-Xmx5120m "set ThisBuild / version := \"tmp\"" docker:publishLocal
 
       - name: Start Mediator
-        uses: hoverkraft-tech/compose-action@ee6af68587292d72db67743171809c19787df4c9 # v3.1.0
+        uses: hoverkraft-tech/compose-action@b659c744ee9bed25aea2307c017ad849bd104433 # v3.2.0
         with:
           compose-file: "./docker-compose.yml"
           compose-flags: ""
@@ -81,11 +81,31 @@ jobs:
       - name: Run tests
         run: |
           cd ./didcomm-v2-mediator-test-suite
-          ./gradlew test || true
+          # The upstream suite (pinned above) lists a JetBrains Space mirror before jitpack.io. The mirror answers
+          # 503 for com.github.multiformats:java-multibase:v1.1.0, which aborts dependency resolution instead of
+          # falling through to jitpack, where the artifact is served fine. Drop the dead mirror; every other
+          # dependency comes from mavenCentral().
+          python3 - <<'PY'
+          import pathlib, re, sys
+
+          path = pathlib.Path("build.gradle.kts")
+          source = path.read_text()
+          patched, count = re.subn(
+              r'\n\s*maven\s*\{\s*url\s*=\s*uri\("https://maven\.pkg\.jetbrains\.space[^"]*"\)\s*\}',
+              "",
+              source,
+          )
+          if count == 0:
+              sys.exit("jetbrains.space repository not found; upstream layout changed")
+          path.write_text(patched)
+          PY
+          status=0
+          ./gradlew test || status=$?
           ./gradlew reports
+          exit "$status"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: e2e-tests-result
           path: ${{ env.REPORTS_DIR }}
@@ -93,11 +113,13 @@ jobs:
       - name: Publish e2e test Results
         if: always()
         id: publish-unit-tests
-        uses: EnricoMi/publish-unit-test-result-action@d0a4676d0e0b938bc201470d88276b7c74c712b3 # v2.24.0
+        uses: EnricoMi/publish-unit-test-result-action@7622c5bf3d112a72ab4fa3951c2aa5723d8ab92d # v2.25.0
         with:
           junit_files: "${{ env.REPORTS_DIR }}/SERENITY-JUNIT-*.xml"
           comment_title: "Integration Test Results"
           check_name: "Integration Test Results"
+          # A run that produced no test results must not look green.
+          action_fail: true
 
       - name: Extract test results
         id: analyze_test_results
@@ -116,7 +138,7 @@ jobs:
             IGNORED_TESTS="$(cat ${JSON_RESULTS} | jq '.results.counts.ignored')"
             FAILED_TESTS="$(cat ${JSON_RESULTS} | jq '.results.counts.failure')"
             TESTS_WITH_ERRORS="$(cat ${JSON_RESULTS} | jq '.results.counts.error')"
-            if [[ ${FAILED_TESTS} == 0 && ${TESTS_WITH_ERRORS} == 0 ]] ; then
+            if [[ ${FAILED_TESTS} == 0 && ${TESTS_WITH_ERRORS} == 0 && ${TOTAL_TESTS} != 0 ]] ; then
               CONCLUSION=success
             fi
           fi
