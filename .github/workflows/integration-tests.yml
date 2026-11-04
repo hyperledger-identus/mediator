@@ -81,8 +81,28 @@ jobs:
       - name: Run tests
         run: |
           cd ./didcomm-v2-mediator-test-suite
-          ./gradlew test || true
+          # The upstream suite (pinned above) lists a JetBrains Space mirror before jitpack.io. The mirror answers
+          # 503 for com.github.multiformats:java-multibase:v1.1.0, which aborts dependency resolution instead of
+          # falling through to jitpack, where the artifact is served fine. Drop the dead mirror; every other
+          # dependency comes from mavenCentral().
+          python3 - <<'PY'
+          import pathlib, re, sys
+
+          path = pathlib.Path("build.gradle.kts")
+          source = path.read_text()
+          patched, count = re.subn(
+              r'\n\s*maven\s*\{\s*url\s*=\s*uri\("https://maven\.pkg\.jetbrains\.space[^"]*"\)\s*\}',
+              "",
+              source,
+          )
+          if count == 0:
+              sys.exit("jetbrains.space repository not found; upstream layout changed")
+          path.write_text(patched)
+          PY
+          status=0
+          ./gradlew test || status=$?
           ./gradlew reports
+          exit "$status"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
@@ -98,6 +118,8 @@ jobs:
           junit_files: "${{ env.REPORTS_DIR }}/SERENITY-JUNIT-*.xml"
           comment_title: "Integration Test Results"
           check_name: "Integration Test Results"
+          # A run that produced no test results must not look green.
+          action_fail: true
 
       - name: Extract test results
         id: analyze_test_results
@@ -116,7 +138,7 @@ jobs:
             IGNORED_TESTS="$(cat ${JSON_RESULTS} | jq '.results.counts.ignored')"
             FAILED_TESTS="$(cat ${JSON_RESULTS} | jq '.results.counts.failure')"
             TESTS_WITH_ERRORS="$(cat ${JSON_RESULTS} | jq '.results.counts.error')"
-            if [[ ${FAILED_TESTS} == 0 && ${TESTS_WITH_ERRORS} == 0 ]] ; then
+            if [[ ${FAILED_TESTS} == 0 && ${TESTS_WITH_ERRORS} == 0 && ${TOTAL_TESTS} != 0 ]] ; then
               CONCLUSION=success
             fi
           fi
