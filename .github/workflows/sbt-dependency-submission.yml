@@ -12,12 +12,12 @@ permissions:
 jobs:
   dependency-graph:
     name: Update Dependency Graph
-    runs-on: ubuntu-latest # or windows-latest, or macOS-latest
+    runs-on: ubuntu-26.04 # or windows-latest, or macOS-latest
     permissions:
       contents: write
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@05e31511f85b41b11d1cf0ef85d0992719546e2c # v2.21.0
+        uses: step-security/harden-runner@dc2769abcc0fcfbadfc1df54081c1608579ef6b2 # v2.22.2
         with:
           egress-policy: audit
 
@@ -27,13 +27,13 @@ jobs:
         with:
           java-version: openjdk@1.17.0
       - name: Setup Node
-        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: "18" # or whatever
       - name: Setup Scala.JS
         uses: japgolly/setup-scalajs@f530918424acb5cca3d46ccd8f6d6a35f5654fd3 # v1
       - name: Cache sbt
-        uses: coursier/cache-action@95e5b1029b6b86e7bac033ee44a0697d8a527d2d # v8.1.1
+        uses: coursier/cache-action@057d08c2f9a2c4e7a4d33df3aae657b7db88b8cc # v8.2.0
       - name: npm install
         run: npm install
       - uses: scalacenter/sbt-dependency-submission@d84eef4c09e633bcf5f113bcad7fd5e9af1baee9 # v3.2.3

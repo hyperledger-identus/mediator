@@ -35,10 +35,10 @@ resolvers += MavenRepository("sonatype-s01-snapshots", "https://s01.oss.sonatype
 addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta44")
 
 // Utils Buildinfo
-addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.12.0")
+addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.13.2")
 
 // CI
-addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.7.0") // sbt> dependencyUpdates
+addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.7.1") // sbt> dependencyUpdates
 
 // TEST COVERAGE
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "2.4.4") // Needs scala version 3.3.0
@@ -49,10 +49,10 @@ addSbtPlugin("io.spray" % "sbt-revolver" % "0.10.0")
 
 // https://zio.dev/howto/migrate/zio-2.x-migration-guide%20v0.9.31
 //sbt "scalafixEnable; scalafixAll github:zio/zio/Zio2Upgrade?sha=series/2.x"
-addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.7")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.9")
 
 // Deploy demo
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.4.1")
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.5.0")
 addSbtPlugin("com.github.sbt" % "sbt-gzip" % "2.0.0")
 
 // Release
@@ -73,7 +73,7 @@ if (sys.env.get("GITHUB_TOKEN").isDefined) {
 } else libraryDependencies ++= Seq[ModuleID]()
 
 // PUBLISH
-addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.12.0")
+addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.12.1")
 
 // Native Packager
 addSbtPlugin("com.github.sbt" % "sbt-native-packager" % "1.10.0")
