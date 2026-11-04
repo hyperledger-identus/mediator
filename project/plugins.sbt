@@ -30,7 +30,6 @@ addSbtPlugin("ch.epfl.scala" % "sbt-web-scalajs-bundler" % "0.21.1")
 
 //https://scalablytyped.org/docs/plugin
 //https://github.com/ScalablyTyped/Converter/releases
-resolvers += Resolver.bintrayRepo("oyvindberg", "converter")
 resolvers += MavenRepository("sonatype-s01-snapshots", "https://s01.oss.sonatype.org/content/repositories/snapshots")
 addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta44")
 
