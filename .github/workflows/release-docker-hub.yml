@@ -34,7 +34,7 @@ permissions:
 jobs:
   build-binaries:
     if: ${{ !contains(github.event.head_commit.message, 'chore(release)') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     permissions:
       contents: read
     env:
@@ -79,7 +79,7 @@ jobs:
 
   build-and-push-docker-images:
     name: Build and Push Docker images
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     needs: build-binaries
     permissions:
       contents: read
