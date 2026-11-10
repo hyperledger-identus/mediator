@@ -11,7 +11,7 @@ This is the **Identus Mediator** — a DIDComm v2 mediator service built with Sc
 
 **Key coordinates:**
 
-- Scala 3.6.4, SBT 1.12.11 (see `build.sbt`, `project/build.properties`)
+- Scala 3.9.0, SBT 1.13.1 (see `build.sbt`, `project/build.properties`)
 - ZIO for effects, ZIO HTTP for server, ReactiveMongo for MongoDB
 - scala-did library (`app.fmgp` % `did` `0.1.0-M45`) for DIDComm primitives
 

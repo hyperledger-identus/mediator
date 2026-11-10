@@ -15,13 +15,11 @@ object AppUtils {
   def onEnterPress = onKeyPress.filter(_.keyCode == dom.KeyCode.Enter)
 
   val menuClickObserver = Observer[dom.MouseEvent](onNext = ev => {
-    import typings.materialDrawer.mod.MDCDrawer
     val tmp = MDCDrawer.attachTo(dom.window.document.querySelector(".mdc-drawer"))
     tmp.open_=(!tmp.open)
   })
 
   val optionsClickObserver = Observer[dom.MouseEvent](onNext = ev => {
-    import typings.materialMenu.mod.MDCMenu
     val tmp = MDCMenu.attachTo(dom.window.document.querySelector(".mdc-menu"))
     tmp.open_=(!tmp.open)
   })
@@ -34,7 +32,7 @@ object AppUtils {
       "menu"
     )
 
-    typings.materialRipple.mod.MDCRipple.attachTo(menuButton.ref)
+    MDCRipple.attachTo(menuButton.ref)
 
     val options = {
       div(
@@ -63,7 +61,7 @@ object AppUtils {
       onClick --> optionsClickObserver,
       "more_vert"
     )
-    typings.materialMenu.mod.MDCMenu.attachTo(options.ref)
+    MDCMenu.attachTo(options.ref)
 
     headerTag(
       div(

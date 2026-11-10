@@ -9,5 +9,5 @@ import org.hyperledger.identus.mediator.{StorageCollection, StorageThrowable, St
 trait MongoHealth {
   def collection: IO[StorageCollection, BSONCollection]
   def stats: IO[StorageError, CollectionStats] =
-    collection.flatMap(c => ZIO.fromFuture(c.stats()).mapError(ex => StorageThrowable(ex)))
+    collection.flatMap(c => ZIO.fromFuture(ec => c.stats()(using ec)).mapError(ex => StorageThrowable(ex)))
 }
