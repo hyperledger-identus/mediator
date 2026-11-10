@@ -43,7 +43,7 @@ addSbtPlugin("io.spray" % "sbt-revolver" % "0.10.0")
 
 // https://zio.dev/howto/migrate/zio-2.x-migration-guide%20v0.9.31
 //sbt "scalafixEnable; scalafixAll github:zio/zio/Zio2Upgrade?sha=series/2.x"
-addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.9")
+addSbtPlugin("ch.epfl.scala" % "sbt-scalafix" % "0.14.10")
 
 // Deploy demo
 addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.5.0")
@@ -51,20 +51,6 @@ addSbtPlugin("com.github.sbt" % "sbt-gzip" % "2.0.0")
 
 // Release
 addSbtPlugin("com.github.sbt" % "sbt-release" % "1.5.0")
-
-// Github Packages
-if (sys.env.get("GITHUB_TOKEN").isDefined) {
-  // The reason for this is that the plugin needs the variable to be defined. We don't want to have that requirement.
-  libraryDependencies += {
-    val log = sLog.value
-    log.info(s"Adding plugin sbt-dependency-tree since env GITHUB_TOKEN is defined.")
-
-    val dependency = "com.codecommit" % "sbt-github-packages" % "0.5.3"
-    val sbtV = (pluginCrossBuild / sbtBinaryVersion).value
-    val scalaV = (update / scalaBinaryVersion).value
-    Defaults.sbtPluginExtra(dependency, sbtV, scalaV)
-  }
-} else libraryDependencies ++= Seq[ModuleID]()
 
 // PUBLISH
 addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.12.1")
