@@ -28,11 +28,6 @@ addSbtPlugin("ch.epfl.scala" % "sbt-web-scalajs-bundler" % "0.21.1")
 ////https://mvnrepository.com/artifact/com.thesamet.scalapb.grpcweb/scalapb-grpcweb
 //libraryDependencies += "com.thesamet.scalapb.grpcweb" %% "scalapb-grpcweb-code-gen" % "0.6.4"
 
-//https://scalablytyped.org/docs/plugin
-//https://github.com/ScalablyTyped/Converter/releases
-resolvers += MavenRepository("sonatype-s01-snapshots", "https://s01.oss.sonatype.org/content/repositories/snapshots")
-addSbtPlugin("org.scalablytyped.converter" % "sbt-converter" % "1.0.0-beta44")
-
 // Utils Buildinfo
 addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.13.2")
 

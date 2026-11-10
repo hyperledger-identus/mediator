@@ -4,7 +4,7 @@ resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
 inThisBuild(
   Seq(
-    scalaVersion := "3.6.4", // Also update docs/publishWebsite.sh and any ref to scala-3.6.3
+    scalaVersion := "3.9.0",
     versionScheme := Some("semver-spec"), // https://www.scala-sbt.org/1.x/docs/Publishing.html#Version+scheme
   )
 )
@@ -98,7 +98,7 @@ lazy val NPM = new {
 
   val materialDesign = Seq("material-components-web" -> V.materialComponents)
 
-  val sha256 = Seq("js-sha256" -> "0.9.0")
+  val sha256 = Seq("js-sha256" -> "0.11.0")
 }
 
 lazy val ENV = new {
@@ -127,7 +127,7 @@ inThisBuild(
       "-deprecation", // warn about use of deprecated APIs
       "-unchecked", // warn about unchecked type parameters
       "-feature", // warn about misused language features (Note we are using 'language:implicitConversions')
-      "-Xfatal-warnings",
+      "-Werror",
       // TODO "-Yexplicit-nulls",
       // "-Ysafe-init", // https://dotty.epfl.ch/docs/reference/other-new-features/safe-initialization.html
       "-language:implicitConversions", // we can use with the flag '-feature'
@@ -138,6 +138,10 @@ inThisBuild(
       // NO NEED ATM "-Xsemanticdb"
       // NO NEED ATM "-Ykind-projector"
     ),
+    scalacOptions ++= {
+      if (coverageEnabled.value) Seq("-Wconf:msg=.*Skipping coverage instrumentation for large method body.*:s")
+      else Seq.empty
+    },
 
     // ### commonSettings ###
     // Compile / doc / sources := Nil,
@@ -170,7 +174,6 @@ lazy val scalaJSBundlerConfigure: Project => Project =
     //   //jsEnv := new org.scalajs.jsenv.jsdomnodejs.JSDOMNodeJSEnv(),
     //   //Test / requireJsDomEnv := true)
     // )
-    .enablePlugins(ScalablyTypedConverterPlugin)
     .settings(
       // Compile / fastOptJS / webpackExtraArgs += "--mode=development",
       // Compile / fullOptJS / webpackExtraArgs += "--mode=production",
@@ -278,7 +281,6 @@ lazy val webapp = project
     Compile / npmDependencies ++= NPM.qrcode ++ NPM.materialDesign ++ NPM.sha256,
   )
   .settings(
-    stShortModuleNames := true,
     webpackBundlingMode := BundlingMode.LibraryAndApplication(), // BundlingMode.Application,
     webpack / version := "5.75.0",
     Compile / scalaJSModuleInitializers += {

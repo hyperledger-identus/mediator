@@ -5,10 +5,9 @@ import fmgp.did.*
 import fmgp.did.comm.*
 import fmgp.did.comm.protocol.oobinvitation.OOBInvitation
 import org.scalajs.dom
-import typings.qrcodeGenerator
-import typings.qrcodeGenerator.anon.CellSize
 import zio.json.*
 
+import scala.scalajs.js
 import scala.scalajs.js.Date
 
 @scala.scalajs.js.annotation.JSExportTopLevel("MediatorInfo")
@@ -50,11 +49,10 @@ object MediatorInfo {
 
   val divQRCode = div(width := "55%")
   {
-    val aux = qrcodeGenerator.mod.^.apply(qrcodeGenerator.TypeNumber.`0`, qrcodeGenerator.ErrorCorrectionLevel.L)
+    val aux = QRCodeGenerator(0, "L")
     aux.addData(qrCodeData)
     aux.make()
-    val cellSize = CellSize().setScalable(true)
-    divQRCode.ref.innerHTML = aux.createSvgTag(cellSize)
+    divQRCode.ref.innerHTML = aux.createSvgTag(js.Dynamic.literal(scalable = true))
   }
 
   def apply(): HtmlElement = // rootElement
