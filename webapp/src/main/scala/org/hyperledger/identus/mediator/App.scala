@@ -30,7 +30,7 @@ object App {
         ),
         mainTag(
           className("mdc-top-app-bar--fixed-adjust"),
-          child <-- $selectedApp.signal
+          child <-- selectedApp.signal
         )
       )
     }
@@ -40,7 +40,7 @@ object App {
 
   }
 
-  private val $selectedApp = SplitRender(MyRouter.router.currentPageSignal)
+  private val selectedApp = SplitRender(MyRouter.router.currentPageSignal)
     .collectStatic(MediatorPage)(MediatorInfo())
 
   private val linkPages: List[Page] = List(

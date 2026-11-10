@@ -40,7 +40,7 @@ object ReactiveMongoApi {
   ).uninterruptible
 
   private def release(api: ReactiveMongoApi) = ZIO
-    .fromFuture(_ => api.connection.close()(10.seconds))
+    .fromFuture(_ => api.connection.close()(using 10.seconds))
     .orDie
     .unit
 
