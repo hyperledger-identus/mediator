@@ -30,7 +30,7 @@ lazy val V = new {
   val logback = "1.6.6"
   val logstash = "9.0"
   val jansi = "2.4.3"
-  val mongo = "1.1.0-RC15"
+  val mongo = "1.1.0-pekko.noshaded.RC22"
   val embedMongo = "4.14.0"
   val munitZio = "0.1.1"
   val zioTest = "2.1.27"
@@ -209,6 +209,16 @@ lazy val mediator = project
   )
   .settings((setupTestConfig): _*)
   .settings(
+    // ReactiveMongo selects kqueue by class presence even on Linux. Keep epoll,
+    // with native libraries for both image architectures.
+    excludeDependencies ++= Seq(
+      ExclusionRule("io.netty", "netty-transport-native-kqueue"),
+      ExclusionRule("io.netty", "netty-transport-classes-kqueue"),
+    ),
+    libraryDependencies ++= Seq(
+      ("io.netty" % "netty-transport-native-epoll" % "4.2.17.Final").classifier("linux-x86_64"),
+      ("io.netty" % "netty-transport-native-epoll" % "4.2.17.Final").classifier("linux-aarch_64"),
+    ),
     libraryDependencies += D.scalaDID_imp.value,
     libraryDependencies += D.scalaDID_peer.value,
     libraryDependencies += D.scalaDID_framework.value,
