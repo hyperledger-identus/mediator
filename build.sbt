@@ -216,8 +216,8 @@ lazy val mediator = project
       ExclusionRule("io.netty", "netty-transport-classes-kqueue"),
     ),
     libraryDependencies ++= Seq(
-      ("io.netty" % "netty-transport-native-epoll" % "4.2.17.Final").classifier("linux-x86_64"),
-      ("io.netty" % "netty-transport-native-epoll" % "4.2.17.Final").classifier("linux-aarch_64"),
+      ("io.netty" % "netty-transport-native-epoll" % "4.2.20.Final").classifier("linux-x86_64"),
+      ("io.netty" % "netty-transport-native-epoll" % "4.2.20.Final").classifier("linux-aarch_64"),
     ),
     libraryDependencies += D.scalaDID_imp.value,
     libraryDependencies += D.scalaDID_peer.value,
