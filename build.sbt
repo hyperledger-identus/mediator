@@ -4,7 +4,7 @@ resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
 inThisBuild(
   Seq(
-    scalaVersion := "3.10.0",
+    scalaVersion := "3.10.1",
     versionScheme := Some("semver-spec"), // https://www.scala-sbt.org/1.x/docs/Publishing.html#Version+scheme
   )
 )
@@ -27,7 +27,7 @@ lazy val V = new {
   val zioConfig = "4.1.2"
   val zioLogging = "2.5.4"
   val zioSl4j = "2.2.2"
-  val logback = "1.6.6"
+  val logback = "1.6.7"
   val logstash = "9.0"
   val jansi = "2.4.3"
   val mongo = "1.1.0-pekko.noshaded.RC22"
