@@ -190,7 +190,9 @@ other DID methods such as `did:prism`.
 - `KEY_AUTHENTICATION_X` - is the key authentication public key (MUST be an Ed25519 OKP key type).
 - `SERVICE_ENDPOINTS` - is the list of endpoints of the mediator split by ';' where the mediator will listen to incoming
   DIDComm messages.
-- `DID_PRISM_RESOLVER` - overrides the base URL used to resolve `did:prism` DID documents.
+- `DID_PRISM_RESOLVER` - enables `did:prism` resolution using this trusted resolver base URL. Set it when
+  using PRISM identities; without it, the mediator resolves `did:peer` only and refuses to start with a
+  `did:prism` mediator identity. Choose an operator-controlled resolver endpoint for production.
 
 #### mediator-storage
 

@@ -230,7 +230,6 @@ lazy val mediator = project
       ("io.netty" % "netty-transport-native-epoll" % "4.2.21.Final").classifier("linux-x86_64"),
       ("io.netty" % "netty-transport-native-epoll" % "4.2.21.Final").classifier("linux-aarch_64"),
     ),
-    Test / scalacOptions ~= (_.filterNot(_ == "-Xfatal-warnings")),
     Test / scalacOptions += "-Wconf:src=.*src_managed/test/scalapb/.*:s",
     Test / PB.protoSources += baseDirectory.value / "src" / "test" / "protobuf",
     Test / PB.targets := Seq(

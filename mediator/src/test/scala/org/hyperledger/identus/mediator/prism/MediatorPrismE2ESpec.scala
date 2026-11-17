@@ -21,8 +21,6 @@ import org.hyperledger.identus.mediator.db.*
 import org.hyperledger.identus.mediator.db.AgentStub
 import proto.prism.{PrismOperation, SignedPrismOperation}
 import proto.prism_ssi.{CompressedECKeyData, KeyUsage, ProtoCreateDID, PublicKey, Service}
-import reactivemongo.api.bson.BSONDocument
-import reactivemongo.api.indexes.{Index, IndexType}
 import zio.*
 import zio.http.*
 import zio.json.*
@@ -58,7 +56,6 @@ object MediatorPrismE2ESpec extends ZIOSpecDefault {
   private case class PrismIdentity(
       shortForm: String,
       longForm: String,
-      createOperation: PrismOperation,
       signedOperation: SignedPrismOperation,
       agent: TestAgent
   )
@@ -73,14 +70,6 @@ object MediatorPrismE2ESpec extends ZIOSpecDefault {
       id: DID,
       keyStore: KeyStore
   ) extends Agent
-
-  private val aliasIndex = Index(
-    key = Seq("alias" -> IndexType.Ascending),
-    name = Some("alias_did"),
-    unique = true,
-    background = true,
-    partialFilter = Some(BSONDocument("alias.0" -> BSONDocument("$exists" -> true)))
-  )
 
   private val prismE2eSpec =
     suite("MediatorPrismE2ESpec")(
@@ -353,7 +342,6 @@ object MediatorPrismE2ESpec extends ZIOSpecDefault {
     } yield PrismIdentity(
       shortForm = shortForm,
       longForm = longForm,
-      createOperation = operation,
       signedOperation = signedOperation,
       agent = TestAgent(id = DIDSubject(shortForm).toDID, keyStore = KeyStore(Set(authKey, agreementKey).flatten))
     )
@@ -402,9 +390,6 @@ object MediatorPrismE2ESpec extends ZIOSpecDefault {
 
   private def waitForResolution(did: String): ZIO[Client, Throwable, Unit] =
     waitForHttpStatus(s"$neoprismBaseUrl/api/dids/$did", Status.Ok, 30.seconds)
-
-  private def assertResolves(did: String): ZIO[Client, Throwable, Unit] =
-    resolveDidDocument(did).unit
 
   private def documentJsonContains(document: DIDDocument, expectedFragments: String*): Boolean = {
     val json = document.toJson

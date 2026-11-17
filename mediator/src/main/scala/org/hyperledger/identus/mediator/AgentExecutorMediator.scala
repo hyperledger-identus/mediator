@@ -257,7 +257,7 @@ case class AgentExecutorMediator(
       }
     } yield ()
 
-  private def handleResolverFailure(
+  private[mediator] def handleResolverFailure(
       pMsgOrProblemReport: Either[ProblemReport, PlaintextMessage],
       transport: TransportDIDComm[Any],
       didFail: DidFail

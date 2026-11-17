@@ -1,6 +1,6 @@
 package org.hyperledger.identus.mediator
 
-import fmgp.crypto.error.{DidFail, ValidationFailed}
+import fmgp.crypto.error.ValidationFailed
 import fmgp.did.*
 import fmgp.did.comm.Operations
 import fmgp.did.comm.protocol.ProtocolExecuter
@@ -27,7 +27,7 @@ object AgentExecutorMediatorSpec extends ZIOSpecDefault {
             transport <- captureTransport
             agentExecutor <- testExecutor
             plaintext = plaintextBasicMessage
-            _ <- invokeHandleResolverFailure(agentExecutor, Right(plaintext), transport, ValidationFailed)
+            _ <- agentExecutor.handleResolverFailure(Right(plaintext), transport.transport, ValidationFailed)
               .provideSomeLayer(DidPeerResolver.layerDidPeerResolver)
               .provideSomeLayer(layerOperations(Operations))
               .provideSomeLayer(ZLayer.succeed(mediatorAgent))
@@ -53,7 +53,7 @@ object AgentExecutorMediatorSpec extends ZIOSpecDefault {
             transport <- captureTransport
             agentExecutor <- testExecutor
             problemReport = Problems.decryptFail(AgentStub.mediatorConfig.did.asFROM, "decrypt failed")
-            _ <- invokeHandleResolverFailure(agentExecutor, Left(problemReport), transport, ValidationFailed)
+            _ <- agentExecutor.handleResolverFailure(Left(problemReport), transport.transport, ValidationFailed)
               .provideSomeLayer(DidPeerResolver.layerDidPeerResolver)
               .provideSomeLayer(layerOperations(Operations))
               .provideSomeLayer(ZLayer.succeed(mediatorAgent))
@@ -112,21 +112,6 @@ object AgentExecutorMediatorSpec extends ZIOSpecDefault {
       messageItemRepo = null.asInstanceOf[org.hyperledger.identus.mediator.db.MessageItemRepo],
       scope = scope
     )
-
-  private def invokeHandleResolverFailure(
-      agentExecutor: AgentExecutorMediator,
-      input: Either[ProblemReport, PlaintextMessage],
-      transport: CaptureTransport,
-      didFail: DidFail
-  ): ZIO[Agent & Operations & Resolver, Nothing, Unit] = {
-    val method = classOf[AgentExecutorMediator].getDeclaredMethods.find { method =>
-      method.getName.endsWith("$$handleResolverFailure") && method.getParameterCount == 3
-    }.get
-    method.setAccessible(true)
-    method
-      .invoke(agentExecutor, input.asInstanceOf[AnyRef], transport.transport.asInstanceOf[AnyRef], didFail.asInstanceOf[AnyRef])
-      .asInstanceOf[ZIO[Agent & Operations & Resolver, Nothing, Unit]]
-  }
 
   private def plaintextBasicMessage: PlaintextMessage =
     s"""{
