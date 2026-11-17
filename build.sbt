@@ -4,14 +4,14 @@ resolvers ++= Resolver.sonatypeOssRepos("snapshots")
 
 inThisBuild(
   Seq(
-    scalaVersion := "3.10.0",
+    scalaVersion := "3.10.1",
     versionScheme := Some("semver-spec"), // https://www.scala-sbt.org/1.x/docs/Publishing.html#Version+scheme
   )
 )
 
 /** Versions */
 lazy val V = new {
-  val scalaDID = "0.1.1"
+  val scalaDID = "0.1.2"
 
   // FIXME another bug in the test framework https://github.com/scalameta/munit/issues/554
   val munit = "1.0.0" // "0.7.29"
@@ -27,7 +27,7 @@ lazy val V = new {
   val zioConfig = "4.1.2"
   val zioLogging = "2.5.4"
   val zioSl4j = "2.2.2"
-  val logback = "1.6.6"
+  val logback = "1.6.7"
   val logstash = "9.0"
   val jansi = "2.4.3"
   val mongo = "1.1.0-pekko.noshaded.RC22"
@@ -227,8 +227,8 @@ lazy val mediator = project
       ExclusionRule("io.netty", "netty-transport-classes-kqueue"),
     ),
     libraryDependencies ++= Seq(
-      ("io.netty" % "netty-transport-native-epoll" % "4.2.17.Final").classifier("linux-x86_64"),
-      ("io.netty" % "netty-transport-native-epoll" % "4.2.17.Final").classifier("linux-aarch_64"),
+      ("io.netty" % "netty-transport-native-epoll" % "4.2.21.Final").classifier("linux-x86_64"),
+      ("io.netty" % "netty-transport-native-epoll" % "4.2.21.Final").classifier("linux-aarch_64"),
     ),
     Test / scalacOptions ~= (_.filterNot(_ == "-Xfatal-warnings")),
     Test / scalacOptions += "-Wconf:src=.*src_managed/test/scalapb/.*:s",
