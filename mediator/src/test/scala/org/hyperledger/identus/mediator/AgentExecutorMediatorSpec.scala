@@ -71,6 +71,26 @@ object AgentExecutorMediatorSpec extends ZIOSpecDefault {
             report.code == ProblemCode.ErroFail("msg")
           )
         }
+      },
+      test("resolver fallback sends nothing on the inbound transport without a return route") {
+        ZIO.scoped {
+          for {
+            transport <- captureTransport
+            agentExecutor <- testExecutor
+            _ <- ZIO.foreachDiscard(Seq(Some("none"), None)) { route =>
+              agentExecutor
+                .handleResolverFailure(
+                  Right(plaintextBasicMessageWithReturnRoute(route)),
+                  transport.transport,
+                  ValidationFailed
+                )
+                .provideSomeLayer(DidPeerResolver.layerDidPeerResolver)
+                .provideSomeLayer(layerOperations(Operations))
+                .provideSomeLayer(ZLayer.succeed(mediatorAgent))
+            }
+            sent <- transport.queue.poll
+          } yield assertTrue(sent.isEmpty)
+        }
       }
     )
 
@@ -113,7 +133,10 @@ object AgentExecutorMediatorSpec extends ZIOSpecDefault {
       scope = scope
     )
 
-  private def plaintextBasicMessage: PlaintextMessage =
+  private def plaintextBasicMessage: PlaintextMessage = plaintextBasicMessageWithReturnRoute(Some("all"))
+
+  private def plaintextBasicMessageWithReturnRoute(route: Option[String]): PlaintextMessage = {
+    val returnRouteField = route.map(value => s"\"return_route\" : \"$value\",").getOrElse("")
     s"""{
        |  "id" : "resolver-fallback-test",
        |  "type" : "https://didcomm.org/basicmessage/2.0/message",
@@ -124,7 +147,8 @@ object AgentExecutorMediatorSpec extends ZIOSpecDefault {
        |  "body" : {
        |    "content" : "hello"
        |  },
-       |  "return_route" : "all",
+       |  $returnRouteField
        |  "typ" : "application/didcomm-plain+json"
        |}""".stripMargin.fromJson[PlaintextMessage].toOption.get
+  }
 }

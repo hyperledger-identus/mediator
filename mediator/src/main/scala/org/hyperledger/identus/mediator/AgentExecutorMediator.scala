@@ -270,6 +270,10 @@ case class AgentExecutorMediator(
             .flatMap(transport.send)
             .tapError(error => ZIO.logError(s"Unable to sign fallback problem-report: $error"))
             .ignore
+      case Right(plaintextMessage)
+          if plaintextMessage.return_route != Some(ReturnRoute.all) &&
+            plaintextMessage.return_route != Some(ReturnRoute.thread) =>
+        ZIO.logWarning(s"Resolver failure for '${plaintextMessage.id}' with no return route: $didFail")
       case Right(plaintextMessage) =>
         for {
           agent <- ZIO.service[Agent]

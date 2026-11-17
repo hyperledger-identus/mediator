@@ -70,6 +70,15 @@ object MediatorConfigSpec extends ZIOSpecDefault {
         assertTrue(result.isLeft)
       }
     },
+    test("explicit DID with an empty keystore fails instead of starting without private keys") {
+      val hocon = legacyIdentity + s"""
+        mediator.identity.did = "did:prism:${"a" * 64}"
+        mediator.identity.keyStore = []
+      """
+      loadIdentity(hocon).either.map { result =>
+        assertTrue(result.fold(_.toString.contains("keyStore must not be empty"), _ => false))
+      }
+    },
     test("malformed explicit keystore fails instead of falling back to legacy keys") {
       val hocon = legacyIdentity + s"""
         mediator.identity.did = "did:prism:${"a" * 64}"

@@ -90,7 +90,10 @@ object MediatorConfig {
       .Sequence(
         Config.Fallback[PrivateKeyWithKid](Config.derived[OKPPrivateKeyWithKid], Config.derived[ECPrivateKeyWithKid])
       )
-      .map(keys => KeyStore(keys.toSet))
+      .mapOrFail { keys =>
+        if keys.isEmpty then Left(Config.Error.InvalidData(Chunk("keyStore"), "Explicit mediator keyStore must not be empty"))
+        else Right(KeyStore(keys.toSet))
+      }
       .nested("keyStore")
 
   private val explicitConfig =
