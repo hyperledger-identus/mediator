@@ -29,7 +29,7 @@ addSbtPlugin("ch.epfl.scala" % "sbt-web-scalajs-bundler" % "0.21.1")
 //libraryDependencies += "com.thesamet.scalapb.grpcweb" %% "scalapb-grpcweb-code-gen" % "0.6.4"
 
 // Utils Buildinfo
-addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.13.2")
+addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.14.0")
 
 // CI
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.7.1") // sbt> dependencyUpdates
