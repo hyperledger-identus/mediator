@@ -36,7 +36,7 @@ lazy val V = new {
   val zioTest = "2.1.27"
   val zioTestSbt = "2.1.27"
   val zioTestMagnolia = "2.1.27"
-  val apollo = "1.8.4-kt2.1.20"
+  val apollo = "1.8.8"
 
   // For WEBAPP
   val laminar = "17.2.1"
