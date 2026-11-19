@@ -153,4 +153,21 @@ object Problems {
     escalate_to = email,
   )
 
+  def resolutionError(
+      to: Set[TO],
+      from: FROM,
+      pthid: MsgID,
+      piuri: PIURI,
+      comment: String
+  ) = ProblemReport(
+    to = to,
+    from = from,
+    pthid = pthid,
+    ack = None,
+    code = ProblemCode.ErroFail("me", "res", "resolver"),
+    comment = Some(comment),
+    args = None,
+    escalate_to = email,
+  )
+
 }
