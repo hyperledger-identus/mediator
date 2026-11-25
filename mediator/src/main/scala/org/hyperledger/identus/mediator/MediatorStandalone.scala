@@ -1,5 +1,6 @@
 package org.hyperledger.identus.mediator
 
+import com.typesafe.config.{Config as TypesafeConfig, ConfigFactory}
 import fmgp.crypto.*
 import fmgp.crypto.OKPPrivateKey.*
 import fmgp.crypto.OKPPrivateKeyWithKid.*
@@ -9,6 +10,7 @@ import fmgp.did.comm.*
 import fmgp.did.comm.protocol.*
 import fmgp.did.framework.TransportFactoryImp
 import fmgp.did.method.peer.*
+import fmgp.did.method.prism.*
 import org.hyperledger.identus.mediator.db.*
 import org.hyperledger.identus.mediator.protocols.*
 import zio.*
@@ -49,20 +51,71 @@ object CurveConfig:
 import CurveConfig.given
 
 case class MediatorConfig(
-    endpoints: String,
-    keyAgreement: OKPPrivateKeyWithoutKid,
-    keyAuthentication: OKPPrivateKeyWithoutKid
+    did: DID,
+    keyStore: KeyStore
 ) {
-  val did = DIDPeer2.makeAgent(
-    Seq(keyAgreement, keyAuthentication),
-    endpoints
-      .split(";")
-      .toSeq
-      .map { endpoint => fmgp.util.Base64.encode(s"""{"t":"dm","s":{"uri":"$endpoint","a":["didcomm/v2"]}}""") }
-      .map(DIDPeerServiceEncodedNew(_))
-  )
   val agentLayer: ZLayer[Any, Nothing, MediatorAgent] =
-    ZLayer(MediatorAgent.make(id = did.id, keyStore = did.keyStore))
+    ZLayer(MediatorAgent.make(id = did, keyStore = keyStore))
+}
+
+object MediatorConfig {
+
+  def legacy(
+      endpoints: String,
+      keyAgreement: OKPPrivateKeyWithoutKid,
+      keyAuthentication: OKPPrivateKeyWithoutKid
+  ): MediatorConfig = {
+    val agent = DIDPeer2.makeAgent(
+      Seq(keyAgreement, keyAuthentication),
+      endpoints
+        .split(";")
+        .toSeq
+        .map { endpoint => fmgp.util.Base64.encode(s"""{"t":"dm","s":{"uri":"$endpoint","a":["didcomm/v2"]}}""") }
+        .map(DIDPeerServiceEncodedNew(_))
+    )
+    MediatorConfig(did = agent.id, keyStore = agent.keyStore)
+  }
+
+  private val didConfig =
+    Config
+      .string("did")
+      .mapOrFail(str =>
+        DIDSubject.either(str) match
+          case Left(value)  => Left(Config.Error.InvalidData(Chunk("did"), "Fail to parse the DID: " + value.error))
+          case Right(value) => Right(value.toDID: DID)
+      )
+
+  private val keyStoreConfig =
+    Config
+      .Sequence(
+        Config.Fallback[PrivateKeyWithKid](Config.derived[OKPPrivateKeyWithKid], Config.derived[ECPrivateKeyWithKid])
+      )
+      .mapOrFail { keys =>
+        if keys.isEmpty then Left(Config.Error.InvalidData(Chunk("keyStore"), "Explicit mediator keyStore must not be empty"))
+        else Right(KeyStore(keys.toSet))
+      }
+      .nested("keyStore")
+
+  private val explicitConfig =
+    (didConfig ++ keyStoreConfig).map((did, keyStore) => MediatorConfig(did = did, keyStore = keyStore))
+
+  private val legacyConfig =
+    (
+      Config.string("endpoints") ++
+        Config.derived[OKPPrivateKeyWithoutKid].nested("keyAgreement") ++
+        Config.derived[OKPPrivateKeyWithoutKid].nested("keyAuthentication")
+    ).map((endpoints, keyAgreement, keyAuthentication) => legacy(endpoints, keyAgreement, keyAuthentication))
+
+  def configFor(source: TypesafeConfig): Config[MediatorConfig] =
+    if source.hasPathOrNull("mediator.identity.did") || source.hasPathOrNull("mediator.identity.keyStore") then
+      explicitConfig
+    else legacyConfig
+
+  def prismResolverUrl(identity: MediatorConfig, configuredUrl: Option[String]): Either[Config.Error, Option[String]] =
+    val url = configuredUrl.map(_.trim).filter(_.nonEmpty)
+    if identity.did.string.startsWith("did:prism:") && url.isEmpty then
+      Left(Config.Error.MissingData(Chunk("mediator", "didPrismResolver"), "DID_PRISM_RESOLVER is required for a PRISM mediator identity"))
+    else Right(url)
 }
 
 case class DataBaseConfig(
@@ -99,6 +152,21 @@ object MediatorStandalone extends ZIOAppDefault {
   override val bootstrap: ZLayer[ZIOAppArgs, Any, Any] =
     Runtime.removeDefaultLoggers >>> SLF4J.slf4j(mediatorColorFormat)
 
+  private def resolverLayer(didPrismResolverBaseUrl: Option[String]): ZLayer[Client & Scope, Nothing, Resolver] =
+    didPrismResolverBaseUrl match
+      case None => DidPeerResolver.layerDidPeerResolver >>> ZLayer.fromFunction((peer: DidPeerResolver) => peer: Resolver)
+      case Some(baseUrl) =>
+        (
+          DidPeerResolver.layerDidPeerResolver ++
+            (HttpUtils.layer >>> DIDPrismResolver.layerDIDPrismResolver(baseUrl))
+        ) >>>
+          ZLayer.fromZIO(
+            for {
+              peer <- ZIO.service[DidPeerResolver]
+              prism <- ZIO.service[DIDPrismResolver]
+            } yield MultiFallbackResolver(peer, prism): Resolver
+          )
+
   def mainProgram = for {
     _ <- Console.printLine( // https://patorjk.com/software/taag/#p=display&f=ANSI%20Shadow&t=Mediator
       """███╗   ███╗███████╗██████╗ ██╗ █████╗ ████████╗ ██████╗ ██████╗ 
@@ -111,11 +179,10 @@ object MediatorStandalone extends ZIOAppDefault {
         |Visit: https://github.com/hyperledger-identus/mediator""".stripMargin
     )
     configs = ConfigProvider.fromResourcePath()
-    mediatorConfig <- configs.nested("identity").nested("mediator").load(deriveConfig[MediatorConfig])
+    mediatorConfig <- configs.nested("identity").nested("mediator").load(MediatorConfig.configFor(ConfigFactory.load()))
     agentLayer = mediatorConfig.agentLayer
     _ <- ZIO.log(s"Identus Mediator APP. See https://github.com/hyperledger-identus/mediator")
-    _ <- ZIO.log(s"MediatorConfig: $mediatorConfig")
-    _ <- ZIO.log(s"DID: ${mediatorConfig.did.id.string}")
+    _ <- ZIO.log(s"DID: ${mediatorConfig.did.string}")
     mediatorDbConfig <- configs.nested("database").nested("mediator").load(deriveConfig[DataBaseConfig])
     _ <- ZIO.log(s"MediatorDb Connection String: ${mediatorDbConfig.displayConnectionString}")
     port <- configs
@@ -130,12 +197,19 @@ object MediatorStandalone extends ZIOAppDefault {
       .nested("mediator")
       .load(Config.string("escalateTo"))
     _ <- ZIO.log(s"Problem reports escalated to: $escalateTo")
-    transportFactory = Scope.default >>> (Client.default >>> TransportFactoryImp.layer)
+    didPrismResolverBaseUrl <- configs
+      .nested("mediator")
+      .load(Config.string("didPrismResolver").optional)
+    prismResolverUrl <- ZIO.fromEither(MediatorConfig.prismResolverUrl(mediatorConfig, didPrismResolverBaseUrl))
+    _ <- ZIO.log(s"DID PRISM resolver: ${prismResolverUrl.getOrElse("disabled")}")
+    httpClient = Scope.default ++ Client.default
+    transportFactory = httpClient >>> TransportFactoryImp.layer
+    resolver = httpClient >>> resolverLayer(prismResolverUrl)
     mongo = AsyncDriverResource.layer >>> ReactiveMongoApi.layer(mediatorDbConfig.finalConnectionString)
     repos = mongo >>> (MessageItemRepo.layer ++ UserAccountRepo.layer ++ OutboxMessageRepo.layer)
     myServer <- Server
       .serve((MediatorAgent.didCommApp ++ DIDCommRoutes.app) @@ (Middleware.cors))
-      .provideSomeLayer(DidPeerResolver.layerDidPeerResolver)
+      .provideSomeLayer(resolver)
       .provideSomeLayer(agentLayer)
       .provideSomeLayer(repos)
       .provideSomeLayer(Scope.default >>> ((agentLayer ++ transportFactory ++ repos) >>> OperatorImp.layer))
