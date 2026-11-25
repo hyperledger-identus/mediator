@@ -1,4 +1,4 @@
-val scalaJSVersion = sys.env.getOrElse("SCALAJS_VERSION", "1.22.0")
+val scalaJSVersion = sys.env.getOrElse("SCALAJS_VERSION", "1.23.0")
 addSbtPlugin("org.portable-scala" % "sbt-scalajs-crossproject" % "1.4.0")
 
 addSbtPlugin("org.scala-js" % "sbt-scalajs" % scalaJSVersion)
@@ -29,7 +29,7 @@ libraryDependencies += "com.thesamet.scalapb" %% "compilerplugin" % "0.11.21"
 //libraryDependencies += "com.thesamet.scalapb.grpcweb" %% "scalapb-grpcweb-code-gen" % "0.6.4"
 
 // Utils Buildinfo
-addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.13.2")
+addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.14.0")
 
 // CI
 addSbtPlugin("com.timushev.sbt" % "sbt-updates" % "0.7.1") // sbt> dependencyUpdates
@@ -50,7 +50,7 @@ addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "2.5.0")
 addSbtPlugin("com.github.sbt" % "sbt-gzip" % "2.0.0")
 
 // Release
-addSbtPlugin("com.github.sbt" % "sbt-release" % "1.5.0")
+addSbtPlugin("com.github.sbt" % "sbt-release" % "1.6.0")
 
 // PUBLISH
 addSbtPlugin("com.github.sbt" % "sbt-ci-release" % "1.12.1")
