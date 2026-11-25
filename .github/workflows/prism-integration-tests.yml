@@ -31,12 +31,12 @@ jobs:
       MEDIATOR_PRISM_MONGO_URI: "mongodb://127.0.0.1:27018/messages"
     steps:
       - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
+        uses: step-security/harden-runner@aebdcf6156ab6691adf63218240e476564a1ed4c # v2.23.0
         with:
           egress-policy: audit
 
       - name: Checkout mediator
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Setup Java and Scala
         uses: olafurpg/setup-scala@32ffa16635ff8f19cc21ea253a987f0fdf29844c # v14
