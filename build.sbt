@@ -25,9 +25,9 @@ lazy val V = new {
   // val zioMunitTest = "0.1.1"
   // val zioHttp = "3.8.1" // also import from scala DID
   val zioConfig = "4.1.2"
-  val zioLogging = "2.5.4"
+  val zioLogging = "2.5.5"
   val zioSl4j = "2.2.2"
-  val logback = "1.6.7"
+  val logback = "1.6.8"
   val logstash = "9.0"
   val jansi = "2.4.3"
   val mongo = "1.1.0-pekko.noshaded.RC22"
@@ -36,7 +36,7 @@ lazy val V = new {
   val zioTest = "2.1.27"
   val zioTestSbt = "2.1.27"
   val zioTestMagnolia = "2.1.27"
-  val apollo = "1.8.4-kt2.1.20"
+  val apollo = "1.8.8"
 
   // For WEBAPP
   val laminar = "17.2.1"
